@@ -1,317 +1,70 @@
-Run set -euo pipefail
-Gateway RPC not ready; retry 1/12
-Gateway RPC not ready; retry 2/12
-Gateway RPC not ready; retry 3/12
-Gateway RPC not ready; retry 4/12
-Gateway RPC not ready; retry 5/12
-Gateway RPC not ready; retry 6/12
-Gateway RPC not ready; retry 7/12
-Gateway RPC not ready; retry 8/12
-Gateway RPC not ready; retry 9/12
-Gateway RPC not ready; retry 10/12
-Gateway RPC not ready; retry 11/12
-Gateway RPC not ready; retry 12/12
-GATEWAY_RPC=FAIL
-NAME                   IMAGE                                                                                                             COMMAND                  SERVICE    CREATED         STATUS                           PORTS
-aihome-openclaw-test   ghcr.io/openclaw/openclaw:2026.8.2-slim@sha256:5d25165995041caa6a7175bec82b25ad98c44eb269bb42435da8e27ec06e6be4   "tini -s -- sh -lc '…"   openclaw   2 minutes ago   Up 1 second (health: starting)   127.0.0.1:18789->18789/tcp
+aihome@AIHome:/opt/aihome-test/source$ cat NhatKy.md
+echo "===== SECURITY.md ====="
+cat SECURITY.md
+AI HOME — NHẬT KÝ TIẾN ĐỘ OPENCLAW
+Ngày khởi tạo: 05/09/2026 (GMT+7)
 
-@openclaw/runway-provider (runway) enabled
-  format: openclaw
-  source: /app/dist/extensions/runway/index.js
-[plugins:lifecycle] phase="manifest registry" ms=328.52 status=ok includeDisabled=true indexPluginCount=62
-[plugins:lifecycle] phase="manifest registry" ms=0.85 status=ok includeDisabled=true indexPluginCount=62
-  origin: bundled
-[plugins:lifecycle] phase="manifest registry" ms=0.32 status=ok includeDisabled=true indexPluginCount=62
-  version: 2026.8.2
-2026-09-07T12:57:32.453+07:00 [plugins:lifecycle] phase="discovery scan" ms=0.20 status=ok scope="scoped" extraPathCount=0
+==================================================
+1. GROQ-ONLY AIHOME TEST ARCHITECTURE — DECISION
+==================================================
+1. User decided to remove Gemini from AIHome because the exact Google Cloud project quota for `gemini-3.6-flash` is only 20 requests/day in the Free tier and is not suitable for the intended assistant workload.
+2. AIHome TEST provider policy is now Groq-only, with primary model `groq/llama-3.1-8b-instant` and `fallbacks: []`.
+3. Gemini/Google was removed from `config/openclaw/openclaw.json5`; only the official `groq` plugin remains enabled/allowed.
+4. Gemini credential injection was removed from `compose/openclaw.yml`.
+5. The TEST workflow `AIHome OpenClaw TEST Box` was changed to validate Groq-only configuration, remove `/opt/aihome-test/openclaw/secrets/gemini.env`, validate the Groq catalog, run Groq independent inference, and verify active routing is Groq-only.
+6. The workflow continues to run only on branch `Test`; Main/Production is unchanged.
+7. DuckDuckGo Search, Weather API, Home Assistant and AIHome Memory remain separate tool layers around the Groq LLM. They are not all enabled yet; each must be audited and tested before activation.
+8. Current target architecture:
+   OpenClaw/KIRA -> Groq LLM
+   OpenClaw tools -> DuckDuckGo Search / Weather API / Home Assistant / AIHome Memory.
+9. The next execution point is GitHub Actions `AIHome OpenClaw TEST Box` triggered by the Groq-only changes. The critical first gate is `groq/llama-3.1-8b-instant` inference PASS.
+10. No Gemini provider, Gemini API credential, or Gemini inference test remains part of the TEST workflow.
 
-2026-09-07T12:57:32.493+07:00 [plugins:lifecycle] phase="discovery scan" ms=38.41 status=ok scope="shared"
-@openclaw/senseaudio-provider (senseaudio) enabled
-2026-09-07T12:57:33.267+07:00 [gateway] wrote stability bundle: /data/state/logs/stability/openclaw-stability-2026-09-07T05-57-33-261Z-8-gateway.startup_failed.json
-  format: openclaw
-2026-09-07T12:57:33.271+07:00 Gateway failed to start: Legacy session store requires migration: /data/state/agents/main/sessions/sessions.json. Run "openclaw doctor --fix" against the same state/config before starting OpenClaw.. Run openclaw gateway status --deep for diagnostics.
-  source: /app/dist/extensions/senseaudio/index.js
-[plugins:lifecycle] phase="manifest registry" ms=181.63 status=ok includeDisabled=true indexPluginCount=62
-  origin: bundled
-[plugins:lifecycle] phase="discovery scan" ms=0.21 status=ok scope="scoped" extraPathCount=0
-  version: 2026.8.2
-[plugins:lifecycle] phase="discovery scan" ms=78.90 status=ok scope="shared"
+==================================================
+2. OPENCLAW 2026.8.2 SESSION MIGRATION — PASS
+==================================================
+1. OpenClaw TEST was upgraded from `2026.7.1-2` to exact pinned image `2026.8.2-slim`.
+2. GitHub Actions run #72 failed because OpenClaw 2026.8.2 detected the legacy session store `/data/state/agents/main/sessions/sessions.json` and required migration before Gateway startup.
+3. The existing workflow `AIHome OpenClaw TEST Box` was modified to migrate the TEST state using `openclaw doctor --fix --non-interactive --yes` against the same `/data/state` and `/data/config` mounts.
+4. The migration step creates a backup of `sessions.json` before modification.
+5. The first migration implementation used `docker run --rm -it`, which was incompatible with the non-interactive GitHub Actions runner and caused run #73 to fail; the TTY flags were removed without changing the migration target or command.
+6. GitHub Actions run #74 passed after the TTY fix. Therefore the legacy OpenClaw session-store migration on TEST is now confirmed PASS.
+7. GitHub Actions run #75 also passed. This confirms the post-migration TEST state and the complete Groq/Gateway/Memory validation gates remained green after the session migration checkpoint.
+8. Branch remains `Test`; no new branch or workflow was created. Main/Production remains unchanged.
 
-[plugins:lifecycle] phase="manifest registry" ms=0.95 status=ok includeDisabled=true indexPluginCount=62
-@openclaw/sglang-provider (sglang) enabled
-[plugins:lifecycle] phase="manifest registry" ms=0.45 status=ok includeDisabled=true indexPluginCount=62
-  format: openclaw
-Config auto-restored from backup: /data/config/openclaw.json5 (missing-meta-vs-last-good)
-  source: /app/dist/extensions/sglang/index.js
-Config observe anomaly: /data/config/openclaw.json5 (missing-meta-vs-last-good)
-  origin: bundled
-[plugins:lifecycle] phase="plugin registry snapshot" ms=0.34 status=ok surface="status"
-  version: 2026.8.2
-[plugins:lifecycle] phase="manifest registry" ms=189.59 status=ok includeDisabled=true indexPluginCount=62
-  providers: sglang
-[plugins:lifecycle] phase="manifest registry" ms=1.24 status=ok includeDisabled=true indexPluginCount=62
+==================================================
+3. OPENCLAW TEST PASS CHECKPOINTS — TAG PLAN
+==================================================
+1. Run #74 is a confirmed PASS checkpoint at commit `20bc040a22932aaf6ee79a1e0b42301dad5dcc5d`.
+2. Run #75 is a confirmed PASS checkpoint at commit `0afe2e234b707cadb49f48dea314627fb4464fe8`.
+3. Planned Git tags for easy rollback/reference: `PASS-74` -> #74 commit; `PASS-75` -> #75 commit.
+4. Tags are references, not branches; no new branch or workflow is required.
+5. The current GitHub connector does not expose a tag/reference creation operation, so tag creation must be performed from the TEST Box with Git and pushed to origin. No tag has been claimed as created until the Box command output confirms it.
+6. Main/Production remains unchanged.===== SECURITY.md =====
+# Security Policy
 
-[plugins:lifecycle] phase="manifest registry" ms=0.40 status=ok includeDisabled=true indexPluginCount=62
-@openclaw/together-provider (together) enabled
-[plugins:lifecycle] phase="manifest registry" ms=141.97 status=ok includeDisabled=true indexPluginCount=62
-  format: openclaw
-[plugins:lifecycle] phase="plugin registry snapshot" ms=0.61 status=ok surface="status"
-  source: /app/dist/extensions/together/index.js
-[plugins:lifecycle] phase="discovery scan" ms=0.21 status=ok scope="scoped" extraPathCount=0
-  origin: bundled
-[plugins:lifecycle] phase="discovery scan" ms=73.51 status=ok scope="shared"
-  version: 2026.8.2
-[plugins:lifecycle] phase="manifest registry" ms=0.41 status=ok includeDisabled=true indexPluginCount=62
-  providers: together
-[plugins:lifecycle] phase="runtime plugin registry load" ms=343.96 status=ok surface="status" onlyPluginCount=1
+## Reporting a Security Vulnerability
 
-[plugins:lifecycle] phase="install records load" ms=4.28 status=ok command="registry-refresh"
-@openclaw/tts-local-cli (tts-local-cli) enabled
-[plugins:lifecycle] phase="registry refresh" ms=28.39 status=ok command="registry-refresh" reason="policy-changed"
-  format: openclaw
-[plugins:lifecycle] phase="manifest registry" ms=179.43 status=ok includeDisabled=true indexPluginCount=62
-  source: /app/dist/extensions/tts-local-cli/index.js
-[plugins:lifecycle] phase="plugin registry snapshot" ms=0.33 status=ok surface="status"
-  origin: bundled
-[plugins:lifecycle] phase="manifest registry" ms=184.83 status=ok includeDisabled=true indexPluginCount=62
-  version: 2026.8.2
-[plugins:lifecycle] phase="manifest registry" ms=1.17 status=ok includeDisabled=true indexPluginCount=62
+Please do not disclose security vulnerabilities in public issues, pull requests, or other public channels.
 
-[plugins:lifecycle] phase="manifest registry" ms=0.45 status=ok includeDisabled=true indexPluginCount=62
-@openclaw/vllm-provider (vllm) enabled
-2026-09-07T12:57:59.957+07:00 [gateway] restart-loop breaker tripped: 3 unclean boot(s) within 300000ms; suppressing channel/provider account auto-start. Inspect the stability bundle and fix the startup crash before restarting the service. Start a channel manually with: openclaw gateway call channels.start --params '{"channel":"<id>"}'
-  format: openclaw
-2026-09-07T12:57:59.964+07:00 [gateway] wrote stability bundle: /data/state/logs/stability/openclaw-stability-2026-09-07T05-57-59-958Z-8-gateway.crash_loop_breaker.json
-  source: /app/dist/extensions/vllm/index.js
-2026-09-07T12:58:01.380+07:00 [plugins:lifecycle] phase="discovery scan" ms=0.22 status=ok scope="scoped" extraPathCount=0
-  origin: bundled
-2026-09-07T12:58:01.420+07:00 [plugins:lifecycle] phase="discovery scan" ms=39.20 status=ok scope="shared"
-  version: 2026.8.2
-2026-09-07T12:58:02.188+07:00 [gateway] wrote stability bundle: /data/state/logs/stability/openclaw-stability-2026-09-07T05-58-02-185Z-8-gateway.startup_failed.json
-  providers: vllm
-2026-09-07T12:58:02.192+07:00 Gateway failed to start: Legacy session store requires migration: /data/state/agents/main/sessions/sessions.json. Run "openclaw doctor --fix" against the same state/config before starting OpenClaw.. Run openclaw gateway status --deep for diagnostics.
+For security-sensitive issues, contact the repository maintainer privately with enough information to reproduce and assess the vulnerability.
 
-@openclaw/xai-plugin (xai) enabled
-  format: openclaw
-  source: /app/dist/extensions/xai/index.js
-  origin: bundled
-  version: 2026.8.2
-  providers: xai
+When reporting a vulnerability, please include:
 
-@openclaw/groq-provider (groq) enabled
-  format: openclaw
-  source: $OPENCLAW_HOME/npm/projects/openclaw-groq-provider-d726e35179/node_modules/@openclaw/groq-provider/dist/index.js
-  origin: global
-  version: 2026.7.1
-  providers: groq
-2026-09-07T12:57:30.488+07:00 [gateway] loading configuration…
-2026-09-07T12:57:30.519+07:00 [gateway] resolving authentication…
-2026-09-07T12:57:30.531+07:00 [gateway] starting...
-Enabled plugin "groq". Restart the gateway to apply.
-Warning: Plugin "groq" requires capability consent; disable and re-enable it or run `openclaw plugins enable groq --accept-capabilities`.
+- A clear description of the vulnerability.
+- The affected component, file, or configuration.
+- Steps to reproduce the issue.
+- The potential security impact.
+- Any suggested mitigation, if available.
 
-Plugins (30/30 enabled)
-@openclaw/alibaba-provider (alibaba) enabled
-  format: openclaw
-  source: /app/dist/extensions/alibaba/index.js
-  origin: bundled
-  version: 2026.8.2
+## Scope
 
-Anthropic (anthropic) enabled
-  format: openclaw
-  source: /app/dist/extensions/anthropic/index.js
-  origin: bundled
-  version: 2026.8.2
-  providers: anthropic
+This policy covers security issues affecting the AIHome repository and its supported TEST/production deployment components.
 
-Azure Speech (azure-speech) enabled
-  format: openclaw
-  source: /app/dist/extensions/azure-speech/index.js
-  origin: bundled
-  version: 2026.8.2
+## Security Practices
 
-@openclaw/clawrouter (clawrouter) enabled
-  format: openclaw
-  source: /app/dist/extensions/clawrouter/index.js
-  origin: bundled
-  version: 2026.8.2
-  providers: clawrouter
-
-@openclaw/copilot-proxy (copilot-proxy) enabled
-  format: openclaw
-  source: /app/dist/extensions/copilot-proxy/index.js
-  origin: bundled
-  version: 2026.8.2
-  providers: copilot-proxy
-
-@openclaw/deepgram-provider (deepgram) enabled
-  format: openclaw
-  source: /app/dist/extensions/deepgram/index.js
-  origin: bundled
-  version: 2026.8.2
-
-@openclaw/elevenlabs-speech (elevenlabs) enabled
-  format: openclaw
-  source: /app/dist/extensions/elevenlabs/index.js
-  origin: bundled
-  version: 2026.8.2
-
-@openclaw/fal-provider (fal) enabled
-  format: openclaw
-  source: /app/dist/extensions/fal/index.js
-  origin: bundled
-  version: 2026.8.2
-  providers: fal
-
-@openclaw/github-copilot-provider (github-copilot) enabled
-  format: openclaw
-  source: /app/dist/extensions/github-copilot/index.js
-  origin: bundled
-  version: 2026.8.2
-  providers: github-copilot
-
-@openclaw/google-plugin (google) enabled
-  format: openclaw
-  source: /app/dist/extensions/google/index.js
-  origin: bundled
-  version: 2026.8.2
-  providers: google, google-gemini-cli, google-vertex
-
-@openclaw/huggingface-provider (huggingface) enabled
-  format: openclaw
-  source: /app/dist/extensions/huggingface/index.js
-  origin: bundled
-  version: 2026.8.2
-  providers: huggingface
-
-@openclaw/litellm-provider (litellm) enabled
-  format: openclaw
-  source: /app/dist/extensions/litellm/index.js
-  origin: bundled
-  version: 2026.8.2
-  providers: litellm
-
-@openclaw/lmstudio-provider (lmstudio) enabled
-  format: openclaw
-  source: /app/dist/extensions/lmstudio/index.js
-  origin: bundled
-  version: 2026.8.2
-  providers: lmstudio
-
-OpenClaw Memory (memory-core) enabled
-  format: openclaw
-  source: /app/dist/extensions/memory-core/index.js
-  origin: bundled
-  version: 2026.8.2
-
-@openclaw/microsoft-speech (microsoft) enabled
-  format: openclaw
-  source: /app/dist/extensions/microsoft/index.js
-  origin: bundled
-  version: 2026.8.2
-
-@openclaw/microsoft-foundry (microsoft-foundry) enabled
-  format: openclaw
-  source: /app/dist/extensions/microsoft-foundry/index.js
-  origin: bundled
-  version: 2026.8.2
-  providers: microsoft-foundry
-
-@openclaw/minimax-provider (minimax) enabled
-  format: openclaw
-  source: /app/dist/extensions/minimax/index.js
-  origin: bundled
-  version: 2026.8.2
-  providers: minimax, minimax-portal
-
-@openclaw/nvidia-provider (nvidia) enabled
-  format: openclaw
-  source: /app/dist/extensions/nvidia/index.js
-  origin: bundled
-  version: 2026.8.2
-  providers: nvidia
-
-@openclaw/ollama-provider (ollama) enabled
-  format: openclaw
-  source: /app/dist/extensions/ollama/index.js
-  origin: bundled
-  version: 2026.8.2
-  providers: ollama, ollama-cloud
-
-@openclaw/openai-provider (openai) enabled
-  format: openclaw
-  source: /app/dist/extensions/openai/index.js
-  origin: bundled
-  version: 2026.8.2
-  providers: openai
-
-@openclaw/opencode-go-provider (opencode-go) enabled
-  format: openclaw
-  source: /app/dist/extensions/opencode-go/index.js
-  origin: bundled
-  version: 2026.8.2
-  providers: opencode-go
-
-@openclaw/openrouter-provider (openrouter) enabled
-  format: openclaw
-  source: /app/dist/extensions/openrouter/index.js
-  origin: bundled
-  version: 2026.8.2
-  providers: openrouter
-
-@openclaw/runway-provider (runway) enabled
-  format: openclaw
-  source: /app/dist/extensions/runway/index.js
-  origin: bundled
-  version: 2026.8.2
-
-@openclaw/senseaudio-provider (senseaudio) enabled
-  format: openclaw
-  source: /app/dist/extensions/senseaudio/index.js
-  origin: bundled
-  version: 2026.8.2
-
-@openclaw/sglang-provider (sglang) enabled
-  format: openclaw
-  source: /app/dist/extensions/sglang/index.js
-  origin: bundled
-  version: 2026.8.2
-  providers: sglang
-
-@openclaw/together-provider (together) enabled
-  format: openclaw
-  source: /app/dist/extensions/together/index.js
-  origin: bundled
-  version: 2026.8.2
-  providers: together
-
-@openclaw/tts-local-cli (tts-local-cli) enabled
-  format: openclaw
-  source: /app/dist/extensions/tts-local-cli/index.js
-  origin: bundled
-  version: 2026.8.2
-
-@openclaw/vllm-provider (vllm) enabled
-  format: openclaw
-  source: /app/dist/extensions/vllm/index.js
-  origin: bundled
-  version: 2026.8.2
-  providers: vllm
-
-@openclaw/xai-plugin (xai) enabled
-  format: openclaw
-  source: /app/dist/extensions/xai/index.js
-  origin: bundled
-  version: 2026.8.2
-  providers: xai
-
-@openclaw/groq-provider (groq) enabled
-  format: openclaw
-  source: $OPENCLAW_HOME/npm/projects/openclaw-groq-provider-d726e35179/node_modules/@openclaw/groq-provider/dist/index.js
-  origin: global
-  version: 2026.7.1
-  providers: groq
-2026-09-07T12:57:59.339+07:00 [gateway] loading configuration…
-2026-09-07T12:57:59.370+07:00 [gateway] resolving authentication…
-2026-09-07T12:57:59.382+07:00 [gateway] starting...
-Error: Process completed with exit code 1.
+- Keep secrets, API keys, access tokens, and credentials out of the repository.
+- Do not include sensitive credentials in issues, logs, commits, or pull requests.
+- Validate security-sensitive changes in the TEST environment before production deployment.
+- Keep dependencies and container images updated and review security alerts regularly.
+- Main/Production changes should be made deliberately and separately from TEST validation.
