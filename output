@@ -1,70 +1,98 @@
-aihome@AIHome:/opt/aihome-test/source$ cat NhatKy.md
-echo "===== SECURITY.md ====="
-cat SECURITY.md
-AI HOME — NHẬT KÝ TIẾN ĐỘ OPENCLAW
-Ngày khởi tạo: 05/09/2026 (GMT+7)
-
-==================================================
-1. GROQ-ONLY AIHOME TEST ARCHITECTURE — DECISION
-==================================================
-1. User decided to remove Gemini from AIHome because the exact Google Cloud project quota for `gemini-3.6-flash` is only 20 requests/day in the Free tier and is not suitable for the intended assistant workload.
-2. AIHome TEST provider policy is now Groq-only, with primary model `groq/llama-3.1-8b-instant` and `fallbacks: []`.
-3. Gemini/Google was removed from `config/openclaw/openclaw.json5`; only the official `groq` plugin remains enabled/allowed.
-4. Gemini credential injection was removed from `compose/openclaw.yml`.
-5. The TEST workflow `AIHome OpenClaw TEST Box` was changed to validate Groq-only configuration, remove `/opt/aihome-test/openclaw/secrets/gemini.env`, validate the Groq catalog, run Groq independent inference, and verify active routing is Groq-only.
-6. The workflow continues to run only on branch `Test`; Main/Production is unchanged.
-7. DuckDuckGo Search, Weather API, Home Assistant and AIHome Memory remain separate tool layers around the Groq LLM. They are not all enabled yet; each must be audited and tested before activation.
-8. Current target architecture:
-   OpenClaw/KIRA -> Groq LLM
-   OpenClaw tools -> DuckDuckGo Search / Weather API / Home Assistant / AIHome Memory.
-9. The next execution point is GitHub Actions `AIHome OpenClaw TEST Box` triggered by the Groq-only changes. The critical first gate is `groq/llama-3.1-8b-instant` inference PASS.
-10. No Gemini provider, Gemini API credential, or Gemini inference test remains part of the TEST workflow.
-
-==================================================
-2. OPENCLAW 2026.8.2 SESSION MIGRATION — PASS
-==================================================
-1. OpenClaw TEST was upgraded from `2026.7.1-2` to exact pinned image `2026.8.2-slim`.
-2. GitHub Actions run #72 failed because OpenClaw 2026.8.2 detected the legacy session store `/data/state/agents/main/sessions/sessions.json` and required migration before Gateway startup.
-3. The existing workflow `AIHome OpenClaw TEST Box` was modified to migrate the TEST state using `openclaw doctor --fix --non-interactive --yes` against the same `/data/state` and `/data/config` mounts.
-4. The migration step creates a backup of `sessions.json` before modification.
-5. The first migration implementation used `docker run --rm -it`, which was incompatible with the non-interactive GitHub Actions runner and caused run #73 to fail; the TTY flags were removed without changing the migration target or command.
-6. GitHub Actions run #74 passed after the TTY fix. Therefore the legacy OpenClaw session-store migration on TEST is now confirmed PASS.
-7. GitHub Actions run #75 also passed. This confirms the post-migration TEST state and the complete Groq/Gateway/Memory validation gates remained green after the session migration checkpoint.
-8. Branch remains `Test`; no new branch or workflow was created. Main/Production remains unchanged.
-
-==================================================
-3. OPENCLAW TEST PASS CHECKPOINTS — TAG PLAN
-==================================================
-1. Run #74 is a confirmed PASS checkpoint at commit `20bc040a22932aaf6ee79a1e0b42301dad5dcc5d`.
-2. Run #75 is a confirmed PASS checkpoint at commit `0afe2e234b707cadb49f48dea314627fb4464fe8`.
-3. Planned Git tags for easy rollback/reference: `PASS-74` -> #74 commit; `PASS-75` -> #75 commit.
-4. Tags are references, not branches; no new branch or workflow is required.
-5. The current GitHub connector does not expose a tag/reference creation operation, so tag creation must be performed from the TEST Box with Git and pushed to origin. No tag has been claimed as created until the Box command output confirms it.
-6. Main/Production remains unchanged.===== SECURITY.md =====
-# Security Policy
-
-## Reporting a Security Vulnerability
-
-Please do not disclose security vulnerabilities in public issues, pull requests, or other public channels.
-
-For security-sensitive issues, contact the repository maintainer privately with enough information to reproduce and assess the vulnerability.
-
-When reporting a vulnerability, please include:
-
-- A clear description of the vulnerability.
-- The affected component, file, or configuration.
-- Steps to reproduce the issue.
-- The potential security impact.
-- Any suggested mitigation, if available.
-
-## Scope
-
-This policy covers security issues affecting the AIHome repository and its supported TEST/production deployment components.
-
-## Security Practices
-
-- Keep secrets, API keys, access tokens, and credentials out of the repository.
-- Do not include sensitive credentials in issues, logs, commits, or pull requests.
-- Validate security-sensitive changes in the TEST environment before production deployment.
-- Keep dependencies and container images updated and review security alerts regularly.
-- Main/Production changes should be made deliberately and separately from TEST validation.
+aihome@AIHome:/opt/aihome-test/source$ cd /opt/aihome-test/source
+git --no-pager diff -- .github/workflows/openclaw-test-box-deploy.yml
+diff --git a/.github/workflows/openclaw-test-box-deploy.yml b/.github/workflows/openclaw-test-box-deploy.yml
+index 6411a80..655763f 100644
+--- a/.github/workflows/openclaw-test-box-deploy.yml
++++ b/.github/workflows/openclaw-test-box-deploy.yml
+@@ -72,22 +72,6 @@ jobs:
+           find "${SOURCE_DIR}" -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf -- {} +
+           tar --exclude=.git -cf - . | tar -xf - -C "${SOURCE_DIR}"
+ 
+-      - name: Remove Gemini TEST credential
+-        shell: bash
+-        run: |
+-          set -euo pipefail
+-          GEMINI_FILE=/opt/aihome-test/openclaw/secrets/gemini.env
+-          if [ -e "${GEMINI_FILE}" ]; then
+-            docker run --rm \
+-              --user 0:0 \
+-              --entrypoint sh \
+-              -v /opt/aihome-test/openclaw/secrets:/secrets \
+-              ghcr.io/openclaw/openclaw:2026.7.1-2-slim@sha256:8789721d2e9b24b780a1504b56deb4c6bd5c7dbf96a1dd117e7c45c2ed72c8ac \
+-              -lc 'rm -f /secrets/gemini.env'
+-          fi
+-          test ! -e "${GEMINI_FILE}"
+-          echo 'GEMINI_SECRET=REMOVED'
+-
+       - name: Prepare Groq TEST credential
+         shell: bash
+         run: |
+@@ -121,6 +105,55 @@ jobs:
+           echo '__AIHOME_GATEWAY_TOKEN__' >> "$GITHUB_ENV"
+           echo 'GATEWAY_CREDENTIAL=GENERATED'
+ 
++      - name: Migrate legacy OpenClaw TEST session store
++        shell: bash
++        run: |
++          set -euo pipefail
++          STATE_DIR=/opt/aihome-test/openclaw/state
++          SESSION_FILE="${STATE_DIR}/agents/main/sessions/sessions.json"
++          RUNTIME_CONFIG=/opt/aihome-test/openclaw/runtime-config
++          SOURCE_CONFIG=/opt/aihome-test/source/config/openclaw/openclaw.json5
++          IMAGE='ghcr.io/openclaw/openclaw:2026.8.2-slim@sha256:5d25165995041caa6a7175bec82b25ad98c44eb269bb42435da8e27ec06e6be4'
++
++          docker compose -f /opt/aihome-test/source/compose/openclaw.yml down || true
++
++          if [ -f "${SESSION_FILE}" ]; then
++            BACKUP="${SESSION_FILE}.pre-2026.8.2-migration"
++            cp -p "${SESSION_FILE}" "${BACKUP}"
++            echo "LEGACY_SESSION_BACKUP=${BACKUP}"
++          fi
++
++          docker run --rm \
++            -e OPENCLAW_HOME=/data/state \
++            -e OPENCLAW_STATE_DIR=/data/state \
++            -e OPENCLAW_CONFIG_PATH=/data/config/openclaw.json5 \
++            -e OPENCLAW_GATEWAY_TOKEN="${OPENCLAW_GATEWAY_TOKEN}" \
++            -e GROQ_API_KEY="${GROQ_API_KEY:-}" \
++            -v /opt/aihome-test/openclaw/state:/data/state \
++            -v /opt/aihome-test/openclaw/workspace:/home/node/.openclaw/workspace \
++            -v "${RUNTIME_CONFIG}:/data/config" \
++            -v "${SOURCE_CONFIG}:/data/source-config/openclaw.json5:ro" \
++            "${IMAGE}" \
++            sh -lc 'set -eu; cp /data/source-config/openclaw.json5 /data/config/openclaw.json5; node openclaw.mjs doctor --fix --non-interactive --yes'
++
++          echo 'OPENCLAW_SESSION_MIGRATION=PASS'
++
++      - name: Remove Gemini TEST credential
++        shell: bash
++        run: |
++          set -euo pipefail
++          GEMINI_FILE=/opt/aihome-test/openclaw/secrets/gemini.env
++          if [ -e "${GEMINI_FILE}" ]; then
++            docker run --rm \
++              --user 0:0 \
++              --entrypoint sh \
++              -v /opt/aihome-test/openclaw/secrets:/secrets \
++              ghcr.io/openclaw/openclaw:2026.7.1-2-slim@sha256:8789721d2e9b24b780a1504b56deb4c6bd5c7dbf96a1dd117e7c45c2ed72c8ac \
++              -lc 'rm -f /secrets/gemini.env'
++          fi
++          test ! -e "${GEMINI_FILE}"
++          echo 'GEMINI_SECRET=REMOVED'
++
+       - name: Validate Compose configuration
+         working-directory: /opt/aihome-test/source
+         shell: bash
+@@ -263,7 +296,11 @@ jobs:
+         run: |
+           set -euo pipefail
+           test -n "${OPENCLAW_GATEWAY_TOKEN:-}"
+-          docker exec -e OPENCLAW_GATEWAY_TOKEN="${OPENCLAW_GATEWAY_TOKEN}" aihome-openclaw-test node openclaw.mjs infer model run --gateway --model "${MODEL}" --prompt 'AIHome TEST Groq provider probe. Reply exactly: GROQ PASS'
++          result="$(docker exec -e OPENCLAW_GATEWAY_TOKEN="${OPENCLAW_GATEWAY_TOKEN}" aihome-openclaw-test node openclaw.mjs infer model run --gateway --prompt 'AIHome TEST Groq provider probe. Reply exactly: GROQ PASS' --json)"
++          printf '%s\n' "${result}"
++          grep -Fq 'groq' <<<"${result}"
++          grep -Fq 'gpt-oss-20b' <<<"${result}"
++          grep -Fq 'GROQ PASS' <<<"${result}"
+           echo 'GROQ_INFERENCE=PASS'
+ 
+       - name: Verify active model routing
