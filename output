@@ -1,100 +1,50 @@
-aihome@AIHome:~/AIHome$ WEB_SESSION_SECRET='test-session-secret-32-characters-minimum' \
-WEB_AUTH_USERNAME='aihome-admin' \
-WEB_AUTH_PASSWORD_HASH='scrypt$16384$8$1$YWJj$YWJj' \
-WEB_SESSION_TTL_MS='60000' \
-npm run test:auth
+aihome@AIHome:~/AIHome$ cd ~/AIHome
+echo "=== GIT ==="
+git branch --show-current
+git status --short
+git log -1 --oneline
 
-> aihome-web-terminal@0.2.0 test:auth
-> node --test test/auth.test.js
+echo
+echo "=== SERVER PROCESS ==="
+ps aux | grep '[n]ode server.js' || true
 
-✔ A01 LAN without session is rejected (402.484118ms)
-✔ A02 correct LAN login creates an application session (133.934541ms)
-✔ A03 wrong password is rejected (132.360118ms)
-✔ A04 wrong username is rejected (17.291328ms)
-✔ A05 execute without a session is rejected (71.536166ms)
-✔ A06 valid session reaches executor authorization layer (57.223557ms)
-✖ A07 logout clears the session and blocks execute (99.419013ms)
-  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
-  
-  501 !== 401
-  
-      at TestContext.<anonymous> (/home/aihome/AIHome/test/auth.test.js:155:10)
-      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-      at async Test.run (node:internal/test_runner/test:797:9)
-      at async Test.processPendingSubtests (node:internal/test_runner/test:526:7) {
-    generatedMessage: true,
-    code: 'ERR_ASSERTION',
-    actual: 501,
-    expected: 401,
-    operator: 'strictEqual'
-  }
+echo
+echo "=== LISTEN 8088 ==="
+ss -ltnp | grep ':8088' || true
 
-✔ A08 expired session is rejected deterministically (2990.528737ms)
-✔ A09 malformed percent-encoded session cookie is rejected with 401 (39.843816ms)
-✔ A10 tampered session cookie is rejected (34.54033ms)
-✔ A11 expired signed session is rejected by exp validation (22.276246ms)
-✔ A12 WebSocket without session is rejected (40.264491ms)
-✔ A13 WebSocket with valid session receives ready and pong (46.511073ms)
-✔ A14 login rate limit is isolated and returns 429 after 10 attempts (2389.174658ms)
-✖ A15 execute rate limit returns 429 after 60 requests (394.216992ms)
-  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
-  
-  401 !== 501
-  
-      at TestContext.<anonymous> (/home/aihome/AIHome/test/auth.test.js:250:10)
-      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-      at async Test.run (node:internal/test_runner/test:797:9)
-      at async Test.processPendingSubtests (node:internal/test_runner/test:526:7) {
-    generatedMessage: true,
-    code: 'ERR_ASSERTION',
-    actual: 401,
-    expected: 501,
-    operator: 'strictEqual'
-  }
+echo
+echo "=== HTTP ==="
+curl -i --max-time 5 http://127.0.0.1:8088/ | head -30
 
-✔ CF-A01 Cloudflare Access mode rejects requests without Access JWT (962.080559ms)
-✔ CF-A02 Cloudflare Access mode reports verifier configuration is required (12.179856ms)
-ℹ tests 17
-ℹ suites 0
-ℹ pass 15
-ℹ fail 2
-ℹ cancelled 0
-ℹ skipped 0
-ℹ todo 0
-ℹ duration_ms 9233.620313
+echo
+echo "=== UI FILES ==="
+ls -lah public/
+sha256sum public/index.html public/app.js public/style.css server.js
+=== GIT ===
+Web
+?? node_modules/
+?? package-lock.json
+d0e2189 (HEAD -> Web, origin/Web) Fix A07 logout and A15 execute rate-limit tests
 
-✖ failing tests:
+=== SERVER PROCESS ===
 
-test at test/auth.test.js:150:1
-✖ A07 logout clears the session and blocks execute (99.419013ms)
-  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
-  
-  501 !== 401
-  
-      at TestContext.<anonymous> (/home/aihome/AIHome/test/auth.test.js:155:10)
-      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-      at async Test.run (node:internal/test_runner/test:797:9)
-      at async Test.processPendingSubtests (node:internal/test_runner/test:526:7) {
-    generatedMessage: true,
-    code: 'ERR_ASSERTION',
-    actual: 501,
-    expected: 401,
-    operator: 'strictEqual'
-  }
+=== LISTEN 8088 ===
+LISTEN 0      5       192.168.1.80:8088      0.0.0.0:*    users:(("python3",pid=6426,fd=3))
 
-test at test/auth.test.js:247:1
-✖ A15 execute rate limit returns 429 after 60 requests (394.216992ms)
-  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
-  
-  401 !== 501
-  
-      at TestContext.<anonymous> (/home/aihome/AIHome/test/auth.test.js:250:10)
-      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-      at async Test.run (node:internal/test_runner/test:797:9)
-      at async Test.processPendingSubtests (node:internal/test_runner/test:526:7) {
-    generatedMessage: true,
-    code: 'ERR_ASSERTION',
-    actual: 401,
-    expected: 501,
-    operator: 'strictEqual'
-  }
+=== HTTP ===
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+curl: (7) Failed to connect to 127.0.0.1 port 8088 after 0 ms: Could not connect to server
+
+=== UI FILES ===
+total 20K
+drwxrwxr-x 2 aihome aihome 4.0K Sep  7 21:47 .
+drwxrwxr-x 7 aihome aihome 4.0K Sep  7 21:48 ..
+-rw-rw-r-- 1 aihome aihome 3.0K Sep  7 21:47 app.js
+-rw-rw-r-- 1 aihome aihome 1.8K Sep  7 21:47 index.html
+-rw-rw-r-- 1 aihome aihome 1.1K Sep  7 21:47 style.css
+d1e552c1079a968646dccfe2e2ec17dceda1e2a87655710565ba3318e9beabe3  public/index.html
+2bd9a8e96315ebf734b9b82769d8b7fd55af66fac0b285a7bc503c585e02b532  public/app.js
+be7f8b9d8a7eead561959e773b19132b8ff1bdefa5eec98c1698db108d17e254  public/style.css
+b952347d37947363bcc221d790491db2efca3c1341ac08429d755d927739e258  server.js
