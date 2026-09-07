@@ -1,98 +1,100 @@
-aihome@AIHome:/opt/aihome-test/source$ cd /opt/aihome-test/source
-git --no-pager diff -- .github/workflows/openclaw-test-box-deploy.yml
-diff --git a/.github/workflows/openclaw-test-box-deploy.yml b/.github/workflows/openclaw-test-box-deploy.yml
-index 6411a80..655763f 100644
---- a/.github/workflows/openclaw-test-box-deploy.yml
-+++ b/.github/workflows/openclaw-test-box-deploy.yml
-@@ -72,22 +72,6 @@ jobs:
-           find "${SOURCE_DIR}" -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf -- {} +
-           tar --exclude=.git -cf - . | tar -xf - -C "${SOURCE_DIR}"
- 
--      - name: Remove Gemini TEST credential
--        shell: bash
--        run: |
--          set -euo pipefail
--          GEMINI_FILE=/opt/aihome-test/openclaw/secrets/gemini.env
--          if [ -e "${GEMINI_FILE}" ]; then
--            docker run --rm \
--              --user 0:0 \
--              --entrypoint sh \
--              -v /opt/aihome-test/openclaw/secrets:/secrets \
--              ghcr.io/openclaw/openclaw:2026.7.1-2-slim@sha256:8789721d2e9b24b780a1504b56deb4c6bd5c7dbf96a1dd117e7c45c2ed72c8ac \
--              -lc 'rm -f /secrets/gemini.env'
--          fi
--          test ! -e "${GEMINI_FILE}"
--          echo 'GEMINI_SECRET=REMOVED'
--
-       - name: Prepare Groq TEST credential
-         shell: bash
-         run: |
-@@ -121,6 +105,55 @@ jobs:
-           echo '__AIHOME_GATEWAY_TOKEN__' >> "$GITHUB_ENV"
-           echo 'GATEWAY_CREDENTIAL=GENERATED'
- 
-+      - name: Migrate legacy OpenClaw TEST session store
-+        shell: bash
-+        run: |
-+          set -euo pipefail
-+          STATE_DIR=/opt/aihome-test/openclaw/state
-+          SESSION_FILE="${STATE_DIR}/agents/main/sessions/sessions.json"
-+          RUNTIME_CONFIG=/opt/aihome-test/openclaw/runtime-config
-+          SOURCE_CONFIG=/opt/aihome-test/source/config/openclaw/openclaw.json5
-+          IMAGE='ghcr.io/openclaw/openclaw:2026.8.2-slim@sha256:5d25165995041caa6a7175bec82b25ad98c44eb269bb42435da8e27ec06e6be4'
-+
-+          docker compose -f /opt/aihome-test/source/compose/openclaw.yml down || true
-+
-+          if [ -f "${SESSION_FILE}" ]; then
-+            BACKUP="${SESSION_FILE}.pre-2026.8.2-migration"
-+            cp -p "${SESSION_FILE}" "${BACKUP}"
-+            echo "LEGACY_SESSION_BACKUP=${BACKUP}"
-+          fi
-+
-+          docker run --rm \
-+            -e OPENCLAW_HOME=/data/state \
-+            -e OPENCLAW_STATE_DIR=/data/state \
-+            -e OPENCLAW_CONFIG_PATH=/data/config/openclaw.json5 \
-+            -e OPENCLAW_GATEWAY_TOKEN="${OPENCLAW_GATEWAY_TOKEN}" \
-+            -e GROQ_API_KEY="${GROQ_API_KEY:-}" \
-+            -v /opt/aihome-test/openclaw/state:/data/state \
-+            -v /opt/aihome-test/openclaw/workspace:/home/node/.openclaw/workspace \
-+            -v "${RUNTIME_CONFIG}:/data/config" \
-+            -v "${SOURCE_CONFIG}:/data/source-config/openclaw.json5:ro" \
-+            "${IMAGE}" \
-+            sh -lc 'set -eu; cp /data/source-config/openclaw.json5 /data/config/openclaw.json5; node openclaw.mjs doctor --fix --non-interactive --yes'
-+
-+          echo 'OPENCLAW_SESSION_MIGRATION=PASS'
-+
-+      - name: Remove Gemini TEST credential
-+        shell: bash
-+        run: |
-+          set -euo pipefail
-+          GEMINI_FILE=/opt/aihome-test/openclaw/secrets/gemini.env
-+          if [ -e "${GEMINI_FILE}" ]; then
-+            docker run --rm \
-+              --user 0:0 \
-+              --entrypoint sh \
-+              -v /opt/aihome-test/openclaw/secrets:/secrets \
-+              ghcr.io/openclaw/openclaw:2026.7.1-2-slim@sha256:8789721d2e9b24b780a1504b56deb4c6bd5c7dbf96a1dd117e7c45c2ed72c8ac \
-+              -lc 'rm -f /secrets/gemini.env'
-+          fi
-+          test ! -e "${GEMINI_FILE}"
-+          echo 'GEMINI_SECRET=REMOVED'
-+
-       - name: Validate Compose configuration
-         working-directory: /opt/aihome-test/source
-         shell: bash
-@@ -263,7 +296,11 @@ jobs:
-         run: |
-           set -euo pipefail
-           test -n "${OPENCLAW_GATEWAY_TOKEN:-}"
--          docker exec -e OPENCLAW_GATEWAY_TOKEN="${OPENCLAW_GATEWAY_TOKEN}" aihome-openclaw-test node openclaw.mjs infer model run --gateway --model "${MODEL}" --prompt 'AIHome TEST Groq provider probe. Reply exactly: GROQ PASS'
-+          result="$(docker exec -e OPENCLAW_GATEWAY_TOKEN="${OPENCLAW_GATEWAY_TOKEN}" aihome-openclaw-test node openclaw.mjs infer model run --gateway --prompt 'AIHome TEST Groq provider probe. Reply exactly: GROQ PASS' --json)"
-+          printf '%s\n' "${result}"
-+          grep -Fq 'groq' <<<"${result}"
-+          grep -Fq 'gpt-oss-20b' <<<"${result}"
-+          grep -Fq 'GROQ PASS' <<<"${result}"
-           echo 'GROQ_INFERENCE=PASS'
- 
-       - name: Verify active model routing
+aihome@AIHome:~/AIHome$ WEB_SESSION_SECRET='test-session-secret-32-characters-minimum' \
+WEB_AUTH_USERNAME='aihome-admin' \
+WEB_AUTH_PASSWORD_HASH='scrypt$16384$8$1$YWJj$YWJj' \
+WEB_SESSION_TTL_MS='60000' \
+npm run test:auth
+
+> aihome-web-terminal@0.2.0 test:auth
+> node --test test/auth.test.js
+
+✔ A01 LAN without session is rejected (402.484118ms)
+✔ A02 correct LAN login creates an application session (133.934541ms)
+✔ A03 wrong password is rejected (132.360118ms)
+✔ A04 wrong username is rejected (17.291328ms)
+✔ A05 execute without a session is rejected (71.536166ms)
+✔ A06 valid session reaches executor authorization layer (57.223557ms)
+✖ A07 logout clears the session and blocks execute (99.419013ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  501 !== 401
+  
+      at TestContext.<anonymous> (/home/aihome/AIHome/test/auth.test.js:155:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async Test.run (node:internal/test_runner/test:797:9)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:526:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 501,
+    expected: 401,
+    operator: 'strictEqual'
+  }
+
+✔ A08 expired session is rejected deterministically (2990.528737ms)
+✔ A09 malformed percent-encoded session cookie is rejected with 401 (39.843816ms)
+✔ A10 tampered session cookie is rejected (34.54033ms)
+✔ A11 expired signed session is rejected by exp validation (22.276246ms)
+✔ A12 WebSocket without session is rejected (40.264491ms)
+✔ A13 WebSocket with valid session receives ready and pong (46.511073ms)
+✔ A14 login rate limit is isolated and returns 429 after 10 attempts (2389.174658ms)
+✖ A15 execute rate limit returns 429 after 60 requests (394.216992ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  401 !== 501
+  
+      at TestContext.<anonymous> (/home/aihome/AIHome/test/auth.test.js:250:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async Test.run (node:internal/test_runner/test:797:9)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:526:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 401,
+    expected: 501,
+    operator: 'strictEqual'
+  }
+
+✔ CF-A01 Cloudflare Access mode rejects requests without Access JWT (962.080559ms)
+✔ CF-A02 Cloudflare Access mode reports verifier configuration is required (12.179856ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 15
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9233.620313
+
+✖ failing tests:
+
+test at test/auth.test.js:150:1
+✖ A07 logout clears the session and blocks execute (99.419013ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  501 !== 401
+  
+      at TestContext.<anonymous> (/home/aihome/AIHome/test/auth.test.js:155:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async Test.run (node:internal/test_runner/test:797:9)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:526:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 501,
+    expected: 401,
+    operator: 'strictEqual'
+  }
+
+test at test/auth.test.js:247:1
+✖ A15 execute rate limit returns 429 after 60 requests (394.216992ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  401 !== 501
+  
+      at TestContext.<anonymous> (/home/aihome/AIHome/test/auth.test.js:250:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async Test.run (node:internal/test_runner/test:797:9)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:526:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 401,
+    expected: 501,
+    operator: 'strictEqual'
+  }
