@@ -1,62 +1,119 @@
-aihome@AIHome:/opt/aihome$ docker inspect aihome-openclaw-test \
-  --format '{{range .Config.Env}}{{println .}}{{end}}' \
-  | grep '^OPENCLAW_GATEWAY_TOKEN='
-OPENCLAW_GATEWAY_TOKEN=f8a****11
-aihome@AIHome:/opt/aihome$ cd /opt/aihome
-docker compose -f compose/openclaw.yml config \
-  | grep -n 'OPENCLAW_GATEWAY_TOKEN'
-open /opt/aihome/compose/openclaw.yml: no such file or directory
-aihome@AIHome:/opt/aihome$ grep -RIl 'OPENCLAW_GATEWAY_TOKEN' \
-  /opt/aihome /opt/aihome-test 2>/dev/null
-/opt/aihome/output
-/opt/aihome-test/source/.github/workflows/openclaw-test-box-deploy.yml
-/opt/aihome-test/source/.github/workflows/TOKEN.yml
-/opt/aihome-test/source/config/openclaw/openclaw.json5
-/opt/aihome-test/source/compose/openclaw.yml
-/opt/aihome-test/openclaw/state/cache/control-ui-assets/35c4d9645ecd21b62d4b609a9d9cc9aa156541ae03c3462240aab748ba379383/assets/control-ui-core-BtrRDFft.js
-/opt/aihome-test/openclaw/state/cache/control-ui-assets/35c4d9645ecd21b62d4b609a9d9cc9aa156541ae03c3462240aab748ba379383/assets/connection-page-Bta2YYVX.js
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-28-45-867Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-25-56-975Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-26-52-992Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-29-14-079Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-27-35-750Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-28-04-040Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-25-00-822Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-28-32-003Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-30-10-228Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-08T05-42-28-784Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-30-38-662Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.last-good
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.bak.1
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-24-32-682Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-30-24-660Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-29-56-164Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.bak.3
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-26-10-878Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-25-42-871Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-29-28-119Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-27-49-995Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-27-20-908Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-31-06-751Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.bak.4
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-24-46-851Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-28-18-024Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-29-42-143Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.bak.2
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-27-07-050Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.bak
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-26-25-002Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-25-29-012Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-25-14-960Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-26-38-991Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-08T03-21-55-750Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-31-20-819Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-30-52-829Z
-/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-29-00-015Z
-aihome@AIHome:/opt/aihome$ if [ -n "${OPENCLAW_GATEWAY_TOKEN:-}" ]; then
-  echo "RUNNER_TOKEN=SET"
-else
-  echo "RUNNER_TOKEN=NOT_SET"
-fi
-RUNNER_TOKEN=NOT_SET
+aihome@AIHome:~$ cd /home/aihome/AIHome && grep -n -A50 -B15 "test" server.js
+141-function requireSession(req, res) {
+142-  const session = readSession(req);
+143-  if (!session) { res.status(401).json({ authenticated: false, error: 'session_required' }); return null; }
+144-  return session;
+145-}
+146-
+147-function audit(req, session, target, command, status) {
+148-  console.log(`[audit] ${JSON.stringify({ timestamp: new Date().toISOString(), user: session?.sub || 'anonymous', mode: session?.mode || 'unknown', source: sourceIp(req), target, action: 'execute', command, status })}`);
+149-}
+150-
+151-const TEST_ECHO_RE = /^echo(?:\s+(.+))?$/;
+152-
+153-function executeTestEcho(command) {
+154-  const match = TEST_ECHO_RE.exec(command);
+155-  if (!match) {
+156:    const error = new Error('test_command_not_allowed');
+157-    error.statusCode = 403;
+158-    throw error;
+159-  }
+160-
+161-  const args = match[1] ? [match[1]] : [];
+162-
+163-  return new Promise((resolve, reject) => {
+164-    const child = spawn('/bin/echo', args, {
+165-      shell: false,
+166-      stdio: ['ignore', 'pipe', 'pipe'],
+167-      timeout: 5000
+168-    });
+169-
+170-    let stdout = '';
+171-    let stderr = '';
+172-
+173-    child.stdout.on('data', chunk => { stdout += chunk.toString(); });
+174-    child.stderr.on('data', chunk => { stderr += chunk.toString(); });
+175-    child.on('error', reject);
+176-    child.on('close', code => resolve({ code: typeof code === 'number' ? code : 1, stdout, stderr }));
+177-  });
+178-}
+179-
+180-app.get('/health', (req, res) => res.json({ ok: true, version: VERSION }));
+181-app.get('/api/version', (req, res) => res.json({ version: VERSION }));
+182-
+183-app.get('/api/auth', async (req, res) => {
+184-  try {
+185-    const current = readSession(req);
+186-    if (current) return res.json({ authenticated: true, mode: current.mode, user: current.sub, expiresAt: current.exp, version: VERSION });
+187-    const bootstrapped = await bootstrapSession(req, res);
+188-    if (bootstrapped) return res.json({ authenticated: true, mode: bootstrapped.mode, user: bootstrapped.sub, expiresAt: bootstrapped.exp, version: VERSION });
+189-    res.status(401).json({ authenticated: false, mode: 'lan', error: 'login_required', version: VERSION });
+190-  } catch (e) { res.status(401).json({ authenticated: false, error: e.message, version: VERSION }); }
+191-});
+192-
+193-app.post('/api/login', loginRate, async (req, res) => {
+194-  const address = sourceIp(req);
+195-  if (!isLanIPv4(address)) return res.status(403).json({ authenticated: false, error: 'lan_login_only' });
+196-  const username = typeof req.body.username === 'string' ? req.body.username : '';
+197-  const password = typeof req.body.password === 'string' ? req.body.password : '';
+198-  if (!username || !password) return res.status(400).json({ authenticated: false, error: 'credentials_required' });
+199-  const expectedUser = Buffer.from(AUTH_USERNAME);
+200-  const suppliedUser = Buffer.from(username);
+201-  const usernameOk = suppliedUser.length === expectedUser.length && crypto.timingSafeEqual(suppliedUser, expectedUser);
+202-  const passwordOk = usernameOk && await verifyPassword(password);
+203-  if (!passwordOk) return res.status(401).json({ authenticated: false, error: 'invalid_credentials' });
+204-  const token = setSession(res, AUTH_USERNAME, 'lan');
+205-  console.log(`[audit] ${JSON.stringify({ timestamp: new Date().toISOString(), user: AUTH_USERNAME, mode: 'lan', source: address, action: 'login', status: 'success' })}`);
+206-  res.json({ authenticated: true, mode: 'lan', user: AUTH_USERNAME, expiresAt: JSON.parse(Buffer.from(token.split('.')[0], 'base64url').toString('utf8')).exp, version: VERSION });
+207-});
+208-
+209-app.post('/api/logout', (req, res) => {
+210-  const session = readSession(req);
+211-  if (session) console.log(`[audit] ${JSON.stringify({ timestamp: new Date().toISOString(), user: session.sub, mode: session.mode, source: sourceIp(req), action: 'logout', status: 'success' })}`);
+212-  clearSession(res); res.json({ authenticated: false });
+213-});
+214-
+215-app.post('/api/execute', terminalRate, async (req, res) => {
+216-  const session = requireSession(req, res); if (!session) return;
+217-  const command = typeof req.body.command === 'string' ? req.body.command.trim() : '';
+218:  const target = req.body.target === 'main' ? 'main' : req.body.target === 'test' ? 'test' : '';
+219-  if (!command) return res.status(400).json({ error: 'command_required' });
+220-  if (!target) return res.status(400).json({ error: 'invalid_target' });
+221-
+222:  if (target === 'test') {
+223-    try {
+224-      const result = await executeTestEcho(command);
+225-      audit(req, session, target, command, `exit_${result.code}`);
+226-      return res.status(result.code === 0 ? 200 : 500).json({
+227-        ok: result.code === 0,
+228-        target,
+229-        command,
+230-        exitCode: result.code,
+231-        stdout: result.stdout,
+232-        stderr: result.stderr
+233-      });
+234-    } catch (e) {
+235-      audit(req, session, target, command, 'rejected');
+236:      return res.status(e.statusCode || 500).json({ error: e.message || 'test_executor_error', target, command });
+237-    }
+238-  }
+239-
+240-  audit(req, session, target, command, 'not_implemented');
+241-  return res.status(501).json({ error: 'executor_not_ready', target, command });
+242-});
+243-
+244-const server = http.createServer(app);
+245-const wss = new WebSocketServer({ noServer: true });
+246-server.on('upgrade', (req, socket, head) => {
+247-  if (req.url !== '/ws') return socket.destroy();
+248-  const session = readSession(req);
+249-  if (!session) { socket.write('HTTP/1.1 401 Unauthorized\r\nConnection: close\r\n\r\n'); return socket.destroy(); }
+250-  wss.handleUpgrade(req, socket, head, ws => wss.emit('connection', ws, req, session));
+251-});
+252-wss.on('connection', (ws, req, session) => {
+253-  ws.send(JSON.stringify({ type: 'ready', version: VERSION, user: session.sub, mode: session.mode, expiresAt: session.exp }));
+254-  ws.on('message', raw => { let msg; try { msg = JSON.parse(raw.toString()); } catch { return; } if (msg.type === 'ping') ws.send(JSON.stringify({ type: 'pong' })); });
+255-});
+256-
+257-server.listen(PORT, HOST, () => console.log(`AIHome Web Terminal v${VERSION} listening on ${HOST}:${PORT}`));
+aihome@AIHome:~/AIHome$ 
