@@ -1,183 +1,62 @@
-Groq TOKEN probe	UNKNOWN STEP	﻿2026-09-08T09:58:05.6633791Z Current runner version: '2.337.0'
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:05.6647909Z Runner name: 'AIHome'
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:05.6649597Z Runner group name: 'Default'
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:05.6652124Z Machine name: 'AIHome'
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:05.6658344Z ##[group]GITHUB_TOKEN Permissions
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:05.6663684Z Contents: read
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:05.6664923Z Metadata: read
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:05.6666055Z ##[endgroup]
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:05.6671158Z Secret source: Actions
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:05.6673344Z Prepare workflow directory
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:05.8348902Z Prepare all required actions
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:05.8468368Z Getting action download info
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:06.8790817Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.3635069Z Complete job name: Groq TOKEN probe
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5590317Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5616967Z ##[group]Run actions/checkout@v4
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5619823Z with:
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5621489Z   ref: Test
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5623377Z   repository: yeuvn/AIHome
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5643944Z   token: ***
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5646382Z   ssh-strict: true
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5648162Z   ssh-user: git
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5650012Z   persist-credentials: true
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5652327Z   clean: true
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5654214Z   sparse-checkout-cone-mode: true
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5656463Z   fetch-depth: 1
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5658309Z   fetch-tags: false
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5660286Z   show-progress: true
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5662557Z   lfs: false
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5664380Z   submodules: false
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5666363Z   set-safe-directory: true
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5668663Z   allow-unsafe-pr-checkout: false
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5672020Z env:
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5673830Z   EXPECTED_BRANCH: Test
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5675930Z   MODEL: groq/openai/gpt-oss-20b
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5679328Z   GROQ_API_KEY: ***
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.5681239Z ##[endgroup]
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.8137082Z Syncing repository: yeuvn/AIHome
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.8143733Z ##[group]Getting Git version info
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.8146992Z Working directory is '/home/aihome/actions-runner/_work/AIHome/AIHome'
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.8151868Z [command]/usr/bin/git version
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.8154112Z git version 2.47.3
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.8161162Z ##[endgroup]
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.8175379Z Copying '/home/aihome/.gitconfig' to '/home/aihome/actions-runner/_work/_temp/023e1670-8858-4144-9052-72614d8a4d64/.gitconfig'
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.8195678Z Temporarily overriding HOME='/home/aihome/actions-runner/_work/_temp/023e1670-8858-4144-9052-72614d8a4d64' before making global git config changes
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.8202493Z Adding repository directory to the temporary git global config as a safe directory
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.8216862Z [command]/usr/bin/git config --global --add safe.directory /home/aihome/actions-runner/_work/AIHome/AIHome
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.8224741Z [command]/usr/bin/git config --local --get remote.origin.url
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.8254803Z https://github.com/yeuvn/AIHome
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.8296062Z ##[group]Removing previously created refs, to avoid conflicts
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.8308181Z [command]/usr/bin/git rev-parse --symbolic-full-name --verify --quiet HEAD
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.8333044Z refs/heads/Test
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.8359004Z [command]/usr/bin/git checkout --detach
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.8420797Z HEAD is now at dd02f9c 2026-09-08 — Lưu tiến độ TOKEN Groq API key
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.8516677Z [command]/usr/bin/git branch --delete --force Test
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.8564151Z Deleted branch Test (was dd02f9c).
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.8644959Z ##[endgroup]
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.8650041Z [command]/usr/bin/git submodule status
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.9097344Z ##[group]Cleaning the repository
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.9100460Z [command]/usr/bin/git clean -ffdx
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.9167489Z [command]/usr/bin/git reset --hard HEAD
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.9248392Z HEAD is now at dd02f9c 2026-09-08 — Lưu tiến độ TOKEN Groq API key
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.9256143Z ##[endgroup]
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.9259211Z ##[group]Disabling automatic garbage collection
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.9262028Z [command]/usr/bin/git config --local gc.auto 0
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.9290293Z ##[endgroup]
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.9294362Z ##[group]Setting up auth
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.9303281Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:09.9366343Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:10.4607903Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:10.4614764Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:10.4620650Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:10.4625233Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:10.4629902Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:10.4634175Z ##[endgroup]
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:10.4635518Z ##[group]Fetching the repository
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:10.4638656Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +refs/heads/Test*:refs/remotes/origin/Test* +refs/tags/Test*:refs/tags/Test*
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.4602892Z From https://github.com/yeuvn/AIHome
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.4618561Z  + dd02f9c...a72e0b0 Test       -> origin/Test  (forced update)
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.4721400Z ##[endgroup]
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.4773482Z ##[group]Determining the checkout info
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.4793185Z [command]/usr/bin/git branch --list --remote origin/Test
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.4850137Z   origin/Test
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.4870923Z ##[endgroup]
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.4872165Z [command]/usr/bin/git sparse-checkout disable
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.4875487Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.4944667Z ##[group]Checking out the ref
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.4968886Z [command]/usr/bin/git checkout --progress --force -B Test refs/remotes/origin/Test
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5041475Z Warning: you are leaving 1 commit behind, not connected to
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5067680Z any of your branches:
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5081970Z 
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5093552Z   dd02f9c 2026-09-08 — Lưu tiến độ TOKEN Groq API key
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5110820Z 
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5132953Z If you want to keep it by creating a new branch, this may be a good time
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5141644Z to do so with:
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5157954Z 
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5164880Z  git branch <new-branch-name> dd02f9c
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5180171Z 
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5189682Z Switched to a new branch 'Test'
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5191768Z branch 'Test' set up to track 'origin/Test'.
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5195102Z ##[endgroup]
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5198533Z [command]/usr/bin/git log -1 --format=%H
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5246234Z a72e0b0530cb86f5aced224d3c903779ec6351a2
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5693903Z ##[group]Run set -euo pipefail
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5694912Z ^[[36;1mset -euo pipefail^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5695879Z ^[[36;1mtest "$(git branch --show-current)" = "${EXPECTED_BRANCH}"^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5696881Z ^[[36;1mecho 'BRANCH=PASS'^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5732862Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5733886Z env:
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5734441Z   EXPECTED_BRANCH: Test
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5735121Z   MODEL: groq/openai/gpt-oss-20b
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5736997Z   GROQ_API_KEY: ***
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5737595Z ##[endgroup]
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.5897865Z BRANCH=PASS
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6002365Z ##[group]Run set -euo pipefail
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6003240Z ^[[36;1mset -euo pipefail^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6003941Z ^[[36;1mtest -n "${GROQ_API_KEY}"^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6004689Z ^[[36;1mecho 'GROQ_API_KEY=PASS'^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6030689Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6031625Z env:
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6032179Z   EXPECTED_BRANCH: Test
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6032847Z   MODEL: groq/openai/gpt-oss-20b
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6034073Z   GROQ_API_KEY: ***
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6034665Z ##[endgroup]
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6100451Z GROQ_API_KEY=PASS
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6181189Z ##[group]Run set -euo pipefail
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6182116Z ^[[36;1mset -euo pipefail^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6182906Z ^[[36;1mtest -n "${OPENCLAW_GATEWAY_TOKEN:-}" || {^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6184008Z ^[[36;1m  echo 'OPENCLAW_GATEWAY_TOKEN is not available on the runner.'^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6185067Z ^[[36;1m  exit 1^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6185622Z ^[[36;1m}^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6186461Z ^[[36;1mset +e^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6187054Z ^[[36;1mresult="$(docker exec \^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6187990Z ^[[36;1m  -e OPENCLAW_GATEWAY_TOKEN="${OPENCLAW_GATEWAY_TOKEN}" \^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6189034Z ^[[36;1m  aihome-openclaw-test \^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6189916Z ^[[36;1m  node openclaw.mjs infer model run --gateway \^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6191029Z ^[[36;1m  --prompt 'Bạn ơi. Reply exactly: Tôi đây' --json 2>&1)"^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6191986Z ^[[36;1mstatus=$?^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6192577Z ^[[36;1mset -e^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6193169Z ^[[36;1mprintf '%s\n' "${result}"^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6193998Z ^[[36;1mif [ "${status}" -ne 0 ]; then^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6195117Z ^[[36;1m  if grep -Eiq 'rate.?limit|quota|tokens.?per.?day|TPD|429' <<<"${result}"; then^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6196284Z ^[[36;1m    echo 'GROQ_QUOTA=EXHAUSTED'^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6197050Z ^[[36;1m  else^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6197674Z ^[[36;1m    echo 'GROQ_PROBE=FAILED'^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6198381Z ^[[36;1m  fi^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6198947Z ^[[36;1m  exit "${status}"^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6199588Z ^[[36;1mfi^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6200169Z ^[[36;1mgrep -Fq 'groq' <<<"${result}"^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6201038Z ^[[36;1mgrep -Fq 'openai/gpt-oss-20b' <<<"${result}"^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6213678Z ^[[36;1mgrep -Fq 'Tôi đây' <<<"${result}"^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6214795Z ^[[36;1mecho 'GROQ_MODEL=PASS'^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6215538Z ^[[36;1mecho 'GROQ_API=PASS'^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6216235Z ^[[36;1mecho 'GROQ_TOKEN=PASS'^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6216955Z ^[[36;1mecho 'GROQ_RESPONSE=PASS'^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6217768Z ^[[36;1mecho 'GROQ_QUOTA=AVAILABLE'^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6218514Z ^[[36;1mecho 'TOKEN=PASS'^[[0m
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6244328Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6245265Z env:
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6245828Z   EXPECTED_BRANCH: Test
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6246531Z   MODEL: groq/openai/gpt-oss-20b
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6247768Z   GROQ_API_KEY: ***
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6248359Z ##[endgroup]
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6314751Z OPENCLAW_GATEWAY_TOKEN is not available on the runner.
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6335630Z ##[error]Process completed with exit code 1.
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6678429Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.6682458Z Post job cleanup.
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.8560711Z [command]/usr/bin/git version
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.8652850Z git version 2.47.3
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.8813493Z Copying '/home/aihome/.gitconfig' to '/home/aihome/actions-runner/_work/_temp/47b24a66-fe31-40f8-ad87-4b102b0b29a4/.gitconfig'
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.8817018Z Temporarily overriding HOME='/home/aihome/actions-runner/_work/_temp/47b24a66-fe31-40f8-ad87-4b102b0b29a4' before making global git config changes
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.8827522Z Adding repository directory to the temporary git global config as a safe directory
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.8854052Z [command]/usr/bin/git config --global --add safe.directory /home/aihome/actions-runner/_work/AIHome/AIHome
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.8934521Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.9015283Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.9418427Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.9464691Z http.https://github.com/.extraheader
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.9488126Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.9559864Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:11.9955923Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:12.0015126Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:12.0677235Z Cleaning up orphan processes
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:12.1428989Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+aihome@AIHome:/opt/aihome$ docker inspect aihome-openclaw-test \
+  --format '{{range .Config.Env}}{{println .}}{{end}}' \
+  | grep '^OPENCLAW_GATEWAY_TOKEN='
+OPENCLAW_GATEWAY_TOKEN=f8a****11
+aihome@AIHome:/opt/aihome$ cd /opt/aihome
+docker compose -f compose/openclaw.yml config \
+  | grep -n 'OPENCLAW_GATEWAY_TOKEN'
+open /opt/aihome/compose/openclaw.yml: no such file or directory
+aihome@AIHome:/opt/aihome$ grep -RIl 'OPENCLAW_GATEWAY_TOKEN' \
+  /opt/aihome /opt/aihome-test 2>/dev/null
+/opt/aihome/output
+/opt/aihome-test/source/.github/workflows/openclaw-test-box-deploy.yml
+/opt/aihome-test/source/.github/workflows/TOKEN.yml
+/opt/aihome-test/source/config/openclaw/openclaw.json5
+/opt/aihome-test/source/compose/openclaw.yml
+/opt/aihome-test/openclaw/state/cache/control-ui-assets/35c4d9645ecd21b62d4b609a9d9cc9aa156541ae03c3462240aab748ba379383/assets/control-ui-core-BtrRDFft.js
+/opt/aihome-test/openclaw/state/cache/control-ui-assets/35c4d9645ecd21b62d4b609a9d9cc9aa156541ae03c3462240aab748ba379383/assets/connection-page-Bta2YYVX.js
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-28-45-867Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-25-56-975Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-26-52-992Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-29-14-079Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-27-35-750Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-28-04-040Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-25-00-822Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-28-32-003Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-30-10-228Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-08T05-42-28-784Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-30-38-662Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.last-good
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.bak.1
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-24-32-682Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-30-24-660Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-29-56-164Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.bak.3
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-26-10-878Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-25-42-871Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-29-28-119Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-27-49-995Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-27-20-908Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-31-06-751Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.bak.4
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-24-46-851Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-28-18-024Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-29-42-143Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.bak.2
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-27-07-050Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.bak
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-26-25-002Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-25-29-012Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-25-14-960Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-26-38-991Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-08T03-21-55-750Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-31-20-819Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-30-52-829Z
+/opt/aihome-test/openclaw/runtime-config/openclaw.json5.clobbered.2026-09-07T23-29-00-015Z
+aihome@AIHome:/opt/aihome$ if [ -n "${OPENCLAW_GATEWAY_TOKEN:-}" ]; then
+  echo "RUNNER_TOKEN=SET"
+else
+  echo "RUNNER_TOKEN=NOT_SET"
+fi
+RUNNER_TOKEN=NOT_SET
