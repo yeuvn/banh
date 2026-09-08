@@ -1,50 +1,29 @@
-aihome@AIHome:~/AIHome$ cd ~/AIHome
-echo "=== GIT ==="
-git branch --show-current
-git status --short
-git log -1 --oneline
-
-echo
-echo "=== SERVER PROCESS ==="
-ps aux | grep '[n]ode server.js' || true
-
-echo
-echo "=== LISTEN 8088 ==="
-ss -ltnp | grep ':8088' || true
-
-echo
-echo "=== HTTP ==="
-curl -i --max-time 5 http://127.0.0.1:8088/ | head -30
-
-echo
-echo "=== UI FILES ==="
-ls -lah public/
-sha256sum public/index.html public/app.js public/style.css server.js
-=== GIT ===
-Web
-?? node_modules/
-?? package-lock.json
-d0e2189 (HEAD -> Web, origin/Web) Fix A07 logout and A15 execute rate-limit tests
-
-=== SERVER PROCESS ===
-
-=== LISTEN 8088 ===
-LISTEN 0      5       192.168.1.80:8088      0.0.0.0:*    users:(("python3",pid=6426,fd=3))
-
-=== HTTP ===
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
-curl: (7) Failed to connect to 127.0.0.1 port 8088 after 0 ms: Could not connect to server
-
-=== UI FILES ===
-total 20K
-drwxrwxr-x 2 aihome aihome 4.0K Sep  7 21:47 .
-drwxrwxr-x 7 aihome aihome 4.0K Sep  7 21:48 ..
--rw-rw-r-- 1 aihome aihome 3.0K Sep  7 21:47 app.js
--rw-rw-r-- 1 aihome aihome 1.8K Sep  7 21:47 index.html
--rw-rw-r-- 1 aihome aihome 1.1K Sep  7 21:47 style.css
-d1e552c1079a968646dccfe2e2ec17dceda1e2a87655710565ba3318e9beabe3  public/index.html
-2bd9a8e96315ebf734b9b82769d8b7fd55af66fac0b285a7bc503c585e02b532  public/app.js
-be7f8b9d8a7eead561959e773b19132b8ff1bdefa5eec98c1698db108d17e254  public/style.css
-b952347d37947363bcc221d790491db2efca3c1341ac08429d755d927739e258  server.js
+Run set -euo pipefail
+  set -euo pipefail
+  test -n "${OPENCLAW_GATEWAY_TOKEN:-}"
+  bash scripts/test-groq-built-in-tools.sh
+  shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+  env:
+    EXPECTED_BRANCH: Test
+    SOURCE_DIR: /opt/aihome-test/source
+    MODEL: groq/openai/gpt-oss-20b
+    GROQ_API_KEY: ***
+    OPENCLAW_GATEWAY_TOKEN: ***
+[plugins:lifecycle] phase="manifest registry" ms=116.92 status=ok includeDisabled=true indexPluginCount=62
+[plugins:lifecycle] phase="manifest registry" ms=0.86 status=ok includeDisabled=true indexPluginCount=62
+[plugins:lifecycle] phase="manifest registry" ms=0.37 status=ok includeDisabled=true indexPluginCount=62
+{
+  "ok": true,
+  "capability": "model.run",
+  "transport": "gateway",
+  "provider": "groq",
+  "model": "openai/gpt-oss-20b",
+  "attempts": [],
+  "outputs": [
+    {
+      "text": "BROWSER PASS",
+      "mediaUrl": null
+    }
+  ]
+}
+Error: Process completed with exit code 1
