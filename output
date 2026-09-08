@@ -1,5 +1,4 @@
-aihome@AIHome:/opt/aihome$ gh run view 34212893255 --log-failed
-Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:05.6633791Z Current runner version: '2.337.0'
+Groq TOKEN probe	UNKNOWN STEP	﻿2026-09-08T09:58:05.6633791Z Current runner version: '2.337.0'
 Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:05.6647909Z Runner name: 'AIHome'
 Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:05.6649597Z Runner group name: 'Default'
 Groq TOKEN probe	UNKNOWN STEP	2026-09-08T09:58:05.6652124Z Machine name: 'AIHome'
