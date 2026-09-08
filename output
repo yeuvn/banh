@@ -1,29 +1,108 @@
 Run set -euo pipefail
-  set -euo pipefail
-  test -n "${OPENCLAW_GATEWAY_TOKEN:-}"
-  bash scripts/test-groq-built-in-tools.sh
-  shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
-  env:
-    EXPECTED_BRANCH: Test
-    SOURCE_DIR: /opt/aihome-test/source
-    MODEL: groq/openai/gpt-oss-20b
-    GROQ_API_KEY: ***
-    OPENCLAW_GATEWAY_TOKEN: ***
-[plugins:lifecycle] phase="manifest registry" ms=116.92 status=ok includeDisabled=true indexPluginCount=62
-[plugins:lifecycle] phase="manifest registry" ms=0.86 status=ok includeDisabled=true indexPluginCount=62
+Gateway RPC not ready; retry 1/12
+Gateway RPC not ready; retry 2/12
+Gateway RPC not ready; retry 3/12
+Gateway RPC not ready; retry 4/12
+Gateway RPC not ready; retry 5/12
+Gateway RPC not ready; retry 6/12
+Gateway RPC not ready; retry 7/12
+Gateway RPC not ready; retry 8/12
+Gateway RPC not ready; retry 9/12
+Gateway RPC not ready; retry 10/12
+Gateway RPC not ready; retry 11/12
+Gateway RPC not ready; retry 12/12
+GATEWAY_RPC=FAIL
+NAME                   IMAGE                                                                                                             COMMAND                  SERVICE    CREATED              STATUS                         PORTS
+aihome-openclaw-test   ghcr.io/openclaw/openclaw:2026.8.2-slim@sha256:5d25165995041caa6a7175bec82b25ad98c44eb269bb42435da8e27ec06e6be4   "tini -s -- sh -lc '…"   openclaw   About a minute ago   Restarting (1) 5 seconds ago   
+[plugins:lifecycle] phase="discovery scan" ms=0.87 status=ok scope="scoped" extraPathCount=0
+[plugins:lifecycle] phase="discovery scan" ms=232.43 status=ok scope="shared"
+[plugins:lifecycle] phase="manifest registry" ms=3.21 status=ok includeDisabled=true indexPluginCount=62
+Config observe anomaly: /data/config/openclaw.json5 (missing-meta-vs-last-good)
+[plugins:lifecycle] phase="manifest registry" ms=1.16 status=ok includeDisabled=true indexPluginCount=62
+[plugins:lifecycle] phase="manifest registry" ms=0.36 status=ok includeDisabled=true indexPluginCount=62
+[openclaw] Could not start the CLI.
+[openclaw] Reason: OpenClaw startup migrations are already running for this state directory; retry after the other OpenClaw process finishes or after 2026-09-08T05:41:41.806Z. (held by pid 246)
+[openclaw] Debug: set OPENCLAW_DEBUG=1 to include the stack trace.
+[openclaw] Try: openclaw doctor
+[openclaw] Help: openclaw --help
+[plugins:lifecycle] phase="discovery scan" ms=0.89 status=ok scope="scoped" extraPathCount=0
+[plugins:lifecycle] phase="discovery scan" ms=255.39 status=ok scope="shared"
+[plugins:lifecycle] phase="manifest registry" ms=2.82 status=ok includeDisabled=true indexPluginCount=62
+[plugins:lifecycle] phase="manifest registry" ms=1.07 status=ok includeDisabled=true indexPluginCount=62
+[plugins:lifecycle] phase="manifest registry" ms=0.39 status=ok includeDisabled=true indexPluginCount=62
+[openclaw] Could not start the CLI.
+[openclaw] Reason: OpenClaw startup migrations are already running for this state directory; retry after the other OpenClaw process finishes or after 2026-09-08T05:41:41.806Z. (held by pid 246)
+[openclaw] Debug: set OPENCLAW_DEBUG=1 to include the stack trace.
+[openclaw] Try: openclaw doctor
+[openclaw] Help: openclaw --help
+[plugins:lifecycle] phase="discovery scan" ms=1.57 status=ok scope="scoped" extraPathCount=0
+[plugins:lifecycle] phase="discovery scan" ms=152.12 status=ok scope="shared"
+[plugins:lifecycle] phase="manifest registry" ms=2.69 status=ok includeDisabled=true indexPluginCount=62
+[plugins:lifecycle] phase="manifest registry" ms=1.13 status=ok includeDisabled=true indexPluginCount=62
+[plugins:lifecycle] phase="manifest registry" ms=0.38 status=ok includeDisabled=true indexPluginCount=62
+[openclaw] Could not start the CLI.
+[openclaw] Reason: OpenClaw startup migrations are already running for this state directory; retry after the other OpenClaw process finishes or after 2026-09-08T05:41:41.806Z. (held by pid 246)
+[openclaw] Debug: set OPENCLAW_DEBUG=1 to include the stack trace.
+[openclaw] Try: openclaw doctor
+[openclaw] Help: openclaw --help
+[plugins:lifecycle] phase="discovery scan" ms=0.84 status=ok scope="scoped" extraPathCount=0
+[plugins:lifecycle] phase="discovery scan" ms=177.47 status=ok scope="shared"
+[plugins:lifecycle] phase="manifest registry" ms=2.63 status=ok includeDisabled=true indexPluginCount=62
+[plugins:lifecycle] phase="manifest registry" ms=1.08 status=ok includeDisabled=true indexPluginCount=62
 [plugins:lifecycle] phase="manifest registry" ms=0.37 status=ok includeDisabled=true indexPluginCount=62
-{
-  "ok": true,
-  "capability": "model.run",
-  "transport": "gateway",
-  "provider": "groq",
-  "model": "openai/gpt-oss-20b",
-  "attempts": [],
-  "outputs": [
-    {
-      "text": "BROWSER PASS",
-      "mediaUrl": null
-    }
-  ]
-}
+[openclaw] Could not start the CLI.
+[openclaw] Reason: OpenClaw startup migrations are already running for this state directory; retry after the other OpenClaw process finishes or after 2026-09-08T05:41:41.806Z. (held by pid 246)
+[openclaw] Debug: set OPENCLAW_DEBUG=1 to include the stack trace.
+[openclaw] Try: openclaw doctor
+[openclaw] Help: openclaw --help
+[plugins:lifecycle] phase="discovery scan" ms=0.84 status=ok scope="scoped" extraPathCount=0
+[plugins:lifecycle] phase="discovery scan" ms=147.68 status=ok scope="shared"
+[plugins:lifecycle] phase="manifest registry" ms=2.57 status=ok includeDisabled=true indexPluginCount=62
+[plugins:lifecycle] phase="manifest registry" ms=0.70 status=ok includeDisabled=true indexPluginCount=62
+[plugins:lifecycle] phase="manifest registry" ms=0.38 status=ok includeDisabled=true indexPluginCount=62
+[openclaw] Could not start the CLI.
+[openclaw] Reason: OpenClaw startup migrations are already running for this state directory; retry after the other OpenClaw process finishes or after 2026-09-08T05:41:41.806Z. (held by pid 246)
+[openclaw] Debug: set OPENCLAW_DEBUG=1 to include the stack trace.
+[openclaw] Try: openclaw doctor
+[openclaw] Help: openclaw --help
+[plugins:lifecycle] phase="discovery scan" ms=0.98 status=ok scope="scoped" extraPathCount=0
+[plugins:lifecycle] phase="discovery scan" ms=185.28 status=ok scope="shared"
+[plugins:lifecycle] phase="manifest registry" ms=2.61 status=ok includeDisabled=true indexPluginCount=62
+[plugins:lifecycle] phase="manifest registry" ms=0.77 status=ok includeDisabled=true indexPluginCount=62
+[plugins:lifecycle] phase="manifest registry" ms=0.40 status=ok includeDisabled=true indexPluginCount=62
+[openclaw] Could not start the CLI.
+[openclaw] Reason: OpenClaw startup migrations are already running for this state directory; retry after the other OpenClaw process finishes or after 2026-09-08T05:41:41.806Z. (held by pid 246)
+[openclaw] Debug: set OPENCLAW_DEBUG=1 to include the stack trace.
+[openclaw] Try: openclaw doctor
+[openclaw] Help: openclaw --help
+[plugins:lifecycle] phase="discovery scan" ms=1.28 status=ok scope="scoped" extraPathCount=0
+[plugins:lifecycle] phase="discovery scan" ms=301.81 status=ok scope="shared"
+[plugins:lifecycle] phase="manifest registry" ms=3.46 status=ok includeDisabled=true indexPluginCount=62
+[plugins:lifecycle] phase="manifest registry" ms=1.09 status=ok includeDisabled=true indexPluginCount=62
+[plugins:lifecycle] phase="manifest registry" ms=0.49 status=ok includeDisabled=true indexPluginCount=62
+[openclaw] Could not start the CLI.
+[openclaw] Reason: OpenClaw startup migrations are already running for this state directory; retry after the other OpenClaw process finishes or after 2026-09-08T05:41:41.806Z. (held by pid 246)
+[openclaw] Debug: set OPENCLAW_DEBUG=1 to include the stack trace.
+[openclaw] Try: openclaw doctor
+[openclaw] Help: openclaw --help
+[plugins:lifecycle] phase="discovery scan" ms=0.88 status=ok scope="scoped" extraPathCount=0
+[plugins:lifecycle] phase="discovery scan" ms=183.97 status=ok scope="shared"
+[plugins:lifecycle] phase="manifest registry" ms=2.62 status=ok includeDisabled=true indexPluginCount=62
+[plugins:lifecycle] phase="manifest registry" ms=1.88 status=ok includeDisabled=true indexPluginCount=62
+[plugins:lifecycle] phase="manifest registry" ms=0.36 status=ok includeDisabled=true indexPluginCount=62
+[openclaw] Could not start the CLI.
+[openclaw] Reason: OpenClaw startup migrations are already running for this state directory; retry after the other OpenClaw process finishes or after 2026-09-08T05:41:41.806Z. (held by pid 246)
+[openclaw] Debug: set OPENCLAW_DEBUG=1 to include the stack trace.
+[openclaw] Try: openclaw doctor
+[openclaw] Help: openclaw --help
+[plugins:lifecycle] phase="discovery scan" ms=0.97 status=ok scope="scoped" extraPathCount=0
+[plugins:lifecycle] phase="discovery scan" ms=271.75 status=ok scope="shared"
+[plugins:lifecycle] phase="manifest registry" ms=25.50 status=ok includeDisabled=true indexPluginCount=62
+[plugins:lifecycle] phase="manifest registry" ms=12.05 status=ok includeDisabled=true indexPluginCount=62
+[plugins:lifecycle] phase="manifest registry" ms=0.36 status=ok includeDisabled=true indexPluginCount=62
+[openclaw] Could not start the CLI.
+[openclaw] Reason: OpenClaw startup migrations are already running for this state directory; retry after the other OpenClaw process finishes or after 2026-09-08T05:41:41.806Z. (held by pid 246)
+[openclaw] Debug: set OPENCLAW_DEBUG=1 to include the stack trace.
+[openclaw] Try: openclaw doctor
+[openclaw] Help: openclaw --help
 Error: Process completed with exit code 1
