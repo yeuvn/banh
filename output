@@ -1,79 +1,36 @@
-aihome@AIHome:/opt/KIRA$ cd /opt/KIRA
+aihome@AIHome:/opt/aihome-test$ cd /opt/aihome-test/source
 
-echo '=== .docker ==='
-find .docker -printf '%y %p %s bytes\n' 2>/dev/null | sort
-
-echo
-echo '=== output ==='
-find output -printf '%y %p %s bytes\n' 2>/dev/null | sort
-
-echo
-echo '=== DU ==='
-du -ah .docker output 2>/dev/null | sort -h
-=== .docker ===
-d .docker 4096 bytes
-d .docker/buildx 4096 bytes
-d .docker/buildx/activity 4096 bytes
-d .docker/buildx/defaults 4096 bytes
-d .docker/buildx/instances 4096 bytes
-d .docker/buildx/refs 4096 bytes
-d .docker/buildx/refs/default 4096 bytes
-d .docker/buildx/refs/default/default 4096 bytes
-d .docker/buildx/refs/__group__ 4096 bytes
-d .docker/cli-plugins 4096 bytes
-f .docker/buildx/activity/default 20 bytes
-f .docker/buildx/.buildNodeID 16 bytes
-f .docker/buildx/current 62 bytes
-f .docker/buildx/.lock 0 bytes
-f .docker/buildx/refs/default/default/8qj2n60yt424934tx5kjijtj3 157 bytes
-f .docker/buildx/refs/default/default/f1z0d47wv1rzu47lbyr3nnd75 157 bytes
-f .docker/buildx/refs/default/default/k0afs4ivpw47by82olwv6dpnw 181 bytes
-f .docker/buildx/refs/default/default/kcxnkn6pqplro307qvei5qi4t 181 bytes
-f .docker/buildx/refs/default/default/ydcuj3ivqv564g9sf3soti1di 181 bytes
-f .docker/buildx/refs/default/default/zr2g5a4i0q9nzslal46c29knj 157 bytes
-f .docker/buildx/refs/__group__/5hiozg9fkgxk0emgnx30vptr9 60 bytes
-f .docker/buildx/refs/__group__/d9khnlsc0wssxseycf1qie0ui 60 bytes
-f .docker/buildx/refs/__group__/i46qfeeu0j62edects84k5jcm 60 bytes
-f .docker/buildx/refs/__group__/qbtu8vwizjccgvst6pvbswyc3 60 bytes
-f .docker/buildx/refs/__group__/qs39yzgvbmfbcs9wmqusf9dop 60 bytes
-f .docker/buildx/refs/__group__/u8p1sji8y9pya072s23mdqt29 60 bytes
-f .docker/buildx/refs/version 1 bytes
-f .docker/cli-plugins/docker-compose 49441177 bytes
-f .docker/.token_seed 74 bytes
-f .docker/.token_seed.lock 0 bytes
-
-=== output ===
-f output 19793 bytes
-
-=== DU ===
-0	.docker/buildx/.lock
-0	.docker/.token_seed.lock
-4.0K	.docker/buildx/activity/default
-4.0K	.docker/buildx/.buildNodeID
-4.0K	.docker/buildx/current
-4.0K	.docker/buildx/defaults
-4.0K	.docker/buildx/instances
-4.0K	.docker/buildx/refs/default/default/8qj2n60yt424934tx5kjijtj3
-4.0K	.docker/buildx/refs/default/default/f1z0d47wv1rzu47lbyr3nnd75
-4.0K	.docker/buildx/refs/default/default/k0afs4ivpw47by82olwv6dpnw
-4.0K	.docker/buildx/refs/default/default/kcxnkn6pqplro307qvei5qi4t
-4.0K	.docker/buildx/refs/default/default/ydcuj3ivqv564g9sf3soti1di
-4.0K	.docker/buildx/refs/default/default/zr2g5a4i0q9nzslal46c29knj
-4.0K	.docker/buildx/refs/__group__/5hiozg9fkgxk0emgnx30vptr9
-4.0K	.docker/buildx/refs/__group__/d9khnlsc0wssxseycf1qie0ui
-4.0K	.docker/buildx/refs/__group__/i46qfeeu0j62edects84k5jcm
-4.0K	.docker/buildx/refs/__group__/qbtu8vwizjccgvst6pvbswyc3
-4.0K	.docker/buildx/refs/__group__/qs39yzgvbmfbcs9wmqusf9dop
-4.0K	.docker/buildx/refs/__group__/u8p1sji8y9pya072s23mdqt29
-4.0K	.docker/buildx/refs/version
-4.0K	.docker/.token_seed
-8.0K	.docker/buildx/activity
-20K	output
-28K	.docker/buildx/refs/default/default
-28K	.docker/buildx/refs/__group__
-32K	.docker/buildx/refs/default
-68K	.docker/buildx/refs
-96K	.docker/buildx
-48M	.docker
-48M	.docker/cli-plugins
-48M	.docker/cli-plugins/docker-compose
+echo '=== SOURCE GIT ==='
+git branch --show-current
+git rev-parse --short HEAD
+git status --short --branch
+git remote -v
+=== SOURCE GIT ===
+Test
+2b75671
+## Test...origin/Test
+ M .github/workflows/openclaw-test-box-deploy.yml
+ D DEPLOY-TRIGGER-2026-09-06.txt
+ D NhatKy
+ D QuyTac.txt
+ M compose/compose.yml
+ M compose/openclaw.yml
+ M config/gateway/app/llm.py
+ M config/gateway/app/main.py
+ M config/gateway/app/orchestrator.py
+ M config/openclaw/AUDIT-v2026.7.1-2.md
+ M config/openclaw/CAPABILITY-MATRIX.md
+ M config/openclaw/HA-EXECUTION-AUDIT.md
+ M config/openclaw/TEST-RUNBOOK.md
+ M config/openclaw/openclaw.json5
+?? .github/workflows/TOKEN.yml
+?? AGENTS.md
+?? "G\341\273\243i \303\275"
+?? NhatKy.md
+?? SECURITY.md
+?? checkpoints.md
+?? config/aihome/
+?? scripts/
+?? workspace/
+origin	https://github.com/yeuvn/AIHome (fetch)
+origin	https://github.com/yeuvn/AIHome (push)
