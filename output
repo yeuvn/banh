@@ -1,52 +1,104 @@
+aihome@AIHome:/opt/aihome-test$ cd /opt/aihome-test/source
+
+echo '=== GIT STATUS ==='
+git status --short --branch
+
+echo '=== HEAD ==='
+git rev-parse HEAD
+
+echo '=== ORIGIN/TEST ==='
+git fetch origin Test
+git rev-parse origin/Test
+
+echo '=== AHEAD/BEHIND ==='
+git rev-list --left-right --count HEAD...origin/Test
+
+echo '=== COMPOSE ==='
+sha256sum compose/openclaw.yml
+git diff --no-ext-diff origin/Test -- compose/openclaw.yml
+
+echo '=== SKILL ==='
+sha256sum workspace/Skill.md
+git diff --no-ext-diff origin/Test -- workspace/Skill.md
+
+echo '=== FILES DIFFERING FROM GITHUB TEST ==='
+git diff --name-status origin/Test
+
+echo '=== UNTRACKED ==='
+git status --short --untracked-files=all
+=== GIT STATUS ===
+## Test...origin/Test
+ M .github/workflows/openclaw-test-box-deploy.yml
+ D DEPLOY-TRIGGER-2026-09-06.txt
+ D NhatKy
+ D QuyTac.txt
+ M compose/compose.yml
+ M compose/openclaw.yml
+ M config/gateway/app/llm.py
+ M config/gateway/app/main.py
+ M config/gateway/app/orchestrator.py
+ M config/openclaw/AUDIT-v2026.7.1-2.md
+ M config/openclaw/CAPABILITY-MATRIX.md
+ M config/openclaw/HA-EXECUTION-AUDIT.md
+ M config/openclaw/TEST-RUNBOOK.md
+ M config/openclaw/openclaw.json5
+?? .github/workflows/TOKEN.yml
+?? AGENTS.md
+?? "G\341\273\243i \303\275"
+?? NhatKy.md
+?? SECURITY.md
+?? checkpoints.md
+?? config/aihome/
+?? scripts/
+?? workspace/
+=== HEAD ===
+2b75671651de0ee7fefede7cd4fcfa58d169ad6e
+=== ORIGIN/TEST ===
+fatal: unable to get credential storage lock in 1000 ms: Permission denied
+remote: Invalid username or token. Password authentication is not supported for Git operations.
+fatal: Authentication failed for 'https://github.com/yeuvn/AIHome/'
+2b75671651de0ee7fefede7cd4fcfa58d169ad6e
+=== AHEAD/BEHIND ===
+0	0
 === COMPOSE ===
-18-    environment:
-19-      TZ: ${AIHOME_TZ:-Asia/Ho_Chi_Minh}
-20-      NODE_OPTIONS: --max-old-space-size=1536
-21:      OPENCLAW_HOME: /data/state
-22:      OPENCLAW_STATE_DIR: /data/state
-23:      OPENCLAW_CONFIG_PATH: /data/config/openclaw.json5
-24-      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN:-}
-25-      GROQ_API_KEY: ${GROQ_API_KEY:-}
-26-      OPENCLAW_PLUGIN_LOAD_DEBUG: "1"
---
-28-    ports:
-29-      - "127.0.0.1:18789:18789"
-30-    volumes:
-31:      - /opt/aihome-test/openclaw/state:/data/state
-32:      - /opt/aihome-test/openclaw/workspace:/home/node/.openclaw/workspace
-33:      - /opt/aihome-test/source/config/aihome:/home/node/.openclaw/workspace/config/aihome:ro
-34:      - /opt/aihome-test/openclaw/runtime-config:/data/config
-35:      - /opt/aihome-test/source/config/openclaw/openclaw.json5:/data/source-config/openclaw.json5:ro
-36-    command:
-37-      - sh
-38-      - -lc
-39-      - >-
-40-        set -eu;
-41:        cp /data/source-config/openclaw.json5 /data/config/openclaw.json5;
-42-        set +e;
-43-        update_output="$$(node openclaw.mjs plugins update npm:@openclaw/groq-provider@2026.8.2 2>&1)";
-44-        update_rc=$$?;
-
-=== SKILL SHA ===
-747de924f5aff00670d578fa761c5a19cc2dcd6269b3aad23eb7873470bd3a6c  source/workspace/Skill.md
-747de924f5aff00670d578fa761c5a19cc2dcd6269b3aad23eb7873470bd3a6c  openclaw/workspace/Skill.md
-
-=== RUNTIME WORKSPACE ===
-total 36
-drwxr-xr-x  3 node node 4096 Sep  7 13:11 .
-drwx------ 17 node node 4096 Sep  7 13:11 ..
-drwxr-xr-x  7 node node 4096 Sep  7 13:11 .git
--rw-r--r--  1 node node 7927 Sep  7 13:11 AGENTS.md
--rw-r--r--  1 node node 4025 Sep  7 13:11 BOOTSTRAP.md
--rw-r--r--  1 node node 1278 Sep  7 13:11 IDENTITY.md
--rw-r--r--  1 node node 1518 Sep  7 13:11 SOUL.md
--rw-r--r--  1 node node  871 Sep  7 13:11 USER.md
----
-/data/state/workspace/.git/HEAD
-/data/state/workspace/.git/config
-/data/state/workspace/.git/description
-/data/state/workspace/AGENTS.md
-/data/state/workspace/BOOTSTRAP.md
-/data/state/workspace/IDENTITY.md
-/data/state/workspace/SOUL.md
-/data/state/workspace/USER.md
+04340da8cded07e8498fd41ab006d71da4eca375595274e4659815b34c03211a  compose/openclaw.yml
+diff --git a/compose/openclaw.yml b/compose/openclaw.yml
+index 557005d..0a2b310 100644
+--- a/compose/openclaw.yml
++++ b/compose/openclaw.yml
+@@ -2,7 +2,7 @@ name: aihome-openclaw-test
+ 
+ services:
+   openclaw:
+-    image: ghcr.io/openclaw/openclaw:2026.7.1-2-slim@sha256:8789721d2e9b24b780a1504b56deb4c6bd5c7dbf96a1dd117e7c45c2ed72c8ac
++    image: ghcr.io/openclaw/openclaw:2026.8.2-slim@sha256:5d25165995041caa6a7175bec82b25ad98c44eb269bb42435da8e27ec06e6be4
+     container_name: aihome-openclaw-test
+     restart: unless-stopped
+     init: true
+@@ -23,11 +23,14 @@ services:
+       OPENCLAW_CONFIG_PATH: /data/config/openclaw.json5
+       OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN:-}
+       GROQ_API_KEY: ${GROQ_API_KEY:-}
++      OPENCLAW_PLUGIN_LOAD_DEBUG: "1"
++      OPENCLAW_PLUGIN_LIFECYCLE_TRACE: "1"
+     ports:
+       - "127.0.0.1:18789:18789"
+     volumes:
+       - /opt/aihome-test/openclaw/state:/data/state
+       - /opt/aihome-test/openclaw/workspace:/home/node/.openclaw/workspace
++      - /opt/aihome-test/source/config/aihome:/home/node/.openclaw/workspace/config/aihome:ro
+       - /opt/aihome-test/openclaw/runtime-config:/data/config
+       - /opt/aihome-test/source/config/openclaw/openclaw.json5:/data/source-config/openclaw.json5:ro
+     command:
+@@ -36,8 +39,18 @@ services:
+       - >-
+         set -eu;
+         cp /data/source-config/openclaw.json5 /data/config/openclaw.json5;
+-        if ! node openclaw.mjs plugins list --json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{const j=JSON.parse(s); const a=Array.isArray(j)?j:(j.plugins||[]); process.exit(a.some(p=>p.id==="groq")?0:1)}catch(e){process.exit(1)}})'; then
+-          node openclaw.mjs plugins install npm:@openclaw/groq-provider@2026.7.1 --pin;
++        set +e;
++        update_output="$$(node openclaw.mjs plugins update npm:@openclaw/groq-provider@2026.8.2 2>&1)";
++        update_rc=$$?;
++        set -e;
++        printf '%s\n' "$$update_output";
+:
