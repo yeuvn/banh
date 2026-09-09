@@ -1,120 +1,52 @@
-aihome@AIHome:/opt/aihome-test$ cd /opt/aihome-test
+=== COMPOSE ===
+18-    environment:
+19-      TZ: ${AIHOME_TZ:-Asia/Ho_Chi_Minh}
+20-      NODE_OPTIONS: --max-old-space-size=1536
+21:      OPENCLAW_HOME: /data/state
+22:      OPENCLAW_STATE_DIR: /data/state
+23:      OPENCLAW_CONFIG_PATH: /data/config/openclaw.json5
+24-      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN:-}
+25-      GROQ_API_KEY: ${GROQ_API_KEY:-}
+26-      OPENCLAW_PLUGIN_LOAD_DEBUG: "1"
+--
+28-    ports:
+29-      - "127.0.0.1:18789:18789"
+30-    volumes:
+31:      - /opt/aihome-test/openclaw/state:/data/state
+32:      - /opt/aihome-test/openclaw/workspace:/home/node/.openclaw/workspace
+33:      - /opt/aihome-test/source/config/aihome:/home/node/.openclaw/workspace/config/aihome:ro
+34:      - /opt/aihome-test/openclaw/runtime-config:/data/config
+35:      - /opt/aihome-test/source/config/openclaw/openclaw.json5:/data/source-config/openclaw.json5:ro
+36-    command:
+37-      - sh
+38-      - -lc
+39-      - >-
+40-        set -eu;
+41:        cp /data/source-config/openclaw.json5 /data/config/openclaw.json5;
+42-        set +e;
+43-        update_output="$$(node openclaw.mjs plugins update npm:@openclaw/groq-provider@2026.8.2 2>&1)";
+44-        update_rc=$$?;
 
-echo '=== 1. SYMLINK / DIRECTORY ==='
-for p in \
-  source/workspace \
-  openclaw/workspace \
-  openclaw/state/workspace \
-  openclaw/state/.openclaw/workspace
-do
-  echo "--- $p ---"
-  stat -c 'type=%F inode=%i mode=%A owner=%U:%G' "$p" 2>/dev/null || true
-  readlink -f "$p" 2>/dev/null || true
-done
+=== SKILL SHA ===
+747de924f5aff00670d578fa761c5a19cc2dcd6269b3aad23eb7873470bd3a6c  source/workspace/Skill.md
+747de924f5aff00670d578fa761c5a19cc2dcd6269b3aad23eb7873470bd3a6c  openclaw/workspace/Skill.md
 
-echo
-echo '=== 2. ALL FILES IN FOUR WORKSPACES ==='
-for p in \
-  source/workspace \
-  openclaw/workspace \
-  openclaw/state/workspace \
-  openclaw/state/.openclaw/workspace
-do
-  echo "--- $p ---"
-  find "$p" -type f -printf '%P\n' 2>/dev/null | sort
-done
-
-echo
-echo '=== 3. DOCKER MOUNTS ==='
-docker inspect aihome-openclaw-test \
-  --format '{{range .Mounts}}{{println .Type .Source "->" .Destination}}{{end}}' | sort
-
-echo
-echo '=== 4. CONTAINER WORKSPACE ENV ==='
-docker inspect aihome-openclaw-test \
-  --format '{{range .Config.Env}}{{println .}}{{end}}' |
-  grep -Ei 'workspace|openclaw|state' | sort
-=== 1. SYMLINK / DIRECTORY ===
---- source/workspace ---
-type=directory inode=2754708 mode=drwxr-xr-x owner=aihome:aihome
-/opt/aihome-test/source/workspace
---- openclaw/workspace ---
-type=directory inode=2753157 mode=drwxr-xr-x owner=aihome:aihome
-/opt/aihome-test/openclaw/workspace
---- openclaw/state/workspace ---
-type=directory inode=2756664 mode=drwxr-xr-x owner=aihome:aihome
-/opt/aihome-test/openclaw/state/workspace
---- openclaw/state/.openclaw/workspace ---
-type=directory inode=2754857 mode=drwx------ owner=aihome:aihome
-/opt/aihome-test/openclaw/state/.openclaw/workspace
-
-=== 2. ALL FILES IN FOUR WORKSPACES ===
---- source/workspace ---
-Skill.md
---- openclaw/workspace ---
-Skill.md
---- openclaw/state/workspace ---
-AGENTS.md
-BOOTSTRAP.md
-.git/config
-.git/description
-.git/HEAD
-.git/hooks/applypatch-msg.sample
-.git/hooks/commit-msg.sample
-.git/hooks/fsmonitor-watchman.sample
-.git/hooks/post-update.sample
-.git/hooks/pre-applypatch.sample
-.git/hooks/pre-commit.sample
-.git/hooks/pre-merge-commit.sample
-.git/hooks/prepare-commit-msg.sample
-.git/hooks/pre-push.sample
-.git/hooks/pre-rebase.sample
-.git/hooks/pre-receive.sample
-.git/hooks/push-to-checkout.sample
-.git/hooks/update.sample
-.git/info/exclude
-IDENTITY.md
-SOUL.md
-USER.md
---- openclaw/state/.openclaw/workspace ---
-AGENTS.md
-BOOTSTRAP.md
-.git/config
-.git/description
-.git/HEAD
-.git/hooks/applypatch-msg.sample
-.git/hooks/commit-msg.sample
-.git/hooks/fsmonitor-watchman.sample
-.git/hooks/post-update.sample
-.git/hooks/pre-applypatch.sample
-.git/hooks/pre-commit.sample
-.git/hooks/pre-merge-commit.sample
-.git/hooks/prepare-commit-msg.sample
-.git/hooks/pre-push.sample
-.git/hooks/pre-rebase.sample
-.git/hooks/pre-receive.sample
-.git/hooks/push-to-checkout.sample
-.git/hooks/update.sample
-.git/info/exclude
-HEARTBEAT.md
-IDENTITY.md
-openclaw-workspace-state.json
-SOUL.md
-TOOLS.md
-USER.md
-
-=== 3. DOCKER MOUNTS ===
-
-bind /opt/aihome-test/openclaw/runtime-config -> /data/config
-bind /opt/aihome-test/openclaw/state -> /data/state
-bind /opt/aihome-test/openclaw/workspace -> /home/node/.openclaw/workspace
-bind /opt/aihome-test/source/config/aihome -> /home/node/.openclaw/workspace/config/aihome
-bind /opt/aihome-test/source/config/openclaw/openclaw.json5 -> /data/source-config/openclaw.json5
-
-=== 4. CONTAINER WORKSPACE ENV ===
-OPENCLAW_CONFIG_PATH=/data/config/openclaw.json5
-OPENCLAW_GATEWAY_TOKEN=eba5**14ee
-OPENCLAW_HOME=/data/state
-OPENCLAW_PLUGIN_LIFECYCLE_TRACE=1
-OPENCLAW_PLUGIN_LOAD_DEBUG=1
-OPENCLAW_STATE_DIR=/data/state
+=== RUNTIME WORKSPACE ===
+total 36
+drwxr-xr-x  3 node node 4096 Sep  7 13:11 .
+drwx------ 17 node node 4096 Sep  7 13:11 ..
+drwxr-xr-x  7 node node 4096 Sep  7 13:11 .git
+-rw-r--r--  1 node node 7927 Sep  7 13:11 AGENTS.md
+-rw-r--r--  1 node node 4025 Sep  7 13:11 BOOTSTRAP.md
+-rw-r--r--  1 node node 1278 Sep  7 13:11 IDENTITY.md
+-rw-r--r--  1 node node 1518 Sep  7 13:11 SOUL.md
+-rw-r--r--  1 node node  871 Sep  7 13:11 USER.md
+---
+/data/state/workspace/.git/HEAD
+/data/state/workspace/.git/config
+/data/state/workspace/.git/description
+/data/state/workspace/AGENTS.md
+/data/state/workspace/BOOTSTRAP.md
+/data/state/workspace/IDENTITY.md
+/data/state/workspace/SOUL.md
+/data/state/workspace/USER.md
