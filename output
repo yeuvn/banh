@@ -1,48 +1,67 @@
-aihome@AIHome:/opt/aihome$ cd /opt/aihome
+aihome@AIHome:/opt/aihome$ systemctl status aihome-web.service --no-pager
+● aihome-web.service - AIHome Web Terminal
+     Loaded: loaded (/etc/systemd/system/aihome-web.service; enabled; preset: enabled)
+     Active: active (running) since Wed 2026-09-09 20:02:30 +07; 31s ago
+ Invocation: 4b008ea8d53d471c843bb00ea4531609
+   Main PID: 498060 (node)
+      Tasks: 7 (limit: 9235)
+     Memory: 17M (peak: 24.9M)
+        CPU: 679ms
+     CGroup: /system.slice/aihome-web.service
+             └─498060 /usr/bin/node /opt/web/server.js
 
-echo "=== COMPOSE STATUS ==="
-docker compose -f compose/compose.yml -f compose/openclaw.yml ps
-
-echo "=== OPENCLAW LOG — GROQ ==="
-docker logs --tail 100 aihome-openclaw-test 2>&1 | grep -iE 'groq|quota|rate.?limit|429' || true
-=== COMPOSE STATUS ===
-NAME                   IMAGE                                                                                                             COMMAND                  SERVICE    CREATED       STATUS                 PORTS
-aihome-openclaw-test   ghcr.io/openclaw/openclaw:2026.8.2-slim@sha256:5d25165995041caa6a7175bec82b25ad98c44eb269bb42435da8e27ec06e6be4   "tini -s -- sh -lc '…"   openclaw   4 hours ago   Up 4 hours (healthy)   127.0.0.1:18789->18789/tcp
-=== OPENCLAW LOG — GROQ ===
-2026-09-09T14:33:11.789+07:00 [gateway] agent model: groq/openai/gpt-oss-20b (thinking=medium, fast=off)
-2026-09-09T14:33:26.809+07:00 [provider-transport-fetch] [model-fetch] start provider=groq api=openai-completions model=openai/gpt-oss-20b method=POST url=https://api.groq.com/openai/v1/chat/completions timeoutMs=undefined proxy=none policy=custom
-2026-09-09T14:33:27.547+07:00 [provider-transport-fetch] [model-fetch] response provider=groq api=openai-completions model=openai/gpt-oss-20b status=200 elapsedMs=737 dispatcher=new contentType=text/event-stream
-2026-09-09T14:34:00.070+07:00 [provider-transport-fetch] [model-fetch] start provider=groq api=openai-completions model=openai/gpt-oss-20b method=POST url=https://api.groq.com/openai/v1/chat/completions timeoutMs=undefined proxy=none policy=custom
-2026-09-09T14:34:00.232+07:00 [provider-transport-fetch] [model-fetch] response provider=groq api=openai-completions model=openai/gpt-oss-20b status=429 elapsedMs=166 dispatcher=reused contentType=application/json
-2026-09-09T14:34:00.759+07:00 [provider-transport-fetch] [model-fetch] start provider=groq api=openai-completions model=openai/gpt-oss-20b method=POST url=https://api.groq.com/openai/v1/chat/completions timeoutMs=undefined proxy=none policy=custom
-2026-09-09T14:34:00.915+07:00 [provider-transport-fetch] [model-fetch] response provider=groq api=openai-completions model=openai/gpt-oss-20b status=429 elapsedMs=156 dispatcher=reused contentType=application/json
-2026-09-09T14:34:01.758+07:00 [provider-transport-fetch] [model-fetch] start provider=groq api=openai-completions model=openai/gpt-oss-20b method=POST url=https://api.groq.com/openai/v1/chat/completions timeoutMs=undefined proxy=none policy=custom
-2026-09-09T14:34:01.910+07:00 [provider-transport-fetch] [model-fetch] response provider=groq api=openai-completions model=openai/gpt-oss-20b status=429 elapsedMs=150 dispatcher=reused contentType=application/json
-2026-09-09T14:34:01.934+07:00 [compaction] Full summarization failed: Summarization failed: 429 Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m1vdgamwegar47pc32sgv8dt` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199994, Requested 2901. Please try again in 20m50.64s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
-2026-09-09T14:34:01.946+07:00 [compaction-safeguard] Compaction summarization failed; cancelling compaction to preserve history: All summarization attempts failed for 1 messages. Last error: Summarization failed: 429 Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m1vdgamwegar47pc32sgv8dt` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199994, Requested 2901. Please try again in 20m50.64s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing | summarization_failed
-2026-09-09T14:34:01.966+07:00 [agent/embedded] [compaction-diag] end runId=d2ca0900-817f-4677-863b-7fe788da2154 sessionKey=agent:main:groq-2b-plus-487778 diagId=cmp-mtts8fpr-b99ZEA trigger=budget provider=groq/openai/gpt-oss-20b attempt=1 maxAttempts=1 outcome=failed reason=guard_blocked durationMs=2140
-2026-09-09T14:34:01.974+07:00 [agents/agent-command] Post-turn transcript compaction failed for agent:main:groq-2b-plus-487778; continuing final delivery: Preflight compaction required but failed: Compaction safeguard could not summarize the session: All summarization attempts failed for 1 messages. Last error: Summarization failed: 429 Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m1vdgamwegar47pc32sgv8dt` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199994, Requested 2901. Please try again in 20m50.64s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing | summarization_failed
-2026-09-09T14:55:38.061+07:00 [provider-transport-fetch] [model-fetch] start provider=groq api=openai-completions model=openai/gpt-oss-20b method=POST url=https://api.groq.com/openai/v1/chat/completions timeoutMs=undefined proxy=none policy=custom
-2026-09-09T14:55:38.654+07:00 [provider-transport-fetch] [model-fetch] response provider=groq api=openai-completions model=openai/gpt-oss-20b status=200 elapsedMs=592 dispatcher=new contentType=text/event-stream
-2026-09-09T14:56:04.193+07:00 [provider-transport-fetch] [model-fetch] start provider=groq api=openai-completions model=openai/gpt-oss-20b method=POST url=https://api.groq.com/openai/v1/chat/completions timeoutMs=undefined proxy=none policy=custom
-2026-09-09T14:56:04.780+07:00 [provider-transport-fetch] [model-fetch] response provider=groq api=openai-completions model=openai/gpt-oss-20b status=200 elapsedMs=585 dispatcher=reused contentType=text/event-stream
-2026-09-09T15:00:39.507+07:00 [provider-transport-fetch] [model-fetch] start provider=groq api=openai-completions model=openai/gpt-oss-20b method=POST url=https://api.groq.com/openai/v1/chat/completions timeoutMs=undefined proxy=none policy=custom
-2026-09-09T15:00:40.056+07:00 [provider-transport-fetch] [model-fetch] response provider=groq api=openai-completions model=openai/gpt-oss-20b status=200 elapsedMs=548 dispatcher=new contentType=text/event-stream
-2026-09-09T15:35:13.072+07:00 [provider-transport-fetch] [model-fetch] start provider=groq api=openai-completions model=openai/gpt-oss-20b method=POST url=https://api.groq.com/openai/v1/chat/completions timeoutMs=undefined proxy=none policy=custom
-2026-09-09T15:35:13.747+07:00 [provider-transport-fetch] [model-fetch] response provider=groq api=openai-completions model=openai/gpt-oss-20b status=200 elapsedMs=673 dispatcher=new contentType=text/event-stream
-2026-09-09T15:44:16.121+07:00 [provider-transport-fetch] [model-fetch] start provider=groq api=openai-completions model=openai/gpt-oss-20b method=POST url=https://api.groq.com/openai/v1/chat/completions timeoutMs=undefined proxy=none policy=custom
-2026-09-09T15:44:16.768+07:00 [provider-transport-fetch] [model-fetch] response provider=groq api=openai-completions model=openai/gpt-oss-20b status=200 elapsedMs=647 dispatcher=new contentType=text/event-stream
-2026-09-09T15:44:39.815+07:00 [provider-transport-fetch] [model-fetch] start provider=groq api=openai-completions model=openai/gpt-oss-20b method=POST url=https://api.groq.com/openai/v1/chat/completions timeoutMs=undefined proxy=none policy=custom
-2026-09-09T15:44:40.412+07:00 [provider-transport-fetch] [model-fetch] response provider=groq api=openai-completions model=openai/gpt-oss-20b status=200 elapsedMs=596 dispatcher=reused contentType=text/event-stream
-2026-09-09T15:45:05.464+07:00 [provider-transport-fetch] [model-fetch] start provider=groq api=openai-completions model=openai/gpt-oss-20b method=POST url=https://api.groq.com/openai/v1/chat/completions timeoutMs=undefined proxy=none policy=custom
-2026-09-09T15:45:06.025+07:00 [provider-transport-fetch] [model-fetch] response provider=groq api=openai-completions model=openai/gpt-oss-20b status=200 elapsedMs=559 dispatcher=reused contentType=text/event-stream
-2026-09-09T15:45:30.253+07:00 [provider-transport-fetch] [model-fetch] start provider=groq api=openai-completions model=openai/gpt-oss-20b method=POST url=https://api.groq.com/openai/v1/chat/completions timeoutMs=undefined proxy=none policy=custom
-2026-09-09T15:45:30.770+07:00 [provider-transport-fetch] [model-fetch] response provider=groq api=openai-completions model=openai/gpt-oss-20b status=200 elapsedMs=517 dispatcher=reused contentType=text/event-stream
-2026-09-09T15:45:54.797+07:00 [provider-transport-fetch] [model-fetch] start provider=groq api=openai-completions model=openai/gpt-oss-20b method=POST url=https://api.groq.com/openai/v1/chat/completions timeoutMs=undefined proxy=none policy=custom
-2026-09-09T15:45:55.312+07:00 [provider-transport-fetch] [model-fetch] response provider=groq api=openai-completions model=openai/gpt-oss-20b status=200 elapsedMs=513 dispatcher=reused contentType=text/event-stream
-2026-09-09T15:48:12.616+07:00 [provider-transport-fetch] [model-fetch] start provider=groq api=openai-completions model=openai/gpt-oss-20b method=POST url=https://api.groq.com/openai/v1/chat/completions timeoutMs=undefined proxy=none policy=custom
-2026-09-09T15:48:13.170+07:00 [provider-transport-fetch] [model-fetch] response provider=groq api=openai-completions model=openai/gpt-oss-20b status=200 elapsedMs=553 dispatcher=new contentType=text/event-stream
-2026-09-09T15:48:41.807+07:00 [provider-transport-fetch] [model-fetch] start provider=groq api=openai-completions model=openai/gpt-oss-20b method=POST url=https://api.groq.com/openai/v1/chat/completions timeoutMs=undefined proxy=none policy=custom
-2026-09-09T15:48:42.344+07:00 [provider-transport-fetch] [model-fetch] response provider=groq api=openai-completions model=openai/gpt-oss-20b status=200 elapsedMs=537 dispatcher=reused contentType=text/event-stream
-2026-09-09T15:49:05.593+07:00 [provider-transport-fetch] [model-fetch] start provider=groq api=openai-completions model=openai/gpt-oss-20b method=POST url=https://api.groq.com/openai/v1/chat/completions timeoutMs=undefined proxy=none policy=custom
-2026-09-09T15:49:06.118+07:00 [provider-transport-fetch] [model-fetch] response provider=groq api=openai-completions model=openai/gpt-oss-20b status=200 elapsedMs=524 dispatcher=reused contentType=text/event-stream
+Sep 09 20:02:31 AIHome node[498060]: AIHome Web Terminal v0.2.0 listening on 0.0.0.0:8088
+aihome@AIHome:/opt/aihome$ journalctl -u aihome-web.service -n 50 --no-pager
+Hint: You are currently not seeing messages from other users and the system.
+      Users in groups 'adm', 'systemd-journal' can see all messages.
+      Pass -q to turn off this notice.
+Sep 08 22:20:23 AIHome node[453800]:     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+Sep 08 22:20:23 AIHome node[453800]:     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+Sep 08 22:20:23 AIHome node[453800]:     at Module.load (node:internal/modules/cjs/loader:1275:32)
+Sep 08 22:20:23 AIHome node[453800]:     at Module._load (node:internal/modules/cjs/loader:1096:12)
+Sep 08 22:20:23 AIHome node[453800]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+Sep 08 22:20:23 AIHome node[453800]:     at node:internal/main/run_main_module:28:49
+Sep 08 22:20:23 AIHome node[453800]: Node.js v20.19.2
+Sep 08 22:20:27 AIHome node[453812]: /home/aihome/AIHome/server.js:26
+Sep 08 22:20:27 AIHome node[453812]: if (!AUTH_USERNAME || !AUTH_PASSWORD_HASH) throw new Error('WEB_AUTH_USERNAME and WEB_AUTH_PASSWORD_HASH must be set');
+Sep 08 22:20:27 AIHome node[453812]:                                            ^
+Sep 08 22:20:27 AIHome node[453812]: Error: WEB_AUTH_USERNAME and WEB_AUTH_PASSWORD_HASH must be set
+Sep 08 22:20:27 AIHome node[453812]:     at Object.<anonymous> (/home/aihome/AIHome/server.js:26:50)
+Sep 08 22:20:27 AIHome node[453812]:     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+Sep 08 22:20:27 AIHome node[453812]:     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+Sep 08 22:20:27 AIHome node[453812]:     at Module.load (node:internal/modules/cjs/loader:1275:32)
+Sep 08 22:20:27 AIHome node[453812]:     at Module._load (node:internal/modules/cjs/loader:1096:12)
+Sep 08 22:20:27 AIHome node[453812]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+Sep 08 22:20:27 AIHome node[453812]:     at node:internal/main/run_main_module:28:49
+Sep 08 22:20:27 AIHome node[453812]: Node.js v20.19.2
+Sep 08 22:20:30 AIHome node[453820]: /home/aihome/AIHome/server.js:26
+Sep 08 22:20:30 AIHome node[453820]: if (!AUTH_USERNAME || !AUTH_PASSWORD_HASH) throw new Error('WEB_AUTH_USERNAME and WEB_AUTH_PASSWORD_HASH must be set');
+Sep 08 22:20:30 AIHome node[453820]:                                            ^
+Sep 08 22:20:30 AIHome node[453820]: Error: WEB_AUTH_USERNAME and WEB_AUTH_PASSWORD_HASH must be set
+Sep 08 22:20:30 AIHome node[453820]:     at Object.<anonymous> (/home/aihome/AIHome/server.js:26:50)
+Sep 08 22:20:30 AIHome node[453820]:     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+Sep 08 22:20:30 AIHome node[453820]:     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+Sep 08 22:20:30 AIHome node[453820]:     at Module.load (node:internal/modules/cjs/loader:1275:32)
+Sep 08 22:20:30 AIHome node[453820]:     at Module._load (node:internal/modules/cjs/loader:1096:12)
+Sep 08 22:20:30 AIHome node[453820]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+Sep 08 22:20:30 AIHome node[453820]:     at node:internal/main/run_main_module:28:49
+Sep 08 22:20:30 AIHome node[453820]: Node.js v20.19.2
+Sep 08 22:20:34 AIHome node[453830]: /home/aihome/AIHome/server.js:26
+Sep 08 22:20:34 AIHome node[453830]: if (!AUTH_USERNAME || !AUTH_PASSWORD_HASH) throw new Error('WEB_AUTH_USERNAME and WEB_AUTH_PASSWORD_HASH must be set');
+Sep 08 22:20:34 AIHome node[453830]:                                            ^
+Sep 08 22:20:34 AIHome node[453830]: Error: WEB_AUTH_USERNAME and WEB_AUTH_PASSWORD_HASH must be set
+Sep 08 22:20:34 AIHome node[453830]:     at Object.<anonymous> (/home/aihome/AIHome/server.js:26:50)
+Sep 08 22:20:34 AIHome node[453830]:     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+Sep 08 22:20:34 AIHome node[453830]:     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+Sep 08 22:20:34 AIHome node[453830]:     at Module.load (node:internal/modules/cjs/loader:1275:32)
+Sep 08 22:20:34 AIHome node[453830]:     at Module._load (node:internal/modules/cjs/loader:1096:12)
+Sep 08 22:20:34 AIHome node[453830]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+Sep 08 22:20:34 AIHome node[453830]:     at node:internal/main/run_main_module:28:49
+Sep 08 22:20:34 AIHome node[453830]: Node.js v20.19.2
+Sep 08 22:20:38 AIHome node[453890]: AIHome Web Terminal v0.2.0 listening on 0.0.0.0:8080
+Sep 08 22:22:56 AIHome node[453987]: AIHome Web Terminal v0.2.0 listening on 0.0.0.0:8088
+Sep 08 22:23:53 AIHome node[454151]: AIHome Web Terminal v0.2.0 listening on 0.0.0.0:8088
+Sep 08 22:25:59 AIHome node[454151]: [audit] {"timestamp":"2026-09-08T15:25:59.911Z","user":"aihome","mode":"lan","source":"192.168.1.80","action":"login","status":"success"}
+Sep 08 22:27:36 AIHome node[454151]: [audit] {"timestamp":"2026-09-08T15:27:35.999Z","user":"aihome","mode":"lan","source":"192.168.1.80","target":"test","action":"execute","command":"echo AIHome Web Terminal TEST OK","status":"exit_0"}
+Sep 08 22:29:38 AIHome node[454151]: [audit] {"timestamp":"2026-09-08T15:29:38.533Z","user":"aihome","mode":"lan","source":"192.168.1.70","action":"login","status":"success"}
+Sep 09 20:02:31 AIHome node[498060]: AIHome Web Terminal v0.2.0 listening on 0.0.0.0:8088
