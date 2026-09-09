@@ -1,76 +1,28 @@
 aihome@AIHome:/opt/web$ cd /opt/web
+npm install
+node -e "console.log(require.resolve('express'))"
 sudo systemctl restart aihome-web
+sleep 2
 sudo systemctl status aihome-web --no-pager
-● aihome-web.service - AIHome Web Terminal
-     Loaded: loaded (/etc/systemd/system/aihome-web.service; enabled; preset: enabled)
-     Active: active (running) since Wed 2026-09-09 20:10:21 +07; 46ms ago
- Invocation: 0be58248dcc644c48fb41cfb2bf25efb
-   Main PID: 498413 (node)
-      Tasks: 1 (limit: 9235)
-     Memory: 2.1M (peak: 2.1M)
-        CPU: 25ms
-     CGroup: /system.slice/aihome-web.service
-             └─498413 /usr/bin/node /opt/web/server.js
+sudo ss -ltnp | grep 8088
 
-Sep 09 20:10:21 AIHome systemd[1]: Started aihome-web.service - AIHome Web Terminal.
-aihome@AIHome:/opt/web$ sudo systemctl status aihome-web --no-pager
+up to date, audited 71 packages in 1s
+
+28 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+/opt/web/node_modules/express/index.js
 ● aihome-web.service - AIHome Web Terminal
      Loaded: loaded (/etc/systemd/system/aihome-web.service; enabled; preset: enabled)
-     Active: activating (auto-restart) (Result: exit-code) since Wed 2026-09-09 20:11:25 +07; 2s ago
- Invocation: 11e9c263115848d7bbeae4cfb79549bb
-    Process: 498695 ExecStart=/usr/bin/node /opt/web/server.js (code=exited, status=1/FAILURE)
-   Main PID: 498695 (code=exited, status=1/FAILURE)
-   Mem peak: 13.6M
-        CPU: 317ms
-aihome@AIHome:/opt/web$ sudo journalctl -u aihome-web -n 50 --no-pager
-Sep 09 20:11:25 AIHome systemd[1]: aihome-web.service: Main process exited, code=exited, status=1/FAILURE
-Sep 09 20:11:25 AIHome systemd[1]: aihome-web.service: Failed with result 'exit-code'.
-Sep 09 20:11:28 AIHome systemd[1]: aihome-web.service: Scheduled restart job, restart counter is at 19.
-Sep 09 20:11:28 AIHome systemd[1]: Started aihome-web.service - AIHome Web Terminal.
-Sep 09 20:11:28 AIHome node[498707]: node:internal/modules/cjs/loader:1215
-Sep 09 20:11:28 AIHome node[498707]:   throw err;
-Sep 09 20:11:28 AIHome node[498707]:   ^
-Sep 09 20:11:28 AIHome node[498707]: Error: Cannot find module 'express'
-Sep 09 20:11:28 AIHome node[498707]: Require stack:
-Sep 09 20:11:28 AIHome node[498707]: - /opt/web/server.js
-Sep 09 20:11:28 AIHome node[498707]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1212:15)
-Sep 09 20:11:28 AIHome node[498707]:     at Module._load (node:internal/modules/cjs/loader:1043:27)
-Sep 09 20:11:28 AIHome node[498707]:     at Module.require (node:internal/modules/cjs/loader:1298:19)
-Sep 09 20:11:28 AIHome node[498707]:     at require (node:internal/modules/helpers:182:18)
-Sep 09 20:11:28 AIHome node[498707]:     at Object.<anonymous> (/opt/web/server.js:5:17)
-Sep 09 20:11:28 AIHome node[498707]:     at Module._compile (node:internal/modules/cjs/loader:1529:14)
-Sep 09 20:11:28 AIHome node[498707]:     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
-Sep 09 20:11:28 AIHome node[498707]:     at Module.load (node:internal/modules/cjs/loader:1275:32)
-Sep 09 20:11:28 AIHome node[498707]:     at Module._load (node:internal/modules/cjs/loader:1096:12)
-Sep 09 20:11:28 AIHome node[498707]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
-Sep 09 20:11:28 AIHome node[498707]:   code: 'MODULE_NOT_FOUND',
-Sep 09 20:11:28 AIHome node[498707]:   requireStack: [ '/opt/web/server.js' ]
-Sep 09 20:11:28 AIHome node[498707]: }
-Sep 09 20:11:28 AIHome node[498707]: Node.js v20.19.2
-Sep 09 20:11:28 AIHome systemd[1]: aihome-web.service: Main process exited, code=exited, status=1/FAILURE
-Sep 09 20:11:28 AIHome systemd[1]: aihome-web.service: Failed with result 'exit-code'.
-Sep 09 20:11:31 AIHome systemd[1]: aihome-web.service: Scheduled restart job, restart counter is at 20.
-Sep 09 20:11:31 AIHome systemd[1]: Started aihome-web.service - AIHome Web Terminal.
-Sep 09 20:11:32 AIHome node[498715]: node:internal/modules/cjs/loader:1215
-Sep 09 20:11:32 AIHome node[498715]:   throw err;
-Sep 09 20:11:32 AIHome node[498715]:   ^
-Sep 09 20:11:32 AIHome node[498715]: Error: Cannot find module 'express'
-Sep 09 20:11:32 AIHome node[498715]: Require stack:
-Sep 09 20:11:32 AIHome node[498715]: - /opt/web/server.js
-Sep 09 20:11:32 AIHome node[498715]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1212:15)
-Sep 09 20:11:32 AIHome node[498715]:     at Module._load (node:internal/modules/cjs/loader:1043:27)
-Sep 09 20:11:32 AIHome node[498715]:     at Module.require (node:internal/modules/cjs/loader:1298:19)
-Sep 09 20:11:32 AIHome node[498715]:     at require (node:internal/modules/helpers:182:18)
-Sep 09 20:11:32 AIHome node[498715]:     at Object.<anonymous> (/opt/web/server.js:5:17)
-Sep 09 20:11:32 AIHome node[498715]:     at Module._compile (node:internal/modules/cjs/loader:1529:14)
-Sep 09 20:11:32 AIHome node[498715]:     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
-Sep 09 20:11:32 AIHome node[498715]:     at Module.load (node:internal/modules/cjs/loader:1275:32)
-Sep 09 20:11:32 AIHome node[498715]:     at Module._load (node:internal/modules/cjs/loader:1096:12)
-Sep 09 20:11:32 AIHome node[498715]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
-Sep 09 20:11:32 AIHome node[498715]:   code: 'MODULE_NOT_FOUND',
-Sep 09 20:11:32 AIHome node[498715]:   requireStack: [ '/opt/web/server.js' ]
-Sep 09 20:11:32 AIHome node[498715]: }
-Sep 09 20:11:32 AIHome node[498715]: Node.js v20.19.2
-Sep 09 20:11:32 AIHome systemd[1]: aihome-web.service: Main process exited, code=exited, status=1/FAILURE
-Sep 09 20:11:32 AIHome systemd[1]: aihome-web.service: Failed with result 'exit-code'.
-aihome@AIHome:/opt/web$ sudo ss -ltnp | grep 8088
+     Active: active (running) since Wed 2026-09-09 20:13:24 +07; 2s ago
+ Invocation: 27b07cd0888d4143a446022290e686fc
+   Main PID: 499006 (node)
+      Tasks: 7 (limit: 9235)
+     Memory: 24M (peak: 24.3M)
+        CPU: 601ms
+     CGroup: /system.slice/aihome-web.service
+             └─499006 /usr/bin/node /opt/web/server.js
+
+Sep 09 20:13:24 AIHome systemd[1]: Started aihome-web.service - AIHome Web Terminal.
+Sep 09 20:13:24 AIHome node[499006]: AIHome Web Terminal v0.2.0 listening on 0.0.0.0:8080
