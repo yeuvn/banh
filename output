@@ -1,114 +1,53 @@
-aihome@AIHome:/opt/aihome$ set -euo pipefail
+aihome@AIHome:~$ set -euo pipefail
 
-echo '=== 1. CHECK PATHS ==='
-ls -ld /opt/aihome /opt/aihome-test
-test ! -e /opt/KIRA
-
-echo
-echo '=== 2. CHECK MAIN GIT ==='
-cd /opt/aihome
-git status --short --branch
-echo "HEAD=$(git rev-parse --short HEAD)"
-echo "FULL_HEAD=$(git rev-parse HEAD)"
+echo '=== PATH ==='
+ls -ld /opt/aihome /opt/KIRA /opt/aihome-test 2>&1 || true
 
 echo
-echo '=== 3. CHECK GATEWAY ==='
-docker ps -a --filter name=aihome-gateway \
-  --format 'NAME={{.Names}} STATUS={{.Status}}'
+echo '=== GIT MAIN ==='
+for d in /opt/aihome /opt/KIRA; do
+  if [ -d "$d/.git" ]; then
+    echo "--- $d ---"
+    cd "$d"
+    git rev-parse --short HEAD
+    git status --short --branch
+  fi
+done
 
 echo
-echo '=== 4. CHECK TEST ==='
-docker ps -a --filter name=aihome-openclaw-test \
-  --format 'NAME={{.Names}} STATUS={{.Status}}'
+echo '=== TEST CONTAINER ==='
+docker inspect aihome-openclaw-test \
+  --format 'STATUS={{.State.Status}} HEALTH={{if .State.Health}}{{.State.Health.Status}}{{else}}n/a{{end}}'
 
 echo
-echo '=== 5. SYSTEMD REFERENCES ==='
-systemctl cat aihome-web-terminal.service 2>/dev/null || true
-
-echo
-echo '=== 6. MAIN ABSOLUTE PATH REFERENCES ==='
-grep -RIn \
-  --exclude-dir=.git \
-  --exclude-dir=.docker \
-  --exclude='*.sqlite*' \
-  '/opt/aihome' \
-  /opt/aihome/compose \
-  /opt/aihome/.github \
-  /opt/aihome/config \
-  /opt/aihome/scripts \
-  2>/dev/null || true
-
-echo
-echo '=== PREFLIGHT COMPLETE ==='
-=== 1. CHECK PATHS ===
+echo '=== SYSTEMD ==='
+echo '=== DONE ==='ueMounts}}{{println .Source "->" .Destination}}{{end}}' \
+=== PATH ===
+ls: cannot access '/opt/KIRA': No such file or directory
 drwxr-xr-x 13 aihome aihome 4096 Sep  9 20:32 /opt/aihome
 drwxr-xr-x 11 aihome aihome 4096 Sep  7 06:17 /opt/aihome-test
 
-=== 2. CHECK MAIN GIT ===
+=== GIT MAIN ===
+--- /opt/aihome ---
+126ecc2
 ## Test...origin/Test [behind 59]
 ?? .docker/
 ?? output
-HEAD=126ecc2
-FULL_HEAD=126ecc28430c3fd7d91dc69e612cb492a1341c9a
 
-=== 3. CHECK GATEWAY ===
-NAME=aihome-gateway STATUS=Exited (128) 4 days ago
+=== TEST CONTAINER ===
+STATUS=running HEALTH=healthy
 
-=== 4. CHECK TEST ===
-NAME=aihome-openclaw-test STATUS=Up 6 hours (healthy)
-
-=== 5. SYSTEMD REFERENCES ===
-# /etc/systemd/system/aihome-web-terminal.service
-[Unit]
-Description=AIHome LAN Web Terminal
-After=network-online.target
-Wants=network-online.target
-
-[Service]
-Type=simple
-User=aihome
-Group=aihome
+=== SYSTEMD ===
 WorkingDirectory=/opt/aihome
-EnvironmentFile=/etc/aihome/web-terminal.env
 ExecStart=/usr/bin/python3 /opt/aihome/tools/web-terminal/web_terminal.py
-Restart=on-failure
-RestartSec=3
-NoNewPrivileges=true
-PrivateTmp=true
-ProtectSystem=full
-ProtectHome=true
 ReadWritePaths=/opt/aihome
 
-[Install]
-WantedBy=multi-user.target
+=== GATEWAY ===
+/opt/aihome/logs/gateway -> /data/logs
+/opt/aihome/memory -> /data/memory
+/opt/aihome/data/sqlite -> /data/sqlite
+/opt/aihome/config/gateway -> /config
+/opt/aihome/data/cache -> /data/cache
+/opt/aihome/knowledge -> /data/knowledge
 
-=== 6. MAIN ABSOLUTE PATH REFERENCES ===
-/opt/aihome/compose/compose.yml:6:      context: /opt/aihome/config/gateway
-/opt/aihome/compose/compose.yml:16:      - /opt/aihome/data/sqlite:/data/sqlite
-/opt/aihome/compose/compose.yml:17:      - /opt/aihome/data/cache:/data/cache
-/opt/aihome/compose/compose.yml:18:      - /opt/aihome/memory:/data/memory
-/opt/aihome/compose/compose.yml:19:      - /opt/aihome/knowledge:/data/knowledge
-/opt/aihome/compose/compose.yml:20:      - /opt/aihome/logs/gateway:/data/logs
-/opt/aihome/compose/compose.yml:21:      - /opt/aihome/config/gateway:/config:ro
-/opt/aihome/compose/openclaw.yml:31:      - /opt/aihome-test/openclaw/state:/data/state
-/opt/aihome/compose/openclaw.yml:32:      - /opt/aihome-test/openclaw/workspace:/home/node/.openclaw/workspace
-/opt/aihome/compose/openclaw.yml:33:      - /opt/aihome-test/openclaw/runtime-config:/data/config
-/opt/aihome/compose/openclaw.yml:34:      - /opt/aihome-test/source/config/openclaw/openclaw.json5:/data/source-config/openclaw.json5:ro
-/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:27:      SOURCE_DIR: /opt/aihome-test/source
-/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:83:          GROQ_FILE=/opt/aihome-test/openclaw/secrets/groq.env
-/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:116:          STATE_DIR=/opt/aihome-test/openclaw/state
-/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:118:          RUNTIME_CONFIG=/opt/aihome-test/openclaw/runtime-config
-/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:119:          SOURCE_CONFIG=/opt/aihome-test/source/config/openclaw/openclaw.json5
-/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:121:          docker compose -f /opt/aihome-test/source/compose/openclaw.yml down || true
-/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:172:            -v /opt/aihome-test/openclaw/state:/data/state \
-/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:173:            -v /opt/aihome-test/openclaw/workspace:/home/node/.openclaw/workspace \
-/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:181:        working-directory: /opt/aihome-test/source
-/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:192:        working-directory: /opt/aihome-test/source
-/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:218:        working-directory: /opt/aihome-test/source
-/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:252:            docker compose -f /opt/aihome-test/source/compose/openclaw.yml ps -a || true
-/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:275:        working-directory: /opt/aihome-test/source
-/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:299:            docker compose -f /opt/aihome-test/source/compose/openclaw.yml ps -a || true
-/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:354:          MEMORY_FILE=/opt/aihome-test/openclaw/workspace/MEMORY-TEST.md
-/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:361:        working-directory: /opt/aihome-test/source
 
-=== PREFLIGHT COMPLETE ===
