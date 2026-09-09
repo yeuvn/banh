@@ -1,68 +1,169 @@
-aihome@AIHome:~$ cd /opt/aihome
+aihome@AIHome:/opt/aihome$ cd /opt/aihome
 
-# 1. Tạo thư mục backup ngoài Git
-BACKUP="/opt/aihome-rollback-backup-$(date +%Y%m%d-%H%M%S)"
-mkdir -p "$BACKUP"
+echo '=== 1. GIT STATE ==='
+git status --short --branch
+git rev-parse HEAD
+git branch --show-current
 
-# 2. Sao lưu toàn bộ các mục đang untracked
-for x in .docker compose/.env compose/backup config data output; do
-    if [ -e "$x" ]; then
-        mkdir -p "$BACKUP/$(dirname "$x")"
-        cp -a "$x" "$BACKUP/$x"
+echo
+echo '=== 2. TOP LEVEL ==='
+find . -maxdepth 2 -mindepth 1 -print | sort
+
+echo
+echo '=== 3. UNTRACKED: .docker ==='
+find .docker -maxdepth 5 -ls 2>/dev/null || true
+
+echo
+echo '=== 4. UNTRACKED: output ==='
+find output -maxdepth 5 -ls 2>/dev/null || true
+
+echo
+echo '=== 5. RUNTIME CANDIDATES ==='
+for p in config data compose/.env compose/backup; do
+    echo "--- $p ---"
+    if [ -e "$p" ]; then
+        ls -lad "$p"
+        find "$p" -maxdepth 3 -type f -printf '%p\t%k KB\n' 2>/dev/null | sort
+    else
+        echo "MISSING"
     fi
 done
 
-# 3. Ghi lại trạng thái Git hiện tại
-git status --short --branch > "$BACKUP/git-status.txt"
-git log -1 --decorate --oneline > "$BACKUP/git-head.txt"
-git reflog -12 --date=iso > "$BACKUP/git-reflog.txt"
-
-# 4. Xác nhận backup tồn tại
-echo "========== BACKUP =========="
-echo "$BACKUP"
-du -sh "$BACKUP"
-
-# 5. Quay về branch Test
-git fetch origin Test
-git checkout Test
-
-# 6. Đưa HEAD về Checkpoint 2
-git reset --hard 126ecc28430c3fd7d91dc69e612cb492a1341c9a
-
-# 7. Khôi phục toàn bộ dữ liệu untracked đã backup
-echo "$BACKUP"== BACKUP =========="}\t{{.Image}}\t{{.Status}}\t{{.Ports}}'
-mkdir: cannot create directory ‘/opt/aihome-rollback-backup-20260909-203244’: Permission denied
-mkdir: cannot create directory ‘/opt/aihome-rollback-backup-20260909-203244’: Permission denied
-cp: cannot create directory '/opt/aihome-rollback-backup-20260909-203244/.docker': No such file or directory
-mkdir: cannot create directory ‘/opt/aihome-rollback-backup-20260909-203244’: Permission denied
-cp: cannot create regular file '/opt/aihome-rollback-backup-20260909-203244/compose/.env': No such file or directory
-mkdir: cannot create directory ‘/opt/aihome-rollback-backup-20260909-203244’: Permission denied
-cp: cannot create directory '/opt/aihome-rollback-backup-20260909-203244/compose/backup': No such file or directory
-mkdir: cannot create directory ‘/opt/aihome-rollback-backup-20260909-203244’: Permission denied
-cp: cannot create directory '/opt/aihome-rollback-backup-20260909-203244/config': No such file or directory
-mkdir: cannot create directory ‘/opt/aihome-rollback-backup-20260909-203244’: Permission denied
-cp: cannot create directory '/opt/aihome-rollback-backup-20260909-203244/data': No such file or directory
-mkdir: cannot create directory ‘/opt/aihome-rollback-backup-20260909-203244’: Permission denied
-cp: cannot create regular file '/opt/aihome-rollback-backup-20260909-203244/output': No such file or directory
-bash: /opt/aihome-rollback-backup-20260909-203244/git-status.txt: No such file or directory
-bash: /opt/aihome-rollback-backup-20260909-203244/git-head.txt: No such file or directory
-bash: /opt/aihome-rollback-backup-20260909-203244/git-reflog.txt: No such file or directory
-========== BACKUP ==========
-/opt/aihome-rollback-backup-20260909-203244
-du: cannot access '/opt/aihome-rollback-backup-20260909-203244': No such file or directory
-From https://github.com/yeuvn/AIHome
- * branch            Test       -> FETCH_HEAD
-branch 'Test' set up to track 'origin/Test'.
-Switched to a new branch 'Test'
-HEAD is now at 126ecc2 checkpoint: 2026-09-08 Groq native built-in tools PASS
-========== FINAL STATUS ==========
+echo
+echo '=== 6. DOCKER STATE ==='
+docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}'
+echo
+docker volume ls
+=== 1. GIT STATE ===
 ## Test...origin/Test [behind 59]
 ?? .docker/
 ?? output
-========== FINAL HEAD ==========
-126ecc2 (HEAD -> Test) checkpoint: 2026-09-08 Groq native built-in tools PASS
-========== DOCKER ==========
+126ecc28430c3fd7d91dc69e612cb492a1341c9a
+Test
+
+=== 2. TOP LEVEL ===
+./AGENTS.md
+./backups
+./compose
+./compose/backup
+./compose/compose.yml
+./compose/.env
+./compose/openclaw.yml
+./config
+./config/ci
+./config/gateway
+./config/openclaw
+./data
+./data/cache
+./data/sqlite
+./.docker
+./.docker/buildx
+./.docker/cli-plugins
+./.docker/.token_seed
+./.docker/.token_seed.lock
+./.git
+./.git/branches
+./.git/COMMIT_EDITMSG
+./.git/config
+./.git-credentials
+./.git/description
+./.git/FETCH_HEAD
+./.git/github-credentials
+./.git/HEAD
+./.git/hooks
+./.github
+./.github/box-test-trigger
+./.github/workflows
+./.gitignore
+./.git/index
+./.git/info
+./.git/logs
+./.git/objects
+./.git/ORIG_HEAD
+./.git/refs
+./.git/worktrees
+./knowledge
+./knowledge/index
+./knowledge/raw
+./logs
+./logs/gateway
+./memory
+./memory/raw
+./NhatKy.md
+./output
+./scripts
+./scripts/test-groq-built-in-tools.sh
+./SECURITY.md
+
+=== 3. UNTRACKED: .docker ===
+  2752815      4 drwxr-xr-x   4 aihome   aihome       4096 Sep  2 21:19 .docker
+  2752681      4 drwx------   6 aihome   aihome       4096 Sep  3 06:49 .docker/buildx
+  2752850      0 -rw-------   1 aihome   aihome          0 Sep  2 21:19 .docker/buildx/.lock
+  2752837      4 drwx------   2 aihome   aihome       4096 Sep  2 21:19 .docker/buildx/instances
+  2752848      4 drwx------   2 aihome   aihome       4096 Sep  2 21:19 .docker/buildx/defaults
+  2752854      4 drwx------   4 aihome   aihome       4096 Sep  2 21:19 .docker/buildx/refs
+  2752855      4 drwx------   2 aihome   aihome       4096 Sep  3 06:49 .docker/buildx/refs/__group__
+  2752622      4 -rw-------   1 aihome   aihome         60 Sep  2 23:26 .docker/buildx/refs/__group__/d9khnlsc0wssxseycf1qie0ui
+  2752894      4 -rw-------   1 aihome   aihome         60 Sep  3 06:49 .docker/buildx/refs/__group__/5hiozg9fkgxk0emgnx30vptr9
+  2752851      4 -rw-------   1 aihome   aihome         60 Sep  2 23:11 .docker/buildx/refs/__group__/u8p1sji8y9pya072s23mdqt29
+  2752856      4 -rw-------   1 aihome   aihome         60 Sep  2 21:19 .docker/buildx/refs/__group__/qbtu8vwizjccgvst6pvbswyc3
+  2752852      4 -rw-------   1 aihome   aihome         60 Sep  2 23:04 .docker/buildx/refs/__group__/i46qfeeu0j62edects84k5jcm
+  2752585      4 -rw-------   1 aihome   aihome         60 Sep  2 23:20 .docker/buildx/refs/__group__/qs39yzgvbmfbcs9wmqusf9dop
+  2752858      4 drwx------   3 aihome   aihome       4096 Sep  2 21:19 .docker/buildx/refs/default
+  2752859      4 drwx------   2 aihome   aihome       4096 Sep  3 06:49 .docker/buildx/refs/default/default
+  2752895      4 -rw-r--r--   1 aihome   aihome        157 Sep  2 23:26 .docker/buildx/refs/default/default/zr2g5a4i0q9nzslal46c29knj
+  2752882      4 -rw-r--r--   1 aihome   aihome        181 Sep  2 23:04 .docker/buildx/refs/default/default/kcxnkn6pqplro307qvei5qi4t
+  2752860      4 -rw-r--r--   1 aihome   aihome        157 Sep  2 21:19 .docker/buildx/refs/default/default/8qj2n60yt424934tx5kjijtj3
+  2752896      4 -rw-r--r--   1 aihome   aihome        181 Sep  2 23:20 .docker/buildx/refs/default/default/k0afs4ivpw47by82olwv6dpnw
+  2752949      4 -rw-r--r--   1 aihome   aihome        181 Sep  3 06:49 .docker/buildx/refs/default/default/ydcuj3ivqv564g9sf3soti1di
+  2752883      4 -rw-r--r--   1 aihome   aihome        157 Sep  2 23:11 .docker/buildx/refs/default/default/f1z0d47wv1rzu47lbyr3nnd75
+  2752857      4 -rw-------   1 aihome   aihome          1 Sep  2 21:19 .docker/buildx/refs/version
+  2752849      4 drwx------   2 aihome   aihome       4096 Sep  3 06:49 .docker/buildx/activity
+  2752880      4 -rw-------   1 aihome   aihome         20 Sep  3 06:49 .docker/buildx/activity/default
+  2752853      4 -rw-------   1 aihome   aihome         16 Sep  2 21:19 .docker/buildx/.buildNodeID
+  2752637      4 -rw-------   1 aihome   aihome         62 Sep  3 06:49 .docker/buildx/current
+  2752862      4 -rw-------   1 aihome   aihome         74 Sep  3 06:49 .docker/.token_seed
+  2752833      4 drwxr-xr-x   2 aihome   aihome       4096 Sep  2 21:09 .docker/cli-plugins
+  2752836  48284 -rwxr-xr-x   1 aihome   aihome   49441177 Sep  2 21:10 .docker/cli-plugins/docker-compose
+  2752861      0 -rw-------   1 aihome   aihome          0 Sep  2 21:19 .docker/.token_seed.lock
+
+=== 4. UNTRACKED: output ===
+  2752950     20 -rw-rw-r--   1 aihome   aihome      19793 Sep  8 20:37 output
+
+=== 5. RUNTIME CANDIDATES ===
+--- config ---
+drwxr-xr-x 5 aihome aihome 4096 Sep  9 20:32 config
+config/ci/AIHOME-GITHUB-ACTIONS-SETUP.md	4 KB
+config/gateway/app/database.py	16 KB
+config/gateway/app/database.py.bak	12 KB
+config/gateway/app/llm.py	4 KB
+config/gateway/app/main.py	8 KB
+config/gateway/app/main.py.bak	8 KB
+config/gateway/app/orchestrator.py	8 KB
+config/gateway/app/orchestrator.py.bak	12 KB
+config/gateway/Dockerfile	4 KB
+config/gateway/requirements.txt	4 KB
+config/openclaw/AUDIT-v2026.7.1-2.md	8 KB
+config/openclaw/CAPABILITY-MATRIX.md	8 KB
+config/openclaw/HA-EXECUTION-AUDIT.md	8 KB
+config/openclaw/openclaw.json5	4 KB
+config/openclaw/TEST-RUNBOOK.md	8 KB
+--- data ---
+drwxr-xr-x 4 aihome aihome 4096 Aug 30 14:44 data
+data/sqlite/aihome.db	80 KB
+--- compose/.env ---
+-rw------- 1 aihome aihome 233 Sep  2 13:20 compose/.env
+compose/.env	4 KB
+--- compose/backup ---
+drwxrwxr-x 2 aihome aihome 4096 Aug 30 20:53 compose/backup
+compose/backup/aihome-before-fts5-20260830-204254.db	60 KB
+compose/backup/database-before-fts5-helper-fix-20260830-205303.py	16 KB
+compose/backup/database-before-fts5-patch-20260830-205039.py	16 KB
+compose/backup/database-before-hybrid-20260830-204616.py	16 KB
+compose/backup/database-before-search-patch-20260830-205159.py	16 KB
+
+=== 6. DOCKER STATE ===
 NAMES                  IMAGE                                     STATUS                 PORTS
 aihome-openclaw-test   ghcr.io/openclaw/openclaw:2026.8.2-slim   Up 6 hours (healthy)   127.0.0.1:18789->18789/tcp
-========== BACKUP ==========
-/opt/aihome-rollback-backup-20260909-203244
+
+DRIVER    VOLUME NAME
