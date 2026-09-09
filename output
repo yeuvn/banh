@@ -1,127 +1,120 @@
-aihome@AIHome:/opt/aihome-test/source$ echo '=== RUNTIME AGENTS CONFIG ==='
-sed -n '1,60p' /opt/aihome-test/openclaw/runtime-config/openclaw.json5
+aihome@AIHome:/opt/aihome-test$ cd /opt/aihome-test
 
-echo '=== SOURCE AGENTS CONFIG ==='
-sed -n '1,60p' /opt/aihome-test/source/config/openclaw/openclaw.json5
-=== RUNTIME AGENTS CONFIG ===
-{
-  "gateway": {
-    "mode": "local",
-    "bind": "loopback",
-    "auth": {
-      "mode": "token",
-      "token": "${OPENCLAW_GATEWAY_TOKEN}"
-    }
-  },
-  "agents": {
-    "defaults": {
-      "model": {
-        "primary": "groq/openai/gpt-oss-20b",
-        "fallbacks": []
-      },
-      "models": {
-        "groq/openai/gpt-oss-20b": {
-          "params": {
-            "extra_body": {
-              "tools": [
-                {
-                  "type": "browser_search"
-                }
-              ]
-            }
-          }
-        }
-      },
-      "skills": [],
-      "subagents": {
-        "maxConcurrent": 1,
-        "runTimeoutSeconds": 300
-      },
-      "modelPolicy": {
-        "allow": [
-          "groq/openai/gpt-oss-20b"
-        ]
-      }
-    }
-  },
-  "models": {
-    "providers": {
-      "groq": {
-        "baseUrl": "https://api.groq.com/openai/v1",
-        "models": [
-          {
-            "id": "openai/gpt-oss-20b",
-            "name": "openai/gpt-oss-20b"
-          }
-        ]
-      }
-    }
-  },
-  "tools": {
-    "profile": "coding",
-    "allow": [
-      "group:memory",
-      "group:fs",
-      "session_status"
-    ],
-=== SOURCE AGENTS CONFIG ===
-// AIHome OpenClaw-Test baseline hardening.
-// Pinned source/release: OpenClaw v2026.8.2.
-// TEST: file read/write is enabled for KIRA workspace; runtime/exec remains disabled.
-{
-  gateway: {
-    mode: "local",
-    bind: "loopback",
-    auth: {
-      mode: "token",
-      token: "${OPENCLAW_GATEWAY_TOKEN}",
-    },
-  },
+echo '=== 1. SYMLINK / DIRECTORY ==='
+for p in \
+  source/workspace \
+  openclaw/workspace \
+  openclaw/state/workspace \
+  openclaw/state/.openclaw/workspace
+do
+  echo "--- $p ---"
+  stat -c 'type=%F inode=%i mode=%A owner=%U:%G' "$p" 2>/dev/null || true
+  readlink -f "$p" 2>/dev/null || true
+done
 
-  agents: {
-    defaults: {
-      model: {
-        primary: "groq/openai/gpt-oss-20b",
-        fallbacks: [],
-      },
-      models: {
-        "groq/openai/gpt-oss-20b": {
-          params: {
-            extra_body: {
-              tools: [
-                { type: "browser_search" },
-                // { type: "code_interpreter" }, // DEACTIVATED; re-enable only when AIHome needs it.
-              ],
-            },
-          },
-        },
-      },
-      skills: [],
-      subagents: {
-        maxConcurrent: 1,
-        runTimeoutSeconds: 300,
-      },
-    },
-  },
+echo
+echo '=== 2. ALL FILES IN FOUR WORKSPACES ==='
+for p in \
+  source/workspace \
+  openclaw/workspace \
+  openclaw/state/workspace \
+  openclaw/state/.openclaw/workspace
+do
+  echo "--- $p ---"
+  find "$p" -type f -printf '%P\n' 2>/dev/null | sort
+done
 
-  models: {
-    providers: {
-      groq: {
-        baseUrl: "https://api.groq.com/openai/v1",
-        models: [
-          {
-            id: "openai/gpt-oss-20b",
-            name: "openai/gpt-oss-20b",
-          },
-        ],
-      },
-    },
-  },
+echo
+echo '=== 3. DOCKER MOUNTS ==='
+docker inspect aihome-openclaw-test \
+  --format '{{range .Mounts}}{{println .Type .Source "->" .Destination}}{{end}}' | sort
 
-  tools: {
-    profile: "coding",
-    allow: ["group:memory", "group:fs", "session_status"],
-    deny: [
-      "group:runtime",
-      "group:web",
-      "group:ui",
+echo
+echo '=== 4. CONTAINER WORKSPACE ENV ==='
+docker inspect aihome-openclaw-test \
+  --format '{{range .Config.Env}}{{println .}}{{end}}' |
+  grep -Ei 'workspace|openclaw|state' | sort
+=== 1. SYMLINK / DIRECTORY ===
+--- source/workspace ---
+type=directory inode=2754708 mode=drwxr-xr-x owner=aihome:aihome
+/opt/aihome-test/source/workspace
+--- openclaw/workspace ---
+type=directory inode=2753157 mode=drwxr-xr-x owner=aihome:aihome
+/opt/aihome-test/openclaw/workspace
+--- openclaw/state/workspace ---
+type=directory inode=2756664 mode=drwxr-xr-x owner=aihome:aihome
+/opt/aihome-test/openclaw/state/workspace
+--- openclaw/state/.openclaw/workspace ---
+type=directory inode=2754857 mode=drwx------ owner=aihome:aihome
+/opt/aihome-test/openclaw/state/.openclaw/workspace
+
+=== 2. ALL FILES IN FOUR WORKSPACES ===
+--- source/workspace ---
+Skill.md
+--- openclaw/workspace ---
+Skill.md
+--- openclaw/state/workspace ---
+AGENTS.md
+BOOTSTRAP.md
+.git/config
+.git/description
+.git/HEAD
+.git/hooks/applypatch-msg.sample
+.git/hooks/commit-msg.sample
+.git/hooks/fsmonitor-watchman.sample
+.git/hooks/post-update.sample
+.git/hooks/pre-applypatch.sample
+.git/hooks/pre-commit.sample
+.git/hooks/pre-merge-commit.sample
+.git/hooks/prepare-commit-msg.sample
+.git/hooks/pre-push.sample
+.git/hooks/pre-rebase.sample
+.git/hooks/pre-receive.sample
+.git/hooks/push-to-checkout.sample
+.git/hooks/update.sample
+.git/info/exclude
+IDENTITY.md
+SOUL.md
+USER.md
+--- openclaw/state/.openclaw/workspace ---
+AGENTS.md
+BOOTSTRAP.md
+.git/config
+.git/description
+.git/HEAD
+.git/hooks/applypatch-msg.sample
+.git/hooks/commit-msg.sample
+.git/hooks/fsmonitor-watchman.sample
+.git/hooks/post-update.sample
+.git/hooks/pre-applypatch.sample
+.git/hooks/pre-commit.sample
+.git/hooks/pre-merge-commit.sample
+.git/hooks/prepare-commit-msg.sample
+.git/hooks/pre-push.sample
+.git/hooks/pre-rebase.sample
+.git/hooks/pre-receive.sample
+.git/hooks/push-to-checkout.sample
+.git/hooks/update.sample
+.git/info/exclude
+HEARTBEAT.md
+IDENTITY.md
+openclaw-workspace-state.json
+SOUL.md
+TOOLS.md
+USER.md
+
+=== 3. DOCKER MOUNTS ===
+
+bind /opt/aihome-test/openclaw/runtime-config -> /data/config
+bind /opt/aihome-test/openclaw/state -> /data/state
+bind /opt/aihome-test/openclaw/workspace -> /home/node/.openclaw/workspace
+bind /opt/aihome-test/source/config/aihome -> /home/node/.openclaw/workspace/config/aihome
+bind /opt/aihome-test/source/config/openclaw/openclaw.json5 -> /data/source-config/openclaw.json5
+
+=== 4. CONTAINER WORKSPACE ENV ===
+OPENCLAW_CONFIG_PATH=/data/config/openclaw.json5
+OPENCLAW_GATEWAY_TOKEN=eba5**14ee
+OPENCLAW_HOME=/data/state
+OPENCLAW_PLUGIN_LIFECYCLE_TRACE=1
+OPENCLAW_PLUGIN_LOAD_DEBUG=1
+OPENCLAW_STATE_DIR=/data/state
