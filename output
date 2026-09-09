@@ -1,169 +1,129 @@
 aihome@AIHome:/opt/aihome$ cd /opt/aihome
 
-echo '=== 1. GIT STATE ==='
-git status --short --branch
-git rev-parse HEAD
-git branch --show-current
+echo '=== CONTAINERS ==='
+docker ps -a --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'
 
 echo
-echo '=== 2. TOP LEVEL ==='
-find . -maxdepth 2 -mindepth 1 -print | sort
+echo '=== GATEWAY MOUNTS ==='
+docker inspect aihome-gateway \
+  --format '{{range .Mounts}}{{println .Source "->" .Destination}}{{end}}' \
+  2>&1 || true
 
 echo
-echo '=== 3. UNTRACKED: .docker ==='
-find .docker -maxdepth 5 -ls 2>/dev/null || true
+echo '=== OPENCLAW TEST MOUNTS ==='
+docker inspect aihome-openclaw-test \
+  --format '{{range .Mounts}}{{println .Source "->" .Destination}}{{end}}'
 
 echo
-echo '=== 4. UNTRACKED: output ==='
-find output -maxdepth 5 -ls 2>/dev/null || true
+echo '=== COMPOSE ENV FILE ==='
+stat /opt/aihome/compose/.env
+echo '--- variable names only ---'
+sed 's/=.*$/=<REDACTED>/' /opt/aihome/compose/.env
 
 echo
-echo '=== 5. RUNTIME CANDIDATES ==='
-for p in config data compose/.env compose/backup; do
-    echo "--- $p ---"
-    if [ -e "$p" ]; then
-        ls -lad "$p"
-        find "$p" -maxdepth 3 -type f -printf '%p\t%k KB\n' 2>/dev/null | sort
-    else
-        echo "MISSING"
-    fi
-done
+echo '=== AIHOME RUNTIME DATA ==='
+ls -lah /opt/aihome/data/sqlite/
+find /opt/aihome/memory -maxdepth 2 -type f -printf '%p %s bytes\n' 2>/dev/null
+find /opt/aihome/knowledge -maxdepth 2 -type f -printf '%p %s bytes\n' 2>/dev/null
 
 echo
-echo '=== 6. DOCKER STATE ==='
-docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}'
-echo
-docker volume ls
-=== 1. GIT STATE ===
-## Test...origin/Test [behind 59]
-?? .docker/
-?? output
-126ecc28430c3fd7d91dc69e612cb492a1341c9a
-Test
+echo '=== OPENCLAW TEST RUNTIME ==='
+find /opt/aihome-test/openclaw/state -maxdepth 3 -type f -printf '%p %s bytes\n' 2>/dev/null | head -100
+=== CONTAINERS ===
+NAMES                  IMAGE                                     STATUS
+aihome-openclaw-test   ghcr.io/openclaw/openclaw:2026.8.2-slim   Up 6 hours (healthy)
+aihome-gateway         31daaedb5801                              Exited (128) 4 days ago
 
-=== 2. TOP LEVEL ===
-./AGENTS.md
-./backups
-./compose
-./compose/backup
-./compose/compose.yml
-./compose/.env
-./compose/openclaw.yml
-./config
-./config/ci
-./config/gateway
-./config/openclaw
-./data
-./data/cache
-./data/sqlite
-./.docker
-./.docker/buildx
-./.docker/cli-plugins
-./.docker/.token_seed
-./.docker/.token_seed.lock
-./.git
-./.git/branches
-./.git/COMMIT_EDITMSG
-./.git/config
-./.git-credentials
-./.git/description
-./.git/FETCH_HEAD
-./.git/github-credentials
-./.git/HEAD
-./.git/hooks
-./.github
-./.github/box-test-trigger
-./.github/workflows
-./.gitignore
-./.git/index
-./.git/info
-./.git/logs
-./.git/objects
-./.git/ORIG_HEAD
-./.git/refs
-./.git/worktrees
-./knowledge
-./knowledge/index
-./knowledge/raw
-./logs
-./logs/gateway
-./memory
-./memory/raw
-./NhatKy.md
-./output
-./scripts
-./scripts/test-groq-built-in-tools.sh
-./SECURITY.md
+=== GATEWAY MOUNTS ===
+/opt/aihome/config/gateway -> /config
+/opt/aihome/data/cache -> /data/cache
+/opt/aihome/knowledge -> /data/knowledge
+/opt/aihome/logs/gateway -> /data/logs
+/opt/aihome/memory -> /data/memory
+/opt/aihome/data/sqlite -> /data/sqlite
 
-=== 3. UNTRACKED: .docker ===
-  2752815      4 drwxr-xr-x   4 aihome   aihome       4096 Sep  2 21:19 .docker
-  2752681      4 drwx------   6 aihome   aihome       4096 Sep  3 06:49 .docker/buildx
-  2752850      0 -rw-------   1 aihome   aihome          0 Sep  2 21:19 .docker/buildx/.lock
-  2752837      4 drwx------   2 aihome   aihome       4096 Sep  2 21:19 .docker/buildx/instances
-  2752848      4 drwx------   2 aihome   aihome       4096 Sep  2 21:19 .docker/buildx/defaults
-  2752854      4 drwx------   4 aihome   aihome       4096 Sep  2 21:19 .docker/buildx/refs
-  2752855      4 drwx------   2 aihome   aihome       4096 Sep  3 06:49 .docker/buildx/refs/__group__
-  2752622      4 -rw-------   1 aihome   aihome         60 Sep  2 23:26 .docker/buildx/refs/__group__/d9khnlsc0wssxseycf1qie0ui
-  2752894      4 -rw-------   1 aihome   aihome         60 Sep  3 06:49 .docker/buildx/refs/__group__/5hiozg9fkgxk0emgnx30vptr9
-  2752851      4 -rw-------   1 aihome   aihome         60 Sep  2 23:11 .docker/buildx/refs/__group__/u8p1sji8y9pya072s23mdqt29
-  2752856      4 -rw-------   1 aihome   aihome         60 Sep  2 21:19 .docker/buildx/refs/__group__/qbtu8vwizjccgvst6pvbswyc3
-  2752852      4 -rw-------   1 aihome   aihome         60 Sep  2 23:04 .docker/buildx/refs/__group__/i46qfeeu0j62edects84k5jcm
-  2752585      4 -rw-------   1 aihome   aihome         60 Sep  2 23:20 .docker/buildx/refs/__group__/qs39yzgvbmfbcs9wmqusf9dop
-  2752858      4 drwx------   3 aihome   aihome       4096 Sep  2 21:19 .docker/buildx/refs/default
-  2752859      4 drwx------   2 aihome   aihome       4096 Sep  3 06:49 .docker/buildx/refs/default/default
-  2752895      4 -rw-r--r--   1 aihome   aihome        157 Sep  2 23:26 .docker/buildx/refs/default/default/zr2g5a4i0q9nzslal46c29knj
-  2752882      4 -rw-r--r--   1 aihome   aihome        181 Sep  2 23:04 .docker/buildx/refs/default/default/kcxnkn6pqplro307qvei5qi4t
-  2752860      4 -rw-r--r--   1 aihome   aihome        157 Sep  2 21:19 .docker/buildx/refs/default/default/8qj2n60yt424934tx5kjijtj3
-  2752896      4 -rw-r--r--   1 aihome   aihome        181 Sep  2 23:20 .docker/buildx/refs/default/default/k0afs4ivpw47by82olwv6dpnw
-  2752949      4 -rw-r--r--   1 aihome   aihome        181 Sep  3 06:49 .docker/buildx/refs/default/default/ydcuj3ivqv564g9sf3soti1di
-  2752883      4 -rw-r--r--   1 aihome   aihome        157 Sep  2 23:11 .docker/buildx/refs/default/default/f1z0d47wv1rzu47lbyr3nnd75
-  2752857      4 -rw-------   1 aihome   aihome          1 Sep  2 21:19 .docker/buildx/refs/version
-  2752849      4 drwx------   2 aihome   aihome       4096 Sep  3 06:49 .docker/buildx/activity
-  2752880      4 -rw-------   1 aihome   aihome         20 Sep  3 06:49 .docker/buildx/activity/default
-  2752853      4 -rw-------   1 aihome   aihome         16 Sep  2 21:19 .docker/buildx/.buildNodeID
-  2752637      4 -rw-------   1 aihome   aihome         62 Sep  3 06:49 .docker/buildx/current
-  2752862      4 -rw-------   1 aihome   aihome         74 Sep  3 06:49 .docker/.token_seed
-  2752833      4 drwxr-xr-x   2 aihome   aihome       4096 Sep  2 21:09 .docker/cli-plugins
-  2752836  48284 -rwxr-xr-x   1 aihome   aihome   49441177 Sep  2 21:10 .docker/cli-plugins/docker-compose
-  2752861      0 -rw-------   1 aihome   aihome          0 Sep  2 21:19 .docker/.token_seed.lock
 
-=== 4. UNTRACKED: output ===
-  2752950     20 -rw-rw-r--   1 aihome   aihome      19793 Sep  8 20:37 output
+=== OPENCLAW TEST MOUNTS ===
+/opt/aihome-test/source/config/openclaw/openclaw.json5 -> /data/source-config/openclaw.json5
+/opt/aihome-test/openclaw/state -> /data/state
+/opt/aihome-test/openclaw/workspace -> /home/node/.openclaw/workspace
+/opt/aihome-test/source/config/aihome -> /home/node/.openclaw/workspace/config/aihome
+/opt/aihome-test/openclaw/runtime-config -> /data/config
 
-=== 5. RUNTIME CANDIDATES ===
---- config ---
-drwxr-xr-x 5 aihome aihome 4096 Sep  9 20:32 config
-config/ci/AIHOME-GITHUB-ACTIONS-SETUP.md	4 KB
-config/gateway/app/database.py	16 KB
-config/gateway/app/database.py.bak	12 KB
-config/gateway/app/llm.py	4 KB
-config/gateway/app/main.py	8 KB
-config/gateway/app/main.py.bak	8 KB
-config/gateway/app/orchestrator.py	8 KB
-config/gateway/app/orchestrator.py.bak	12 KB
-config/gateway/Dockerfile	4 KB
-config/gateway/requirements.txt	4 KB
-config/openclaw/AUDIT-v2026.7.1-2.md	8 KB
-config/openclaw/CAPABILITY-MATRIX.md	8 KB
-config/openclaw/HA-EXECUTION-AUDIT.md	8 KB
-config/openclaw/openclaw.json5	4 KB
-config/openclaw/TEST-RUNBOOK.md	8 KB
---- data ---
-drwxr-xr-x 4 aihome aihome 4096 Aug 30 14:44 data
-data/sqlite/aihome.db	80 KB
---- compose/.env ---
--rw------- 1 aihome aihome 233 Sep  2 13:20 compose/.env
-compose/.env	4 KB
---- compose/backup ---
-drwxrwxr-x 2 aihome aihome 4096 Aug 30 20:53 compose/backup
-compose/backup/aihome-before-fts5-20260830-204254.db	60 KB
-compose/backup/database-before-fts5-helper-fix-20260830-205303.py	16 KB
-compose/backup/database-before-fts5-patch-20260830-205039.py	16 KB
-compose/backup/database-before-hybrid-20260830-204616.py	16 KB
-compose/backup/database-before-search-patch-20260830-205159.py	16 KB
 
-=== 6. DOCKER STATE ===
-NAMES                  IMAGE                                     STATUS                 PORTS
-aihome-openclaw-test   ghcr.io/openclaw/openclaw:2026.8.2-slim   Up 6 hours (healthy)   127.0.0.1:18789->18789/tcp
+=== COMPOSE ENV FILE ===
+  File: /opt/aihome/compose/.env
+  Size: 233       	Blocks: 8          IO Block: 4096   regular file
+Device: 8,5	Inode: 2752636     Links: 1
+Access: (0600/-rw-------)  Uid: ( 1000/  aihome)   Gid: ( 1000/  aihome)
+Access: 2026-09-08 20:43:44.620183892 +0700
+Modify: 2026-09-02 13:20:18.411929859 +0700
+Change: 2026-09-02 13:20:18.415929855 +0700
+ Birth: 2026-09-02 13:20:18.411929859 +0700
+--- variable names only ---
+AIHOME_ENV=<REDACTED>
+AIHOME_TZ=<REDACTED>
+AIHOME_HOST=<REDACTED>
+AIHOME_NETWORK=<REDACTED>
+AIHOME_DB_PATH=<REDACTED>
+GEMINI_API_KEY=<REDACTED>
+GEMINI_MODEL=<REDACTED>
 
-DRIVER    VOLUME NAME
+=== AIHOME RUNTIME DATA ===
+total 88K
+drwxrwxr-x 2 aihome aihome 4.0K Sep  2 15:02 .
+drwxr-xr-x 4 aihome aihome 4.0K Aug 30 14:44 ..
+-rw-r--r-- 1 aihome aihome  76K Sep  2 15:02 aihome.db
+
+=== OPENCLAW TEST RUNTIME ===
+/opt/aihome-test/openclaw/state/tmp/agent-cli/openclaw 67 bytes
+/opt/aihome-test/openclaw/state/tmp/openclaw-1000/gateway.a20315a7.lock.sqlite 0 bytes
+/opt/aihome-test/openclaw/state/tmp/openclaw-1000/gateway.state.lock.sqlite 0 bytes
+/opt/aihome-test/openclaw/state/tmp/openclaw-1000/gateway.a20315a7.lock 413 bytes
+/opt/aihome-test/openclaw/state/tmp/openclaw-1000/device-identity.4fb89da1.lock.sqlite 0 bytes
+/opt/aihome-test/openclaw/state/tmp/openclaw-1000/gateway.a20315a7.lock.sqlite-journal 512 bytes
+/opt/aihome-test/openclaw/state/tmp/openclaw-1000/gateway.state.lock.sqlite-journal 512 bytes
+/opt/aihome-test/openclaw/state/tmp/openclaw-1000/gateway.state.lock 413 bytes
+/opt/aihome-test/openclaw/state/logs/stability/openclaw-stability-2026-09-07T06-05-25-722Z-8-gateway.startup_failed.json 694 bytes
+/opt/aihome-test/openclaw/state/logs/stability/openclaw-stability-2026-09-07T06-00-45-592Z-8-gateway.startup_failed.json 694 bytes
+/opt/aihome-test/openclaw/state/logs/stability/openclaw-stability-2026-09-07T06-02-41-872Z-8-gateway.startup_failed.json 694 bytes
+/opt/aihome-test/openclaw/state/logs/stability/openclaw-stability-2026-09-07T06-00-22-342Z-7-gateway.startup_failed.json 694 bytes
+/opt/aihome-test/openclaw/state/logs/stability/openclaw-stability-2026-09-07T06-02-18-567Z-9-gateway.startup_failed.json 694 bytes
+/opt/aihome-test/openclaw/state/logs/stability/openclaw-stability-2026-09-07T06-03-05-273Z-8-gateway.startup_failed.json 694 bytes
+/opt/aihome-test/openclaw/state/logs/stability/openclaw-stability-2026-09-07T06-01-32-282Z-8-gateway.startup_failed.json 694 bytes
+/opt/aihome-test/openclaw/state/logs/stability/openclaw-stability-2026-09-07T06-03-51-644Z-8-gateway.startup_failed.json 694 bytes
+/opt/aihome-test/openclaw/state/logs/stability/openclaw-stability-2026-09-07T06-05-48-996Z-8-gateway.startup_failed.json 694 bytes
+/opt/aihome-test/openclaw/state/logs/stability/openclaw-stability-2026-09-07T06-01-55-344Z-8-gateway.startup_failed.json 694 bytes
+/opt/aihome-test/openclaw/state/logs/stability/openclaw-stability-2026-09-07T05-59-35-912Z-8-gateway.startup_failed.json 694 bytes
+/opt/aihome-test/openclaw/state/logs/stability/openclaw-stability-2026-09-07T06-05-01-294Z-9-gateway.startup_failed.json 694 bytes
+/opt/aihome-test/openclaw/state/logs/stability/openclaw-stability-2026-09-07T06-03-28-351Z-8-gateway.startup_failed.json 694 bytes
+/opt/aihome-test/openclaw/state/logs/stability/openclaw-stability-2026-09-07T05-59-12-638Z-8-gateway.startup_failed.json 694 bytes
+/opt/aihome-test/openclaw/state/logs/stability/openclaw-stability-2026-09-07T05-58-49-515Z-8-gateway.startup_failed.json 694 bytes
+/opt/aihome-test/openclaw/state/logs/stability/openclaw-stability-2026-09-07T05-59-59-244Z-8-gateway.startup_failed.json 694 bytes
+/opt/aihome-test/openclaw/state/logs/stability/openclaw-stability-2026-09-07T06-01-08-910Z-8-gateway.startup_failed.json 694 bytes
+/opt/aihome-test/openclaw/state/logs/stability/openclaw-stability-2026-09-07T06-06-12-104Z-9-gateway.startup_failed.json 694 bytes
+/opt/aihome-test/openclaw/state/logs/stability/openclaw-stability-2026-09-07T06-04-14-821Z-9-gateway.startup_failed.json 694 bytes
+/opt/aihome-test/openclaw/state/logs/stability/openclaw-stability-2026-09-07T06-04-38-162Z-8-gateway.startup_failed.json 694 bytes
+/opt/aihome-test/openclaw/state/logs/config-audit.jsonl.migrated 77415 bytes
+/opt/aihome-test/openclaw/state/logs/config-audit.jsonl.migrated.raw 77415 bytes
+/opt/aihome-test/openclaw/state/.openclaw/workspace/USER.md 537 bytes
+/opt/aihome-test/openclaw/state/.openclaw/workspace/HEARTBEAT.md 244 bytes
+/opt/aihome-test/openclaw/state/.openclaw/workspace/openclaw-workspace-state.json 70 bytes
+/opt/aihome-test/openclaw/state/.openclaw/workspace/IDENTITY.md 1278 bytes
+/opt/aihome-test/openclaw/state/.openclaw/workspace/SOUL.md 1518 bytes
+/opt/aihome-test/openclaw/state/.openclaw/workspace/AGENTS.md 7196 bytes
+/opt/aihome-test/openclaw/state/.openclaw/workspace/TOOLS.md 876 bytes
+/opt/aihome-test/openclaw/state/.openclaw/workspace/BOOTSTRAP.md 1669 bytes
+/opt/aihome-test/openclaw/state/config-journal-fingerprint.key 32 bytes
+/opt/aihome-test/openclaw/state/state/openclaw.sqlite-wal 1755152 bytes
+/opt/aihome-test/openclaw/state/state/openclaw.sqlite 6967296 bytes
+/opt/aihome-test/openclaw/state/state/openclaw.sqlite-shm 32768 bytes
+/opt/aihome-test/openclaw/state/session-sqlite-migration-runs/session-sqlite-1788761382198-e41c3a73.json 137641 bytes
+/opt/aihome-test/openclaw/state/workspace/USER.md 871 bytes
+/opt/aihome-test/openclaw/state/workspace/IDENTITY.md 1278 bytes
+/opt/aihome-test/openclaw/state/workspace/SOUL.md 1518 bytes
+/opt/aihome-test/openclaw/state/workspace/AGENTS.md 7927 bytes
+/opt/aihome-test/openclaw/state/workspace/.git/config 92 bytes
+/opt/aihome-test/openclaw/state/workspace/.git/HEAD 23 bytes
+/opt/aihome-test/openclaw/state/workspace/.git/description 73 bytes
+/opt/aihome-test/openclaw/state/workspace/BOOTSTRAP.md 4025 bytes
