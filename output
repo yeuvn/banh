@@ -1,36 +1,127 @@
-aihome@AIHome:/opt/aihome-test$ cd /opt/aihome-test/source
+aihome@AIHome:/opt/aihome-test/source$ echo '=== RUNTIME AGENTS CONFIG ==='
+sed -n '1,60p' /opt/aihome-test/openclaw/runtime-config/openclaw.json5
 
-echo '=== SOURCE GIT ==='
-git branch --show-current
-git rev-parse --short HEAD
-git status --short --branch
-git remote -v
-=== SOURCE GIT ===
-Test
-2b75671
-## Test...origin/Test
- M .github/workflows/openclaw-test-box-deploy.yml
- D DEPLOY-TRIGGER-2026-09-06.txt
- D NhatKy
- D QuyTac.txt
- M compose/compose.yml
- M compose/openclaw.yml
- M config/gateway/app/llm.py
- M config/gateway/app/main.py
- M config/gateway/app/orchestrator.py
- M config/openclaw/AUDIT-v2026.7.1-2.md
- M config/openclaw/CAPABILITY-MATRIX.md
- M config/openclaw/HA-EXECUTION-AUDIT.md
- M config/openclaw/TEST-RUNBOOK.md
- M config/openclaw/openclaw.json5
-?? .github/workflows/TOKEN.yml
-?? AGENTS.md
-?? "G\341\273\243i \303\275"
-?? NhatKy.md
-?? SECURITY.md
-?? checkpoints.md
-?? config/aihome/
-?? scripts/
-?? workspace/
-origin	https://github.com/yeuvn/AIHome (fetch)
-origin	https://github.com/yeuvn/AIHome (push)
+echo '=== SOURCE AGENTS CONFIG ==='
+sed -n '1,60p' /opt/aihome-test/source/config/openclaw/openclaw.json5
+=== RUNTIME AGENTS CONFIG ===
+{
+  "gateway": {
+    "mode": "local",
+    "bind": "loopback",
+    "auth": {
+      "mode": "token",
+      "token": "${OPENCLAW_GATEWAY_TOKEN}"
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "groq/openai/gpt-oss-20b",
+        "fallbacks": []
+      },
+      "models": {
+        "groq/openai/gpt-oss-20b": {
+          "params": {
+            "extra_body": {
+              "tools": [
+                {
+                  "type": "browser_search"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "skills": [],
+      "subagents": {
+        "maxConcurrent": 1,
+        "runTimeoutSeconds": 300
+      },
+      "modelPolicy": {
+        "allow": [
+          "groq/openai/gpt-oss-20b"
+        ]
+      }
+    }
+  },
+  "models": {
+    "providers": {
+      "groq": {
+        "baseUrl": "https://api.groq.com/openai/v1",
+        "models": [
+          {
+            "id": "openai/gpt-oss-20b",
+            "name": "openai/gpt-oss-20b"
+          }
+        ]
+      }
+    }
+  },
+  "tools": {
+    "profile": "coding",
+    "allow": [
+      "group:memory",
+      "group:fs",
+      "session_status"
+    ],
+=== SOURCE AGENTS CONFIG ===
+// AIHome OpenClaw-Test baseline hardening.
+// Pinned source/release: OpenClaw v2026.8.2.
+// TEST: file read/write is enabled for KIRA workspace; runtime/exec remains disabled.
+{
+  gateway: {
+    mode: "local",
+    bind: "loopback",
+    auth: {
+      mode: "token",
+      token: "${OPENCLAW_GATEWAY_TOKEN}",
+    },
+  },
+
+  agents: {
+    defaults: {
+      model: {
+        primary: "groq/openai/gpt-oss-20b",
+        fallbacks: [],
+      },
+      models: {
+        "groq/openai/gpt-oss-20b": {
+          params: {
+            extra_body: {
+              tools: [
+                { type: "browser_search" },
+                // { type: "code_interpreter" }, // DEACTIVATED; re-enable only when AIHome needs it.
+              ],
+            },
+          },
+        },
+      },
+      skills: [],
+      subagents: {
+        maxConcurrent: 1,
+        runTimeoutSeconds: 300,
+      },
+    },
+  },
+
+  models: {
+    providers: {
+      groq: {
+        baseUrl: "https://api.groq.com/openai/v1",
+        models: [
+          {
+            id: "openai/gpt-oss-20b",
+            name: "openai/gpt-oss-20b",
+          },
+        ],
+      },
+    },
+  },
+
+  tools: {
+    profile: "coding",
+    allow: ["group:memory", "group:fs", "session_status"],
+    deny: [
+      "group:runtime",
+      "group:web",
+      "group:ui",
