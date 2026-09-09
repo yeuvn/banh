@@ -1,28 +1,86 @@
-aihome@AIHome:/opt/web$ cd /opt/web
-npm install
-node -e "console.log(require.resolve('express'))"
-sudo systemctl restart aihome-web
-sleep 2
-sudo systemctl status aihome-web --no-pager
-sudo ss -ltnp | grep 8088
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AIHome Web Terminal</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">AIHOME</div>
+        <h1>Web Terminal</h1>
+        <p>LAN fallback + Cloudflare Access</p>
+      </div>
+      <span id="version" class="version">v0.2.0</span>
+    </header>
 
-up to date, audited 71 packages in 1s
+    <section id="loginPanel" class="login-panel" hidden>
+      <h2>Đăng nhập Web Terminal</h2>
+      <p>LAN trực tiếp vẫn phải xác thực ở tầng ứng dụng.</p>
+      <form id="loginForm">
+        <input id="username" autocomplete="username" placeholder="Username" required>
+        <input id="password" type="password" autocomplete="current-password" placeholder="Application password" required>
+        <button class="btn primary" type="submit">Đăng nhập</button>
+      </form>
+      <p id="loginError" class="error"></p>
+    </section>
 
-28 packages are looking for funding
-  run `npm fund` for details
+    <section id="terminalPanel" hidden>
+      <section class="terminal-grid">
+        <article class="terminal-card test-card">
+          <div class="card-head">
+            <div><span class="target-label">TEST</span><span class="card-hint">Môi trường kiểm thử</span></div>
+          </div>
+          <textarea id="testCommand" placeholder="Nhập lệnh TEST..."></textarea>
+          <div class="card-actions">
+            <button id="runTest" class="btn test-btn" type="button">Run TEST</button>
+          </div>
+        </article>
 
-found 0 vulnerabilities
-/opt/web/node_modules/express/index.js
-● aihome-web.service - AIHome Web Terminal
-     Loaded: loaded (/etc/systemd/system/aihome-web.service; enabled; preset: enabled)
-     Active: active (running) since Wed 2026-09-09 20:13:24 +07; 2s ago
- Invocation: 27b07cd0888d4143a446022290e686fc
-   Main PID: 499006 (node)
-      Tasks: 7 (limit: 9235)
-     Memory: 24M (peak: 24.3M)
-        CPU: 601ms
-     CGroup: /system.slice/aihome-web.service
-             └─499006 /usr/bin/node /opt/web/server.js
+        <article class="terminal-card main-card">
+          <div class="card-head">
+            <div><span class="target-label">MAIN</span><span class="card-hint">Môi trường chính</span></div>
+          </div>
+          <textarea id="mainCommand" placeholder="Nhập lệnh MAIN..."></textarea>
+          <div class="card-actions main-actions">
+            <button id="runMain" class="btn main-btn" type="button">Run MAIN</button>
+          </div>
+        </article>
+      </section>
 
-Sep 09 20:13:24 AIHome systemd[1]: Started aihome-web.service - AIHome Web Terminal.
-Sep 09 20:13:24 AIHome node[499006]: AIHome Web Terminal v0.2.0 listening on 0.0.0.0:8080
+      <section class="utility-bar">
+        <button id="clear" class="btn secondary" type="button">Xóa lệnh</button>
+        <button id="copy" class="btn secondary" type="button">Copy kết quả</button>
+        <button id="logout" class="btn secondary" type="button">Đăng xuất</button>
+      </section>
+
+      <section class="result-card">
+        <div class="result-head"><h2>Kết quả</h2><span id="auth" class="auth-status">Đang kiểm tra xác thực…</span></div>
+        <pre id="result">Sẵn sàng.</pre>
+      </section>
+    </section>
+
+    <footer><span>AIHome Web Terminal</span><span>Secure command gateway</span></footer>
+  </main>
+
+  <div id="mainConfirm" class="modal-backdrop" hidden>
+    <div class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="mainConfirmTitle">
+      <div class="warning-icon">!</div>
+      <div class="confirm-content">
+        <div class="confirm-kicker">CẢNH BÁO</div>
+        <h2 id="mainConfirmTitle">CẢNH BÁO</h2>
+        <p>Lệnh sẽ được thực thi trong môi trường MAIN.</p>
+        <div class="confirm-actions">
+          <button id="cancelMain" class="btn secondary" type="button">Hủy</button>
+          <button id="confirmMain" class="btn main-btn" type="button">Run</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
