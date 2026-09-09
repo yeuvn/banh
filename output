@@ -1,133 +1,37 @@
-Logs
+aihome@AIHome:/opt/aihome$ cd /opt/aihome
 
-Show Errors Only
+echo "=== OPENCLAW ==="
+which openclaw || true
+openclaw --version 2>/dev/null || true
 
-Download
-Request Time	Model	API Key	Code	TTFT	Latency	Input
-Tokens	Output
-Tokens	Audio
-Seconds	Request ID	Error
-14:56:04 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-200	0.389	0.441	515	50	-	
-req_0...n0sz
--
-14:55:38 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-200	0.341	0.401	515	59	-	
-req_0...6n74
--
-14:34:01 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-429	0	0.003	0	0	-	
-req_0...22ak
+echo "=== CONTAINERS ==="
+docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Ports}}\t{{.Status}}'
 
-rate_limit_exceeded
-14:34:00 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-429	0	0.003	0	0	-	
-req_0...ftrx
+echo "=== LISTENING PORTS ==="
+ss -lntp 2>/dev/null | grep -E 'LISTEN|openclaw|docker' || true
 
-rate_limit_exceeded
-14:34:00 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-429	0	0.003	0	0	-	
-req_0...qdcc
-
-rate_limit_exceeded
-14:33:27 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-200	0.738	32.106	233123	1809	-	
-req_0...egy2
--
-14:23:03 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-200	0.375	0.453	515	72	-	
-req_0...b5nh
--
-14:22:39 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-200	0.369	0.412	515	41	-	
-req_0...3sm9
--
-13:58:24 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-200	0.345	0.419	649	61	-	
-req_0...4kjn
--
-13:57:59 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-200	0.116	0.248	649	134	-	
-req_0...nr78
--
-13:51:15 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-200	0.352	0.442	649	89	-	
-req_0...2ste
--
-13:50:52 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-200	0.399	0.466	649	50	-	
-req_0...78ag
--
-13:30:26 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-200	0.399	0.544	649	130	-	
-req_0...10a8
--
-13:30:02 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-200	0.384	0.434	649	49	-	
-req_0...mqha
--
-13:29:38 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-200	0.362	0.499	649	123	-	
-req_0...1wg9
--
-13:19:20 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-200	0.358	0.425	649	46	-	
-req_0...v0bm
--
-13:12:56 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-200	0.259	0.327	649	66	-	
-req_0...xmvh
--
-13:12:32 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-200	0.107	0.241	649	97	-	
-req_0...491f
--
-12:51:53 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-200	0.381	0.447	649	46	-	
-req_0...98dy
--
-12:29:03 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-500	0.665	37.425	178773	1271	-	
-req_0...rfv5
-
-internal_server_error
-12:25:05 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-200	0.352	0.406	649	53	-	
-req_0...1y2h
--
-12:13:03 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-200	0.450	0.548	649	95	-	
-req_0...81j2
--
-12:09:17 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-200	0.394	0.498	649	92	-	
-req_0...64pn
--
-12:05:09 9/9/2026	openai/gpt-oss-20b	
-AIHome TEST
-200	0.489	0.652	649	97	-	
-req_0...9jpy
--
+echo "=== PROJECT FILES ==="
+find /opt/aihome -maxdepth 2 -type f \( \
+  -name 'docker-compose.yml' -o \
+  -name 'compose.yml' -o \
+  -name 'compose.yaml' -o \
+  -name '*openclaw*' \
+\) -print
+=== OPENCLAW ===
+=== CONTAINERS ===
+NAMES                  IMAGE                                     PORTS                        STATUS
+aihome-openclaw-test   ghcr.io/openclaw/openclaw:2026.8.2-slim   127.0.0.1:18789->18789/tcp   Up 4 hours (healthy)
+=== LISTENING PORTS ===
+LISTEN 0      4096       127.0.0.1:18789      0.0.0.0:*                                     
+LISTEN 0      511          0.0.0.0:8088       0.0.0.0:*    users:(("node",pid=454151,fd=21))
+LISTEN 0      4096       127.0.0.1:631        0.0.0.0:*                                     
+LISTEN 0      128          0.0.0.0:22         0.0.0.0:*                                     
+LISTEN 0      4096           [::1]:631           [::]:*                                     
+LISTEN 0      128             [::]:22            [::]:*                                     
+=== PROJECT FILES ===
+/opt/aihome/scripts/append-openclaw-groq-event.sh
+/opt/aihome/scripts/openclaw-groq-log-exporter.sh
+/opt/aihome/scripts/merge-openclaw-groq-events.sh
+/opt/aihome/scripts/openclaw-groq-events.sh
+/opt/aihome/compose/compose.yml
+/opt/aihome/compose/openclaw.yml
