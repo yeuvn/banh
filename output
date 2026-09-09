@@ -1,255 +1,63 @@
-Run set -euo pipefail
-HOME_LOCATION_CONFIG=PASS
-2B_PLUS_CONTEXT=Skill.md+home-location.json
-SKILL_FILE=PASS
-HOME_LOCATION_FILE=PASS
-SKILL_OPEN_METEO_RULE=PASS
-SKILL_HOME_LOCATION_RULE=PASS
-{
-  "runId": "982b3774-1264-44a4-a03d-9e0b6177f844",
-  "status": "ok",
-  "summary": "completed",
-  "result": {
-2B_PLUS_HOME_LOCATION=FAIL: configured home coordinates not present in Agent trace/result
-    "payloads": [
-      {
-        "text": "I’m sorry, but I can’t find the `config/aihome/home-location.json` file in this workspace.  \nWithout the latitude, longitude, and timezone from that file, I can’t query Open‑Meteo for the weather at your home. If you could share the contents of that file (or the coordinates), I’ll gladly fetch and summarize the forecast for you.",
-        "mediaUrl": null
-      }
-    ],
-    "meta": {
-      "durationMs": 33535,
-      "agentMeta": {
-        "sessionId": "d2ca0900-817f-4677-863b-7fe788da2154",
-        "sessionFile": "agent:main:groq-2b-plus-487778",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "contextTokens": 131072,
-        "contextTokensSource": "resolved",
-        "agentHarnessId": "openclaw",
-        "credentialSource": {
-          "kind": "direct",
-          "evidence": "environment",
-          "authorization": "ambient"
-        },
-        "usage": {
-          "input": 232867,
-          "output": 1809,
-          "cacheRead": 256,
-          "reasoningTokens": 1473,
-          "total": 234932,
-          "cost": {
-            "total": 0
-          }
-        },
-        "lastCallUsage": {
-          "input": 232867,
-          "output": 1809,
-          "cacheRead": 256,
-          "cacheWrite": 0,
-          "cost": {
-            "total": 0
-          },
-          "reasoningTokens": 1473,
-          "total": 234932
-        },
-        "promptTokens": 233123,
-        "contextBudgetStatus": {
-          "schemaVersion": 1,
-          "source": "pre-prompt-estimate",
-          "updatedAt": 1788939206701,
-          "provider": "groq",
-          "model": "openai/gpt-oss-20b",
-          "route": "fits",
-          "shouldCompact": false,
-          "estimatedPromptTokens": 7131,
-          "contextTokenBudget": 131072,
-          "promptBudgetBeforeReserve": 111072,
-          "reserveTokens": 20000,
-          "effectiveReserveTokens": 20000,
-          "remainingPromptBudgetTokens": 103941,
-          "overflowTokens": 0,
-          "toolResultReducibleChars": 0,
-          "messageCount": 0,
-          "unwindowedMessageCount": 0,
-          "sessionId": "d2ca0900-817f-4677-863b-7fe788da2154"
-        },
-        "codeModeEngaged": false,
-        "assistantTurns": 1,
-        "costUsd": 0,
-        "terminalReceipt": {
-          "runId": "982b3774-1264-44a4-a03d-9e0b6177f844",
-          "sessionId": "d2ca0900-817f-4677-863b-7fe788da2154",
-          "turnId": "982b3774-1264-44a4-a03d-9e0b6177f844",
-          "requested": {
-            "provider": "groq",
-            "model": "openai/gpt-oss-20b"
-          },
-          "effective": {
-            "provider": "groq",
-            "model": "openai/gpt-oss-20b",
-            "responseModel": "openai/gpt-oss-20b"
-          },
-          "successfulToolNames": [],
-          "rerouted": false
-        }
-      },
-      "aborted": false,
-      "systemPromptReport": {
-        "source": "run",
-        "generatedAt": 1788939206532,
-        "sessionId": "d2ca0900-817f-4677-863b-7fe788da2154",
-        "sessionKey": "agent:main:groq-2b-plus-487778",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "workspaceDir": "/data/state/workspace",
-        "bootstrapMaxChars": 20000,
-        "bootstrapTotalMaxChars": 60000,
-        "bootstrapTruncation": {
-          "warningMode": "always",
-          "warningShown": false,
-          "truncatedFiles": 0,
-          "nearLimitFiles": 0,
-          "totalNearLimit": false
-        },
-        "sandbox": {
-          "mode": "off",
-          "sandboxed": false
-        },
-        "systemPrompt": {
-          "chars": 22978,
-          "hash": "43d09af56dc624df6ea9a6ec2d4a33832345081eb9ee1c130dea5c4d1d2f893e",
-          "projectContextChars": 16015,
-          "nonProjectContextChars": 6963
-        },
-        "injectedWorkspaceFiles": [
-          {
-            "name": "AGENTS.md",
-            "path": "/data/state/workspace/AGENTS.md",
-            "missing": false,
-            "rawChars": 7926,
-            "injectedChars": 7926,
-            "truncated": false
-          },
-          {
-            "name": "SOUL.md",
-            "path": "/data/state/workspace/SOUL.md",
-            "missing": false,
-            "rawChars": 1509,
-            "injectedChars": 1509,
-            "truncated": false
-          },
-          {
-            "name": "IDENTITY.md",
-            "path": "/data/state/workspace/IDENTITY.md",
-            "missing": false,
-            "rawChars": 1275,
-            "injectedChars": 1275,
-            "truncated": false
-          },
-          {
-            "name": "USER.md",
-            "path": "/data/state/workspace/USER.md",
-            "missing": false,
-            "rawChars": 870,
-            "injectedChars": 870,
-            "truncated": false
-          },
-          {
-            "name": "BOOTSTRAP.md",
-            "path": "/data/state/workspace/BOOTSTRAP.md",
-            "missing": false,
-            "rawChars": 4022,
-            "injectedChars": 4022,
-            "truncated": false
-          }
-        ],
-        "skills": {
-          "promptChars": 0,
-          "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-          "entries": []
-        },
-        "tools": {
-          "listChars": 0,
-          "schemaChars": 1461,
-          "entries": [
-            {
-              "name": "read",
-              "summaryChars": 164,
-              "summaryHash": "d136f5b09e28d671addad4ca800b75b8aa6a36002bc739ead964f618d3e34829",
-              "schemaChars": 481,
-              "schemaHash": "b1b9b637dfe1dfade40f50c37cf840a298f1992b534cb9425b7470233a6b0cbb",
-              "propertiesCount": 5
-            },
-            {
-              "name": "edit",
-              "summaryChars": 130,
-              "summaryHash": "4149500b1f6501ec6450e4c048bdb6844764dd4a888a10846726cbbc7256152e",
-              "schemaChars": 501,
-              "schemaHash": "adf3140833ca927b84c66c989d6833fdcbd9de011dd2ffc59f9a2c4d3c25f127",
-              "propertiesCount": 2
-            },
-            {
-              "name": "write",
-              "summaryChars": 49,
-              "summaryHash": "f9ce3d8ac929a51498c03331b97c59bfaa2bb4d25580a5ddf0102e6a8e173aec",
-              "schemaChars": 191,
-              "schemaHash": "b61d2da23febf5fbda55e391526f36d283e9e9fb7f1a1dbadcf5c618a0632287",
-              "propertiesCount": 2
-            },
-            {
-              "name": "apply_patch",
-              "summaryChars": 71,
-              "summaryHash": "5c1173efe93d080a386a23216bc3e58db2e0033eb3ddea697eb2439938b7cae4",
-              "schemaChars": 153,
-              "schemaHash": "05521268363ff4f191472c90d69ef08a503ba9acf1d2febc50b3ee68db32ab65",
-              "propertiesCount": 1
-            },
-            {
-              "name": "session_status",
-              "summaryChars": 192,
-              "summaryHash": "23343479c1bf552695627bd580795ca22cdc1020232f6984bf0cad5557f74dbd",
-              "schemaChars": 135,
-              "schemaHash": "528432b98ffdb5d86d4f09f43cb85eb3647387388109b84fc01183040a2406bd",
-              "propertiesCount": 3
-            }
-          ]
-        },
-        "currentTurn": {
-          "promptChars": 662,
-          "runtimeContextChars": 0,
-          "modelOnlyPromptChars": 0
-        }
-      },
-      "finalPromptText": "Read only the current workspace Skill.md and the current workspace config/aihome/home-location.json. Apply the weather routing rule exactly. Answer this exact user intent: \"Thời tiết tại nhà hôm nay thế nào?\" Use the existing Groq browser_search built-in tool to retrieve Open-Meteo structured forecast data for the latitude, longitude, and timezone from home-location.json. The search/query must target Open-Meteo and must use the configured coordinates rather than geocoding the home location. Do not answer from memory. After the server-side Open-Meteo search completes, summarize the structured weather data and finish with the marker SKILL_ROUTING_EXECUTED.",
-      "finalAssistantVisibleText": "I’m sorry, but I can’t find the `config/aihome/home-location.json` file in this workspace.  \nWithout the latitude, longitude, and timezone from that file, I can’t query Open‑Meteo for the weather at your home. If you could share the contents of that file (or the coordinates), I’ll gladly fetch and summarize the forecast for you.",
-      "finalAssistantRawText": "I’m sorry, but I can’t find the `config/aihome/home-location.json` file in this workspace.  \nWithout the latitude, longitude, and timezone from that file, I can’t query Open‑Meteo for the weather at your home. If you could share the contents of that file (or the coordinates), I’ll gladly fetch and summarize the forecast for you.",
-      "replayInvalid": false,
-      "livenessState": "working",
-      "stopReason": "stop",
-      "executionTrace": {
-        "winnerProvider": "groq",
-        "winnerModel": "openai/gpt-oss-20b",
-        "attempts": [
-          {
-            "provider": "groq",
-            "model": "openai/gpt-oss-20b",
-            "result": "success",
-            "stage": "assistant"
-          }
-        ],
-        "fallbackUsed": false,
-        "runner": "embedded"
-      },
-      "requestShaping": {
-        "thinking": "medium"
-      },
-      "completion": {
-        "stopReason": "stop",
-        "finishReason": "stop"
-      }
-    }
-  }
-}
-sh: 1: ISOLATED_WORKSPACE: parameter not set
-Error: Process completed with exit code 2
+request_id,created_at,status_code,time_to_first_token,time_to_completion,model,api_key_id,project_id,input_tokens,input_non_cached_tokens,input_cached_tokens,input_audio_seconds,output_tokens
+req_01m22jxttgeebrdbr5d43v7z4w,1788940839760,200,0.245752,0.293883,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,515,515,0,0,45
+req_01m22jndw5eazrt70yqaw4n0sz,1788940564357,200,0.389029,0.440852,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,515,515,0,0,50
+req_01m22jmmd2ef6tvqtjwrsg6n74,1788940538274,200,0.341148,0.401304,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,515,515,0,0,59
+req_01m22hd2b7e369md6y5g4f22ak,1788939241831,429,0,0.003051,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,0,0,0,0,0,"{\"code\":\"rate_limit_exceeded\",\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m1vdgamwegar47pc32sgv8dt` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199994, Requested 2901. Please try again in 20m50.64s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"param\":\"\",\"type\":\"tokens\"}"
+req_01m22hd1c7ekfsxp7n0cj6ftrx,1788939240839,429,0,0.002814,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,0,0,0,0,0,"{\"code\":\"rate_limit_exceeded\",\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m1vdgamwegar47pc32sgv8dt` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199997, Requested 1345. Please try again in 9m39.744s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"param\":\"\",\"type\":\"tokens\"}"
+req_01m22hd0pres0aejtjntcdqdcc,1788939240152,429,0,0.003037,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,0,0,0,0,0,"{\"code\":\"rate_limit_exceeded\",\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m1vdgamwegar47pc32sgv8dt` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199998, Requested 1345. Please try again in 9m40.175999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"param\":\"\",\"type\":\"tokens\"}"
+req_01m22hc0cxeearyb9zyc12egy2,1788939207069,200,0.737534,32.105585,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,233123,232867,256,0,1809
+req_01m22grzsqessay3m6shsxb5nh,1788938583863,200,0.374582,0.452955,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,515,515,0,0,72
+req_01m22gr7jbev0vkrn6fmbx3sm9,1788938559051,200,0.36939,0.411591,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,515,259,256,0,41
+req_01m22fbv8ne95tt8hwnqfc4kjn,1788937104661,200,0.344685,0.419268,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,137,512,0,61
+req_01m22fb327ekpvbn3vyz5anr78,1788937079879,200,0.116165,0.247522,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,134
+req_01m22eyrkteaw88sdwd84h2ste,1788936675962,200,0.351746,0.44179,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,89
+req_01m22ey1mcefk9pgcmhfym78ag,1788936652428,200,0.399004,0.465896,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,50
+req_01m22drm6teejtmzgjq2aw10a8,1788935426266,200,0.399138,0.544498,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,130
+req_01m22dqwwkenhs3jxssc6jmqha,1788935402387,200,0.383618,0.433978,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,49
+req_01m22dq5cfe8vvcw815cms1wg9,1788935378319,200,0.362268,0.498857,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,123
+req_01m22d4a9ge7hrs00c0eq0v0bm,1788934760752,200,0.358339,0.424836,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,46
+req_01m22crk0fe9ctac9y9zbfxmvh,1788934376463,200,0.25866,0.326635,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,66
+req_01m22cqvraerrrpxz7s657491f,1788934352650,200,0.107047,0.241491,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,97
+req_01m22bj1h7emvsnq9kzwvv98dy,1788933113383,200,0.380515,0.446897,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,46
+req_01m22a87a8eppvb9kj88n0rfv5,1788931743048,500,0.664926,37.424552,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,178773,178773,0,0,1271,"{\"code\":\"\",\"message\":\"Internal Server Error\",\"param\":\"\",\"type\":\"internal_server_error\"}"
+req_01m22a0zq8eknb35q99fvj1y2h,1788931505896,200,0.352355,0.406179,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,53
+req_01m229ay8pehar1fsts1nb81j2,1788930783510,200,0.450066,0.548242,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,95
+req_01m22941cpevztbvqv2hfn64pn,1788930557334,200,0.394465,0.497721,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,92
+req_01m228wf7se9tsptmefdwm9jpy,1788930309369,200,0.488591,0.651693,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,97
+req_01m227q7w5e90srdgzc7wpc17k,1788929089413,200,0.701006,2.194742,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,11870,11870,0,0,103
+req_01m227nxmreyvv68mnybf6063q,1788929046168,429,0,0.00908,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,0,0,0,0,0,"{\"code\":\"rate_limit_exceeded\",\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m1vdgamwegar47pc32sgv8dt` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7400, Requested 6332. Please try again in 42.99s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"param\":\"\",\"type\":\"tokens\"}"
+req_01m227ngvqewab66m8b7t1xhsr,1788929033079,200,0.714933,8.594855,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,46406,46406,0,0,449
+req_01m227avz9e9rtha9fgbvj7b87,1788928684009,200,0.396524,0.426274,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,654,654,0,0,29
+req_01m2221694eydvhkknqqmd85tp,1788923124004,200,0.358969,0.388454,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,27
+req_01m21x0k19ex4tzg7qsqgatyfp,1788917861417,200,0.388531,0.468667,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,69
+req_01m21t6drbehnvn81zv09m1vzt,1788914906891,200,0.348867,0.379737,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,30
+req_01m21n3rfjead910nr2nwm5z7v,1788909576690,200,0.391332,0.51715,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,120
+req_01m21mnyfve7t9p56sysk21vra,1788909124091,200,0.386713,0.43618,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,49
+req_01m20yc94heh8b4wc3ttmfmj4a,1788885738641,200,0.388584,0.438233,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,44
+req_01m20xyebaekpvebx8k16rn02b,1788885285226,200,0.37482,0.55067,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,114
+req_01m20x3n0zejwven36qqtgtybc,1788884407327,200,0.357534,0.413011,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,43
+req_01m20s8wm8emht1fpxa99ef8pw,1788880384648,200,0.437939,0.488958,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,50
+req_01m20rg9e7ee99rhb4nz220ckz,1788879578567,200,0.359078,0.410978,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,48
+req_01m20qnktxe0sa3q0z320z2e9d,1788878704477,429,0,0.015944,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,0,0,0,0,0,"{\"code\":\"rate_limit_exceeded\",\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m1vdgamwegar47pc32sgv8dt` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 197795, Requested 6087. Please try again in 27m57.024s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"param\":\"\",\"type\":\"tokens\"}"
+req_01m20qne2yed8s9t2fmac871d4,1788878698590,200,0.445259,0.512529,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,654,654,0,0,48
+req_01m20qfpjpe9pvqezndne5jatn,1788878510678,200,0.392304,0.542308,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,137
+req_01m20q9dm8e70brzg04c633b8p,1788878304904,429,0,0.009821,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,0,0,0,0,0,"{\"code\":\"rate_limit_exceeded\",\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m1vdgamwegar47pc32sgv8dt` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 197230, Requested 5936. Please try again in 22m47.712s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"param\":\"\",\"type\":\"tokens\"}"
+req_01m20q95pwe5vvacxxp0tbk5qz,1788878296796,200,0.631317,0.70247,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,654,654,0,0,48
+req_01m20q24zsemz9repay805rj6c,1788878066681,200,0.381123,0.439156,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,42
+req_01m20ns9jfe4hbbs69vq65e3a4,1788876727887,429,0,0.002365,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,0,0,0,0,0,"{\"code\":\"rate_limit_exceeded\",\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m1vdgamwegar47pc32sgv8dt` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199486, Requested 861. Please try again in 2m29.904s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"param\":\"\",\"type\":\"tokens\"}"
+req_01m20njhctec59f88f3xzrqan9,1788876506522,200,0.404988,0.471434,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,44
+req_01m20nhmw8ecarz6y2qf7vbact,1788876477320,429,0,0.008567,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,0,0,0,0,0,"{\"code\":\"rate_limit_exceeded\",\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m1vdgamwegar47pc32sgv8dt` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199373, Requested 5986. Please try again in 38m35.087999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"param\":\"\",\"type\":\"tokens\"}"
+req_01m20nhdq2eaps1dxbqfcm5jfe,1788876469986,200,0.448824,0.48439,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,654,654,0,0,28
+req_01m20nakxsetmbsjyvrafp9tm9,1788876246969,200,0.644315,0.749595,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,99
+req_01m20n07e9e2ettp56h73zp33x,1788875906505,429,0,0.002713,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,0,0,0,0,0,"{\"code\":\"rate_limit_exceeded\",\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m1vdgamwegar47pc32sgv8dt` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199262, Requested 901. Please try again in 1m10.416s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"param\":\"\",\"type\":\"tokens\"}"
+req_01m20ms6xbed9aneavpn55djqy,1788875676587,429,0,0.002522,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,0,0,0,0,0,"{\"code\":\"rate_limit_exceeded\",\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m1vdgamwegar47pc32sgv8dt` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199794, Requested 702. Please try again in 3m34.272s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"param\":\"\",\"type\":\"tokens\"}"
+req_01m20mpedyerv9c5yr8g40ny0p,1788875585982,200,0.363467,1.482222,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,11804,11804,0,0,51
+req_01m20mpd67egn8kcr9er8221k7,1788875584711,429,0,0.013802,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,0,0,0,0,0,"{\"code\":\"rate_limit_exceeded\",\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m1vdgamwegar47pc32sgv8dt` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 2025, Requested 6080. Please try again in 787.5ms. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"param\":\"\",\"type\":\"tokens\"}"
+req_01m20mn6tpefdtr4nq2rm90fp9,1788875545430,429,0,0.008647,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,0,0,0,0,0,"{\"code\":\"rate_limit_exceeded\",\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m1vdgamwegar47pc32sgv8dt` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7263, Requested 5929. Please try again in 38.94s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"param\":\"\",\"type\":\"tokens\"}"
+req_01m20mms8hes4tg4y766ec6tke,1788875531537,200,0.547799,8.371548,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,28479,27967,512,0,300
+req_01m20mmk91e7vsmeq8bmad449p,1788875525409,200,0.388807,0.436666,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,654,654,0,0,43
+req_01m20me2tsewk9f37eg4scsxqj,1788875311961,200,0.393967,0.473906,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,649,649,0,0,53
+req_01m207dvq1eexvqcd7phjjy51b,1788861673185,429,0,0.007617,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,0,0,0,0,0,"{\"code\":\"rate_limit_exceeded\",\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m1vdgamwegar47pc32sgv8dt` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 194210, Requested 6137. Please try again in 2m29.904s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"param\":\"\",\"type\":\"tokens\"}"
+req_01m207dphmekcrk5bncjzr0f3z,1788861667892,200,0.402389,0.450875,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,654,654,0,0,45
+req_01m205qn3weab88pp2fmeqcayf,1788859896956,429,0,0.007534,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,0,0,0,0,0,"{\"code\":\"rate_limit_exceeded\",\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m1vdgamwegar47pc32sgv8dt` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 197623, Requested 5934. Please try again in 25m36.623999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"param\":\"\",\"type\":\"tokens\"}"
+req_01m205qfr6egmvjfg1mptarsqq,1788859891462,200,0.363835,0.439633,openai/gpt-oss-20b,key_01m205brs9e3w8vtb5fwmvmqrm,project_01m205a9nmefmt7ntste37tz92,654,654,0,0,50
