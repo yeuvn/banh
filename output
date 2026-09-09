@@ -1,67 +1,76 @@
-aihome@AIHome:/opt/aihome$ systemctl status aihome-web.service --no-pager
+aihome@AIHome:/opt/web$ cd /opt/web
+sudo systemctl restart aihome-web
+sudo systemctl status aihome-web --no-pager
 ● aihome-web.service - AIHome Web Terminal
      Loaded: loaded (/etc/systemd/system/aihome-web.service; enabled; preset: enabled)
-     Active: active (running) since Wed 2026-09-09 20:02:30 +07; 31s ago
- Invocation: 4b008ea8d53d471c843bb00ea4531609
-   Main PID: 498060 (node)
-      Tasks: 7 (limit: 9235)
-     Memory: 17M (peak: 24.9M)
-        CPU: 679ms
+     Active: active (running) since Wed 2026-09-09 20:10:21 +07; 46ms ago
+ Invocation: 0be58248dcc644c48fb41cfb2bf25efb
+   Main PID: 498413 (node)
+      Tasks: 1 (limit: 9235)
+     Memory: 2.1M (peak: 2.1M)
+        CPU: 25ms
      CGroup: /system.slice/aihome-web.service
-             └─498060 /usr/bin/node /opt/web/server.js
+             └─498413 /usr/bin/node /opt/web/server.js
 
-Sep 09 20:02:31 AIHome node[498060]: AIHome Web Terminal v0.2.0 listening on 0.0.0.0:8088
-aihome@AIHome:/opt/aihome$ journalctl -u aihome-web.service -n 50 --no-pager
-Hint: You are currently not seeing messages from other users and the system.
-      Users in groups 'adm', 'systemd-journal' can see all messages.
-      Pass -q to turn off this notice.
-Sep 08 22:20:23 AIHome node[453800]:     at Module._compile (node:internal/modules/cjs/loader:1529:14)
-Sep 08 22:20:23 AIHome node[453800]:     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
-Sep 08 22:20:23 AIHome node[453800]:     at Module.load (node:internal/modules/cjs/loader:1275:32)
-Sep 08 22:20:23 AIHome node[453800]:     at Module._load (node:internal/modules/cjs/loader:1096:12)
-Sep 08 22:20:23 AIHome node[453800]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
-Sep 08 22:20:23 AIHome node[453800]:     at node:internal/main/run_main_module:28:49
-Sep 08 22:20:23 AIHome node[453800]: Node.js v20.19.2
-Sep 08 22:20:27 AIHome node[453812]: /home/aihome/AIHome/server.js:26
-Sep 08 22:20:27 AIHome node[453812]: if (!AUTH_USERNAME || !AUTH_PASSWORD_HASH) throw new Error('WEB_AUTH_USERNAME and WEB_AUTH_PASSWORD_HASH must be set');
-Sep 08 22:20:27 AIHome node[453812]:                                            ^
-Sep 08 22:20:27 AIHome node[453812]: Error: WEB_AUTH_USERNAME and WEB_AUTH_PASSWORD_HASH must be set
-Sep 08 22:20:27 AIHome node[453812]:     at Object.<anonymous> (/home/aihome/AIHome/server.js:26:50)
-Sep 08 22:20:27 AIHome node[453812]:     at Module._compile (node:internal/modules/cjs/loader:1529:14)
-Sep 08 22:20:27 AIHome node[453812]:     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
-Sep 08 22:20:27 AIHome node[453812]:     at Module.load (node:internal/modules/cjs/loader:1275:32)
-Sep 08 22:20:27 AIHome node[453812]:     at Module._load (node:internal/modules/cjs/loader:1096:12)
-Sep 08 22:20:27 AIHome node[453812]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
-Sep 08 22:20:27 AIHome node[453812]:     at node:internal/main/run_main_module:28:49
-Sep 08 22:20:27 AIHome node[453812]: Node.js v20.19.2
-Sep 08 22:20:30 AIHome node[453820]: /home/aihome/AIHome/server.js:26
-Sep 08 22:20:30 AIHome node[453820]: if (!AUTH_USERNAME || !AUTH_PASSWORD_HASH) throw new Error('WEB_AUTH_USERNAME and WEB_AUTH_PASSWORD_HASH must be set');
-Sep 08 22:20:30 AIHome node[453820]:                                            ^
-Sep 08 22:20:30 AIHome node[453820]: Error: WEB_AUTH_USERNAME and WEB_AUTH_PASSWORD_HASH must be set
-Sep 08 22:20:30 AIHome node[453820]:     at Object.<anonymous> (/home/aihome/AIHome/server.js:26:50)
-Sep 08 22:20:30 AIHome node[453820]:     at Module._compile (node:internal/modules/cjs/loader:1529:14)
-Sep 08 22:20:30 AIHome node[453820]:     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
-Sep 08 22:20:30 AIHome node[453820]:     at Module.load (node:internal/modules/cjs/loader:1275:32)
-Sep 08 22:20:30 AIHome node[453820]:     at Module._load (node:internal/modules/cjs/loader:1096:12)
-Sep 08 22:20:30 AIHome node[453820]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
-Sep 08 22:20:30 AIHome node[453820]:     at node:internal/main/run_main_module:28:49
-Sep 08 22:20:30 AIHome node[453820]: Node.js v20.19.2
-Sep 08 22:20:34 AIHome node[453830]: /home/aihome/AIHome/server.js:26
-Sep 08 22:20:34 AIHome node[453830]: if (!AUTH_USERNAME || !AUTH_PASSWORD_HASH) throw new Error('WEB_AUTH_USERNAME and WEB_AUTH_PASSWORD_HASH must be set');
-Sep 08 22:20:34 AIHome node[453830]:                                            ^
-Sep 08 22:20:34 AIHome node[453830]: Error: WEB_AUTH_USERNAME and WEB_AUTH_PASSWORD_HASH must be set
-Sep 08 22:20:34 AIHome node[453830]:     at Object.<anonymous> (/home/aihome/AIHome/server.js:26:50)
-Sep 08 22:20:34 AIHome node[453830]:     at Module._compile (node:internal/modules/cjs/loader:1529:14)
-Sep 08 22:20:34 AIHome node[453830]:     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
-Sep 08 22:20:34 AIHome node[453830]:     at Module.load (node:internal/modules/cjs/loader:1275:32)
-Sep 08 22:20:34 AIHome node[453830]:     at Module._load (node:internal/modules/cjs/loader:1096:12)
-Sep 08 22:20:34 AIHome node[453830]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
-Sep 08 22:20:34 AIHome node[453830]:     at node:internal/main/run_main_module:28:49
-Sep 08 22:20:34 AIHome node[453830]: Node.js v20.19.2
-Sep 08 22:20:38 AIHome node[453890]: AIHome Web Terminal v0.2.0 listening on 0.0.0.0:8080
-Sep 08 22:22:56 AIHome node[453987]: AIHome Web Terminal v0.2.0 listening on 0.0.0.0:8088
-Sep 08 22:23:53 AIHome node[454151]: AIHome Web Terminal v0.2.0 listening on 0.0.0.0:8088
-Sep 08 22:25:59 AIHome node[454151]: [audit] {"timestamp":"2026-09-08T15:25:59.911Z","user":"aihome","mode":"lan","source":"192.168.1.80","action":"login","status":"success"}
-Sep 08 22:27:36 AIHome node[454151]: [audit] {"timestamp":"2026-09-08T15:27:35.999Z","user":"aihome","mode":"lan","source":"192.168.1.80","target":"test","action":"execute","command":"echo AIHome Web Terminal TEST OK","status":"exit_0"}
-Sep 08 22:29:38 AIHome node[454151]: [audit] {"timestamp":"2026-09-08T15:29:38.533Z","user":"aihome","mode":"lan","source":"192.168.1.70","action":"login","status":"success"}
-Sep 09 20:02:31 AIHome node[498060]: AIHome Web Terminal v0.2.0 listening on 0.0.0.0:8088
+Sep 09 20:10:21 AIHome systemd[1]: Started aihome-web.service - AIHome Web Terminal.
+aihome@AIHome:/opt/web$ sudo systemctl status aihome-web --no-pager
+● aihome-web.service - AIHome Web Terminal
+     Loaded: loaded (/etc/systemd/system/aihome-web.service; enabled; preset: enabled)
+     Active: activating (auto-restart) (Result: exit-code) since Wed 2026-09-09 20:11:25 +07; 2s ago
+ Invocation: 11e9c263115848d7bbeae4cfb79549bb
+    Process: 498695 ExecStart=/usr/bin/node /opt/web/server.js (code=exited, status=1/FAILURE)
+   Main PID: 498695 (code=exited, status=1/FAILURE)
+   Mem peak: 13.6M
+        CPU: 317ms
+aihome@AIHome:/opt/web$ sudo journalctl -u aihome-web -n 50 --no-pager
+Sep 09 20:11:25 AIHome systemd[1]: aihome-web.service: Main process exited, code=exited, status=1/FAILURE
+Sep 09 20:11:25 AIHome systemd[1]: aihome-web.service: Failed with result 'exit-code'.
+Sep 09 20:11:28 AIHome systemd[1]: aihome-web.service: Scheduled restart job, restart counter is at 19.
+Sep 09 20:11:28 AIHome systemd[1]: Started aihome-web.service - AIHome Web Terminal.
+Sep 09 20:11:28 AIHome node[498707]: node:internal/modules/cjs/loader:1215
+Sep 09 20:11:28 AIHome node[498707]:   throw err;
+Sep 09 20:11:28 AIHome node[498707]:   ^
+Sep 09 20:11:28 AIHome node[498707]: Error: Cannot find module 'express'
+Sep 09 20:11:28 AIHome node[498707]: Require stack:
+Sep 09 20:11:28 AIHome node[498707]: - /opt/web/server.js
+Sep 09 20:11:28 AIHome node[498707]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1212:15)
+Sep 09 20:11:28 AIHome node[498707]:     at Module._load (node:internal/modules/cjs/loader:1043:27)
+Sep 09 20:11:28 AIHome node[498707]:     at Module.require (node:internal/modules/cjs/loader:1298:19)
+Sep 09 20:11:28 AIHome node[498707]:     at require (node:internal/modules/helpers:182:18)
+Sep 09 20:11:28 AIHome node[498707]:     at Object.<anonymous> (/opt/web/server.js:5:17)
+Sep 09 20:11:28 AIHome node[498707]:     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+Sep 09 20:11:28 AIHome node[498707]:     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+Sep 09 20:11:28 AIHome node[498707]:     at Module.load (node:internal/modules/cjs/loader:1275:32)
+Sep 09 20:11:28 AIHome node[498707]:     at Module._load (node:internal/modules/cjs/loader:1096:12)
+Sep 09 20:11:28 AIHome node[498707]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Sep 09 20:11:28 AIHome node[498707]:   code: 'MODULE_NOT_FOUND',
+Sep 09 20:11:28 AIHome node[498707]:   requireStack: [ '/opt/web/server.js' ]
+Sep 09 20:11:28 AIHome node[498707]: }
+Sep 09 20:11:28 AIHome node[498707]: Node.js v20.19.2
+Sep 09 20:11:28 AIHome systemd[1]: aihome-web.service: Main process exited, code=exited, status=1/FAILURE
+Sep 09 20:11:28 AIHome systemd[1]: aihome-web.service: Failed with result 'exit-code'.
+Sep 09 20:11:31 AIHome systemd[1]: aihome-web.service: Scheduled restart job, restart counter is at 20.
+Sep 09 20:11:31 AIHome systemd[1]: Started aihome-web.service - AIHome Web Terminal.
+Sep 09 20:11:32 AIHome node[498715]: node:internal/modules/cjs/loader:1215
+Sep 09 20:11:32 AIHome node[498715]:   throw err;
+Sep 09 20:11:32 AIHome node[498715]:   ^
+Sep 09 20:11:32 AIHome node[498715]: Error: Cannot find module 'express'
+Sep 09 20:11:32 AIHome node[498715]: Require stack:
+Sep 09 20:11:32 AIHome node[498715]: - /opt/web/server.js
+Sep 09 20:11:32 AIHome node[498715]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1212:15)
+Sep 09 20:11:32 AIHome node[498715]:     at Module._load (node:internal/modules/cjs/loader:1043:27)
+Sep 09 20:11:32 AIHome node[498715]:     at Module.require (node:internal/modules/cjs/loader:1298:19)
+Sep 09 20:11:32 AIHome node[498715]:     at require (node:internal/modules/helpers:182:18)
+Sep 09 20:11:32 AIHome node[498715]:     at Object.<anonymous> (/opt/web/server.js:5:17)
+Sep 09 20:11:32 AIHome node[498715]:     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+Sep 09 20:11:32 AIHome node[498715]:     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+Sep 09 20:11:32 AIHome node[498715]:     at Module.load (node:internal/modules/cjs/loader:1275:32)
+Sep 09 20:11:32 AIHome node[498715]:     at Module._load (node:internal/modules/cjs/loader:1096:12)
+Sep 09 20:11:32 AIHome node[498715]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Sep 09 20:11:32 AIHome node[498715]:   code: 'MODULE_NOT_FOUND',
+Sep 09 20:11:32 AIHome node[498715]:   requireStack: [ '/opt/web/server.js' ]
+Sep 09 20:11:32 AIHome node[498715]: }
+Sep 09 20:11:32 AIHome node[498715]: Node.js v20.19.2
+Sep 09 20:11:32 AIHome systemd[1]: aihome-web.service: Main process exited, code=exited, status=1/FAILURE
+Sep 09 20:11:32 AIHome systemd[1]: aihome-web.service: Failed with result 'exit-code'.
+aihome@AIHome:/opt/web$ sudo ss -ltnp | grep 8088
