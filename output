@@ -1,112 +1,114 @@
 aihome@AIHome:/opt/aihome$ set -euo pipefail
 
-echo '=== 1. CURRENT DIRECTORIES ==='
-ls -ld /opt/aihome /opt/aihome-test /opt/KIRA 2>&1 || true
+echo '=== 1. CHECK PATHS ==='
+ls -ld /opt/aihome /opt/aihome-test
+test ! -e /opt/KIRA
 
 echo
-echo '=== 2. RUNNING CONTAINERS ==='
-docker ps -a --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'
-
-echo
-echo '=== 3. CONTAINER MOUNTS ==='
-for c in aihome-gateway aihome-openclaw-test; do
-  echo "--- $c ---"
-  docker inspect "$c" \
-    --format '{{range .Mounts}}{{println .Source "->" .Destination}}{{end}}' \
-    2>&1 || true
-done
-
-echo
-echo '=== 4. CONTAINER LABELS ==='
-for c in aihome-gateway aihome-openclaw-test; do
-  echo "--- $c ---"
-  docker inspect "$c" \
-    --format '{{json .Config.Labels}}' \
-    2>&1 || true
-done
-
-echo
-echo '=== 5. REFERENCES TO /opt/aihome ==='
-grep -RIl --exclude-dir=.git --exclude='*.sqlite*' \
-  '/opt/aihome' /opt/aihome /etc/systemd /etc/cron* 2>/dev/null \
-  | head -200 || true
-
-echo
-echo '=== 6. COMPOSE FILES ==='
-find /opt/aihome /opt/aihome-test \
-  -maxdepth 4 \
-  \( -name 'compose*.yml' -o -name 'docker-compose*.yml' \) \
-  -type f -print 2>/dev/null
-
-echo
-echo '=== 7. MOUNTED FILESYSTEM CHECK ==='
-findmnt /opt/aihome 2>/dev/null || true
-findmnt /opt/aihome-test 2>/dev/null || true
-
-echo
-echo '=== 8. GIT STATUS MAIN ==='
+echo '=== 2. CHECK MAIN GIT ==='
 cd /opt/aihome
-git status --short --branch 2>&1 || true
+git status --short --branch
+echo "HEAD=$(git rev-parse --short HEAD)"
+echo "FULL_HEAD=$(git rev-parse HEAD)"
 
 echo
-echo '=== AUDIT COMPLETE ==='
-=== 1. CURRENT DIRECTORIES ===
-ls: cannot access '/opt/KIRA': No such file or directory
+echo '=== 3. CHECK GATEWAY ==='
+docker ps -a --filter name=aihome-gateway \
+  --format 'NAME={{.Names}} STATUS={{.Status}}'
+
+echo
+echo '=== 4. CHECK TEST ==='
+docker ps -a --filter name=aihome-openclaw-test \
+  --format 'NAME={{.Names}} STATUS={{.Status}}'
+
+echo
+echo '=== 5. SYSTEMD REFERENCES ==='
+systemctl cat aihome-web-terminal.service 2>/dev/null || true
+
+echo
+echo '=== 6. MAIN ABSOLUTE PATH REFERENCES ==='
+grep -RIn \
+  --exclude-dir=.git \
+  --exclude-dir=.docker \
+  --exclude='*.sqlite*' \
+  '/opt/aihome' \
+  /opt/aihome/compose \
+  /opt/aihome/.github \
+  /opt/aihome/config \
+  /opt/aihome/scripts \
+  2>/dev/null || true
+
+echo
+echo '=== PREFLIGHT COMPLETE ==='
+=== 1. CHECK PATHS ===
 drwxr-xr-x 13 aihome aihome 4096 Sep  9 20:32 /opt/aihome
 drwxr-xr-x 11 aihome aihome 4096 Sep  7 06:17 /opt/aihome-test
 
-=== 2. RUNNING CONTAINERS ===
-NAMES                  IMAGE                                     STATUS
-aihome-openclaw-test   ghcr.io/openclaw/openclaw:2026.8.2-slim   Up 6 hours (healthy)
-aihome-gateway         31daaedb5801                              Exited (128) 4 days ago
-
-=== 3. CONTAINER MOUNTS ===
---- aihome-gateway ---
-/opt/aihome/config/gateway -> /config
-/opt/aihome/data/cache -> /data/cache
-/opt/aihome/knowledge -> /data/knowledge
-/opt/aihome/logs/gateway -> /data/logs
-/opt/aihome/memory -> /data/memory
-/opt/aihome/data/sqlite -> /data/sqlite
-
---- aihome-openclaw-test ---
-/opt/aihome-test/openclaw/runtime-config -> /data/config
-/opt/aihome-test/source/config/openclaw/openclaw.json5 -> /data/source-config/openclaw.json5
-/opt/aihome-test/openclaw/state -> /data/state
-/opt/aihome-test/openclaw/workspace -> /home/node/.openclaw/workspace
-/opt/aihome-test/source/config/aihome -> /home/node/.openclaw/workspace/config/aihome
-
-
-=== 4. CONTAINER LABELS ===
---- aihome-gateway ---
-{"com.docker.compose.config-hash":"e9666c7a4811594288c14c23ceaa049e2de0249c890fda68a07b6ee10043ce7b","com.docker.compose.container-number":"1","com.docker.compose.depends_on":"","com.docker.compose.image":"sha256:fe1e4ea81ed6845e82302196da4d9f15a7d0fb5b60de1605764d7fc274035379","com.docker.compose.oneoff":"False","com.docker.compose.project":"aihome","com.docker.compose.project.config_files":"/opt/aihome/compose/compose.yml","com.docker.compose.project.working_dir":"/opt/aihome/compose","com.docker.compose.replace":"aihome-gateway","com.docker.compose.service":"gateway","com.docker.compose.version":"5.5.0"}
---- aihome-openclaw-test ---
-{"com.docker.compose.config-hash":"3de6ad711452d6550635518b94e1fca95ad5a9b616b580a4b89c396c3dcb4c6e","com.docker.compose.container-number":"1","com.docker.compose.depends_on":"","com.docker.compose.image":"sha256:b03648ec0cf27f4eb2140cd3ff1dbf230a4948c33fdb7a7a305a3aab985b093d","com.docker.compose.oneoff":"False","com.docker.compose.project":"aihome-openclaw-test","com.docker.compose.project.config_files":"/opt/aihome-test/source/compose/openclaw.yml","com.docker.compose.project.working_dir":"/opt/aihome-test/source/compose","com.docker.compose.replace":"aihome-openclaw-test","com.docker.compose.service":"openclaw","com.docker.compose.version":"5.5.0","org.opencontainers.image.base.digest":"sha256:3638d9a6fe4030bd716be989438248074489337ba3275657f93595428be4fc03","org.opencontainers.image.base.name":"docker.io/library/node:24-bookworm-slim","org.opencontainers.image.created":"2026-09-01T17:11:58Z","org.opencontainers.image.description":"OpenClaw gateway and CLI runtime container image","org.opencontainers.image.documentation":"https://docs.openclaw.ai/install/docker","org.opencontainers.image.licenses":"MIT","org.opencontainers.image.revision":"0965053fe6b9341776df147a6934b7485c60b5ca","org.opencontainers.image.source":"https://github.com/openclaw/openclaw","org.opencontainers.image.title":"OpenClaw","org.opencontainers.image.url":"https://openclaw.ai","org.opencontainers.image.version":"2026.8.2"}
-
-=== 5. REFERENCES TO /opt/aihome ===
-/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml
-/opt/aihome/.docker/buildx/refs/default/default/zr2g5a4i0q9nzslal46c29knj
-/opt/aihome/.docker/buildx/refs/default/default/kcxnkn6pqplro307qvei5qi4t
-/opt/aihome/.docker/buildx/refs/default/default/8qj2n60yt424934tx5kjijtj3
-/opt/aihome/.docker/buildx/refs/default/default/k0afs4ivpw47by82olwv6dpnw
-/opt/aihome/.docker/buildx/refs/default/default/ydcuj3ivqv564g9sf3soti1di
-/opt/aihome/.docker/buildx/refs/default/default/f1z0d47wv1rzu47lbyr3nnd75
-/opt/aihome/compose/compose.yml
-/opt/aihome/compose/openclaw.yml
-/etc/systemd/system/multi-user.target.wants/aihome-web-terminal.service
-/etc/systemd/system/aihome-web-terminal.service
-
-=== 6. COMPOSE FILES ===
-/opt/aihome/compose/compose.yml
-/opt/aihome-test/source/compose/compose.yml
-/opt/aihome-test/compose/compose.yml
-/opt/aihome-test/source.old-20260903-064813/compose/compose.yml
-
-=== 7. MOUNTED FILESYSTEM CHECK ===
-
-=== 8. GIT STATUS MAIN ===
+=== 2. CHECK MAIN GIT ===
 ## Test...origin/Test [behind 59]
 ?? .docker/
 ?? output
+HEAD=126ecc2
+FULL_HEAD=126ecc28430c3fd7d91dc69e612cb492a1341c9a
 
-=== AUDIT COMPLETE ===
+=== 3. CHECK GATEWAY ===
+NAME=aihome-gateway STATUS=Exited (128) 4 days ago
+
+=== 4. CHECK TEST ===
+NAME=aihome-openclaw-test STATUS=Up 6 hours (healthy)
+
+=== 5. SYSTEMD REFERENCES ===
+# /etc/systemd/system/aihome-web-terminal.service
+[Unit]
+Description=AIHome LAN Web Terminal
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=aihome
+Group=aihome
+WorkingDirectory=/opt/aihome
+EnvironmentFile=/etc/aihome/web-terminal.env
+ExecStart=/usr/bin/python3 /opt/aihome/tools/web-terminal/web_terminal.py
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/opt/aihome
+
+[Install]
+WantedBy=multi-user.target
+
+=== 6. MAIN ABSOLUTE PATH REFERENCES ===
+/opt/aihome/compose/compose.yml:6:      context: /opt/aihome/config/gateway
+/opt/aihome/compose/compose.yml:16:      - /opt/aihome/data/sqlite:/data/sqlite
+/opt/aihome/compose/compose.yml:17:      - /opt/aihome/data/cache:/data/cache
+/opt/aihome/compose/compose.yml:18:      - /opt/aihome/memory:/data/memory
+/opt/aihome/compose/compose.yml:19:      - /opt/aihome/knowledge:/data/knowledge
+/opt/aihome/compose/compose.yml:20:      - /opt/aihome/logs/gateway:/data/logs
+/opt/aihome/compose/compose.yml:21:      - /opt/aihome/config/gateway:/config:ro
+/opt/aihome/compose/openclaw.yml:31:      - /opt/aihome-test/openclaw/state:/data/state
+/opt/aihome/compose/openclaw.yml:32:      - /opt/aihome-test/openclaw/workspace:/home/node/.openclaw/workspace
+/opt/aihome/compose/openclaw.yml:33:      - /opt/aihome-test/openclaw/runtime-config:/data/config
+/opt/aihome/compose/openclaw.yml:34:      - /opt/aihome-test/source/config/openclaw/openclaw.json5:/data/source-config/openclaw.json5:ro
+/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:27:      SOURCE_DIR: /opt/aihome-test/source
+/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:83:          GROQ_FILE=/opt/aihome-test/openclaw/secrets/groq.env
+/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:116:          STATE_DIR=/opt/aihome-test/openclaw/state
+/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:118:          RUNTIME_CONFIG=/opt/aihome-test/openclaw/runtime-config
+/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:119:          SOURCE_CONFIG=/opt/aihome-test/source/config/openclaw/openclaw.json5
+/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:121:          docker compose -f /opt/aihome-test/source/compose/openclaw.yml down || true
+/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:172:            -v /opt/aihome-test/openclaw/state:/data/state \
+/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:173:            -v /opt/aihome-test/openclaw/workspace:/home/node/.openclaw/workspace \
+/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:181:        working-directory: /opt/aihome-test/source
+/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:192:        working-directory: /opt/aihome-test/source
+/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:218:        working-directory: /opt/aihome-test/source
+/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:252:            docker compose -f /opt/aihome-test/source/compose/openclaw.yml ps -a || true
+/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:275:        working-directory: /opt/aihome-test/source
+/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:299:            docker compose -f /opt/aihome-test/source/compose/openclaw.yml ps -a || true
+/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:354:          MEMORY_FILE=/opt/aihome-test/openclaw/workspace/MEMORY-TEST.md
+/opt/aihome/.github/workflows/openclaw-test-box-deploy.yml:361:        working-directory: /opt/aihome-test/source
+
+=== PREFLIGHT COMPLETE ===
