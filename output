@@ -1,94 +1,37 @@
-#!/usr/bin/env bash
-set -euo pipefail
+Run set -euo pipefail
+  set -euo pipefail
+  response="$(docker exec aihome-openclaw-test node openclaw.mjs gateway status --require-rpc 2>&1)"
+  printf '%s\n' "${response}"
+  grep -Fq 'RPC probe: ok' <<<"${response}"
+  echo 'OPENCLAW_API=PASS'
+  shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+  env:
+    EXPECTED_BRANCH: Test
+    SOURCE_DIR: /opt/aihome-test/source
+    MODEL: groq/openai/gpt-oss-20b
+    GROQ_API_KEY: ***
+    OPENCLAW_GATEWAY_TOKEN: ***
+[plugins:lifecycle] phase="manifest registry" ms=112.62 status=ok includeDisabled=true indexPluginCount=62
+Service: systemd user (disabled)
+File logs: /tmp/openclaw/openclaw-2026-09-10.log
+Host desktop: disabled
 
-SKILL_FILE="skills/weather/Skill.md"
-LOCATION_FILE="config/aihome/home-location.json"
+Config (cli): /data/config/openclaw.json5
+Config (service): /data/config/openclaw.json5
 
-fail() {
-  echo "WEATHER_OPEN_METEO=FAIL"
-  echo "ERROR=$1"
-  exit 1
-}
+Gateway: bind=loopback (127.0.0.1), port=18789 (env/config)
+Probe target: ws://127.0.0.1:18789
+Dashboard: http://127.0.0.1:18789/
+Probe note: Loopback-only gateway; only local clients can connect.
 
-test -f "$SKILL_FILE" || fail "missing $SKILL_FILE"
-test -f "$LOCATION_FILE" || fail "missing $LOCATION_FILE"
+CLI version: 2026.8.2 (/app/openclaw.mjs)
+Gateway version: 2026.8.2
 
-grep -Fq 'Nguồn forecast duy nhất:** Open-Meteo' "$SKILL_FILE" || fail "Open-Meteo-only rule missing"
-grep -Fq 'api.open-meteo.com' "$SKILL_FILE" || fail "Open-Meteo endpoint rule missing"
-grep -Fq 'Không sử dụng NCHMF' "$SKILL_FILE" || fail "NCHMF prohibition missing"
-grep -Fq 'Không có fallback nguồn dữ liệu' "$SKILL_FILE" || fail "fallback prohibition missing"
-grep -Fq 'request' "$SKILL_FILE" || fail "request input missing"
-grep -Fq 'home-location.json' "$SKILL_FILE" || fail "home location source missing"
-grep -Fq 'status' "$SKILL_FILE" || fail "status output missing"
-grep -Fq 'source' "$SKILL_FILE" || fail "source output missing"
-grep -Fq 'forecast' "$SKILL_FILE" || fail "forecast output missing"
+Runtime: unknown (systemctl not available; systemd user services are required on Linux.)
+Read probe: ok
+Capability: read-only
 
-python3 - "$LOCATION_FILE" <<'PY'
-import json, sys
-from pathlib import Path
-
-p = Path(sys.argv[1])
-data = json.loads(p.read_text(encoding='utf-8'))
-assert isinstance(data, dict)
-lat = data.get('latitude')
-lon = data.get('longitude')
-tz = data.get('timezone')
-assert isinstance(lat, (int, float)) and not isinstance(lat, bool) and -90 <= lat <= 90
-assert isinstance(lon, (int, float)) and not isinstance(lon, bool) and -180 <= lon <= 180
-assert isinstance(tz, str) and tz
-print(f'LOCATION=PASS latitude={lat} longitude={lon} timezone={tz}')
-PY
-
-# Whole Weather/Open-Meteo data-path test for the current repository implementation.
-# This calls Open-Meteo directly and never calls Groq.
-python3 - "$LOCATION_FILE" <<'PY'
-import json, sys, urllib.parse, urllib.request
-from pathlib import Path
-
-cfg = json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
-params = urllib.parse.urlencode({
-    'latitude': cfg['latitude'],
-    'longitude': cfg['longitude'],
-    'timezone': cfg['timezone'],
-    'forecast_days': 1,
-    'daily': 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum',
-})
-url = f'https://api.open-meteo.com/v1/forecast?{params}'
-parsed = urllib.parse.urlparse(url)
-assert parsed.scheme == 'https'
-assert parsed.hostname == 'api.open-meteo.com'
-assert parsed.path == '/v1/forecast'
-
-req = urllib.request.Request(url, headers={'User-Agent': 'AIHome-Weather-Open-Meteo-test/1.0'})
-with urllib.request.urlopen(req, timeout=15) as response:
-    assert response.status == 200
-    body = json.load(response)
-
-assert isinstance(body, dict)
-assert isinstance(body.get('latitude'), (int, float))
-assert isinstance(body.get('longitude'), (int, float))
-assert abs(float(body['latitude']) - cfg['latitude']) < 0.01
-assert abs(float(body['longitude']) - cfg['longitude']) < 0.01
-assert body.get('timezone') == cfg['timezone']
-
-daily = body.get('daily')
-assert isinstance(daily, dict)
-required_daily_fields = [
-    'time',
-    'weather_code',
-    'temperature_2m_max',
-    'temperature_2m_min',
-    'precipitation_sum',
-]
-for field in required_daily_fields:
-    values = daily.get(field)
-    assert isinstance(values, list), field
-    assert len(values) >= 1, field
-
-assert isinstance(daily['time'][0], str)
-print('OPEN_METEO=PASS')
-print('FORECAST_FIELDS=PASS daily.time,daily.weather_code,daily.temperature_2m_max,daily.temperature_2m_min,daily.precipitation_sum')
-print('GROQ_CALLS=0')
-PY
-
-echo 'WEATHER_OPEN_METEO=PASS'
+Listening: 127.0.0.1:18789
+Troubles: run openclaw status
+Troubleshooting: https://docs.openclaw.ai/troubleshooting
+Error: Process completed with exit code 1.
