@@ -1,55 +1,81 @@
 aihome@AIHome:/opt/aihome-test/source$ cd /opt/aihome-test/source
 
-CHECKPOINT=87330352ab55a4ad10490f0a795181589022fb6f
-BASE="https://raw.githubusercontent.com/yeuvn/AIHome/$CHECKPOINT"
+echo '=== 1. COMPOSE WEATHER MOUNT ==='
+grep -n -A3 -B3 'source-skills/weather' compose/openclaw.yml
 
-echo "=== CHECKPOINT ==="
-echo "$CHECKPOINT"
+echo '=== 2. CONTAINER MOUNT ==='
+docker compose -f compose/openclaw.yml exec openclaw sh -lc '
+ls -la /data/source-skills/weather 2>&1 || true
+echo "---"
+ls -la /tmp/aihome-skills 2>&1 || true
+echo "---"
+ls -la /tmp/aihome-skills/weather 2>&1 || true
+'
 
-echo "=== BACKUP RUNTIME FILES ==="
-mkdir -p /opt/aihome-test/checkpoint-backup-$CHECKPOINT
-cp -a compose/openclaw.yml \
-  /opt/aihome-test/checkpoint-backup-$CHECKPOINT/openclaw.yml.old
-cp -a config/openclaw/openclaw.json5 \
-  /opt/aihome-test/checkpoint-backup-$CHECKPOINT/openclaw.json5.old
-cp -a skills/weather/Skill-weather.md \
-  /opt/aihome-test/checkpoint-backup-$CHECKPOINT/Skill-weather.md.old
-
-echo "=== DOWNLOAD CHECKPOINT 4 ==="
-curl -fL "$BASE/compose/openclaw.yml" \
-  -o compose/openclaw.yml
-
-curl -fL "$BASE/config/openclaw/openclaw.json5" \
-  -o config/openclaw/openclaw.json5
-
-mkdir -p skills/weather
-curl -fL "$BASE/skills/weather/Skill-weather.md" \
-  -o skills/weather/Skill-weather.md
-
-echo "=== VERIFY ==="
-git hash-object compose/openclaw.yml
-git hash-object config/openclaw/openclaw.json5
-git hash-object skills/weather/Skill-weather.md
-
-echo "=== CHECKPOINT 4 DEPLOYED ==="
-=== CHECKPOINT ===
-87330352ab55a4ad10490f0a795181589022fb6f
-=== BACKUP RUNTIME FILES ===
-=== DOWNLOAD CHECKPOINT 4 ===
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
-curl: (22) The requested URL returned error: 404
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
-curl: (22) The requested URL returned error: 404
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
-curl: (22) The requested URL returned error: 404
-=== VERIFY ===
-557005db4a99f190be1e54a22c488ca8c91823af
-fafced72dc8f2fbd422d9d3b93680a816418684b
-ced934572757ad1c3fee61262a98ea5f69fd8715
-=== CHECKPOINT 4 DEPLOYED ===
+echo '=== 3. CONTAINER COMMAND ==='
+docker compose -f compose/openclaw.yml config | grep -n -A15 -B5 'source-skills/weather'
+=== 1. COMPOSE WEATHER MOUNT ===
+32-      - /opt/aihome-test/openclaw/workspace:/home/node/.openclaw/workspace
+33-      - /opt/aihome-test/source/config/aihome:/home/node/.openclaw/workspace/config/aihome:ro
+34-      - /opt/aihome-test/source/config/aihome:/data/state/workspace/config/aihome:ro
+35:      - /opt/aihome-test/source/skills/weather:/data/source-skills/weather:ro
+36-      - /opt/aihome-test/openclaw/runtime-config:/data/config
+37-      - /opt/aihome-test/source/config/openclaw/openclaw.json5:/data/source-config/openclaw.json5:ro
+38-    command:
+--
+43-        cp /data/source-config/openclaw.json5 /data/config/openclaw.json5;
+44-        rm -rf /tmp/aihome-skills;
+45-        mkdir -p /tmp/aihome-skills/weather;
+46:        cp /data/source-skills/weather/Skill-weather.md /tmp/aihome-skills/weather/SKILL.md;
+47-        set +e;
+48-        update_output="$$(node openclaw.mjs plugins update npm:@openclaw/groq-provider@2026.8.2 2>&1)";
+49-        update_rc=$$?;
+=== 2. CONTAINER MOUNT ===
+ls: cannot access '/data/source-skills/weather': No such file or directory
+---
+ls: cannot access '/tmp/aihome-skills': No such file or directory
+---
+ls: cannot access '/tmp/aihome-skills/weather': No such file or directory
+=== 3. CONTAINER COMMAND ===
+6-    cpus: 1.5
+7-    command:
+8-      - sh
+9-      - -lc
+10-      - |-
+11:        set -eu; cp /data/source-config/openclaw.json5 /data/config/openclaw.json5; rm -rf /tmp/aihome-skills; mkdir -p /tmp/aihome-skills/weather; cp /data/source-skills/weather/Skill-weather.md /tmp/aihome-skills/weather/SKILL.md; set +e; update_output="$$(node openclaw.mjs plugins update npm:@openclaw/groq-provider@2026.8.2 2>&1)"; update_rc=$$?; set -e; printf '%s\n' "$$update_output"; if [ "$$update_rc" -ne 0 ]; then
+12-          if printf '%s\n' "$$update_output" | grep -Fq 'No tracked plugin or hook pack found'; then
+13-            node openclaw.mjs plugins install npm:@openclaw/groq-provider@2026.8.2 --force --pin;
+14-          else
+15-            exit "$$update_rc";
+16-          fi;
+17-        fi; node openclaw.mjs plugins enable groq; node openclaw.mjs plugins list --enabled --verbose; exec node openclaw.mjs gateway run
+18-    container_name: aihome-openclaw-test
+19-    environment:
+20-      GROQ_API_KEY: ""
+21-      NODE_OPTIONS: --max-old-space-size=1536
+22-      OPENCLAW_CONFIG_PATH: /data/config/openclaw.json5
+23-      OPENCLAW_GATEWAY_TOKEN: ""
+24-      OPENCLAW_HOME: /data/state
+25-      OPENCLAW_PLUGIN_LIFECYCLE_TRACE: "1"
+26-      OPENCLAW_PLUGIN_LOAD_DEBUG: "1"
+--
+62-        target: /data/state/workspace/config/aihome
+63-        read_only: true
+64-        bind: {}
+65-      - type: bind
+66-        source: /opt/aihome-test/source/skills/weather
+67:        target: /data/source-skills/weather
+68-        read_only: true
+69-        bind: {}
+70-      - type: bind
+71-        source: /opt/aihome-test/openclaw/runtime-config
+72-        target: /data/config
+73-        bind: {}
+74-      - type: bind
+75-        source: /opt/aihome-test/source/config/openclaw/openclaw.json5
+76-        target: /data/source-config/openclaw.json5
+77-        read_only: true
+78-        bind: {}
+79-networks:
+80-  default:
+81-    name: aihome-openclaw-test_default
