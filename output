@@ -1,292 +1,35 @@
-Run set -euo pipefail
-  set -euo pipefail
-  case "2C-only" in
-    2A-only)
-      bash scripts/test-groq-openclaw.sh
-      ;;
-    2B-only)
-      bash scripts/test-groq-built-in-tools.sh
-      ;;
-    2C-only)
-      bash scripts/test-weather-agent-skill.sh
-      ;;
-    full)
-      bash scripts/test-groq-openclaw.sh
-      bash scripts/test-groq-built-in-tools.sh
-      bash scripts/test-weather-agent-skill.sh
-      ;;
-    *)
-      echo "Unsupported test mode: 2C-only"
-      exit 1
-      ;;
-  esac
-  shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
-  env:
-    EXPECTED_BRANCH: Test
-    SOURCE_DIR: /opt/aihome-test/source
-    MODEL: groq/openai/gpt-oss-20b
-    GROQ_API_KEY: ***
-    OPENCLAW_GATEWAY_TOKEN: ***
-HOME_LOCATION_CONFIG=PASS
+ HOME_LOCATION_CONFIG=PASS
 2C_CONTEXT=Skill-weather.md+home-location.json
 SKILL_FILE=PASS
 HOME_LOCATION_FILE=PASS
 SKILL_OPEN_METEO_RULE=PASS
 SKILL_HOME_LOCATION_RULE=PASS
 SKILL_WEB_FETCH_RULE=PASS
+2C_AGENT_INSTRUCTIONS=PASS
 === 2C AGENT -> SKILL -> WEB_FETCH -> OPEN-METEO ===
 {
-  "runId": "add540ea-5bd6-4d85-959f-b34f2f56d883",
-  "status": "ok",
-  "summary": "completed",
-  "result": {
-2C_HOME_LOCATION=FAIL: configured home coordinates not present in Agent trace/result
-    "payloads": [
-      {
-        "text": "I’m sorry, but I can’t read the workspace files needed for this request (Skill‑weather.md and config/aihome/home-location.json). If you can provide the contents of those files or give me the latitude, longitude, and timezone, I’ll be able to fetch the weather data for you.",
-        "mediaUrl": null
-      }
-    ],
-    "meta": {
-      "durationMs": 23367,
-      "agentMeta": {
-        "sessionId": "bb14cfa9-b571-477e-b44a-c5830fc3ff05",
-        "sessionFile": "agent:main:weather-2c-535383",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "contextTokens": 131072,
-        "contextTokensSource": "resolved",
-        "agentHarnessId": "openclaw",
-        "credentialSource": {
-          "kind": "direct",
-          "evidence": "environment",
-          "authorization": "ambient"
-        },
-        "usage": {
-          "input": 85255,
-          "output": 1820,
-          "cacheRead": 5888,
-          "reasoningTokens": 1523,
-          "total": 92963,
-          "cost": {
-            "total": 0
-          }
-        },
-        "lastCallUsage": {
-          "input": 85255,
-          "output": 1820,
-          "cacheRead": 5888,
-          "cacheWrite": 0,
-          "cost": {
-            "total": 0
-          },
-          "reasoningTokens": 1523,
-          "total": 92963
-        },
-        "promptTokens": 91143,
-        "contextBudgetStatus": {
-          "schemaVersion": 1,
-          "source": "pre-prompt-estimate",
-          "updatedAt": 1789049166236,
-          "provider": "groq",
-          "model": "openai/gpt-oss-20b",
-          "route": "fits",
-          "shouldCompact": false,
-          "estimatedPromptTokens": 7131,
-          "contextTokenBudget": 131072,
-          "promptBudgetBeforeReserve": 111072,
-          "reserveTokens": 20000,
-          "effectiveReserveTokens": 20000,
-          "remainingPromptBudgetTokens": 103941,
-          "overflowTokens": 0,
-          "toolResultReducibleChars": 0,
-          "messageCount": 0,
-          "unwindowedMessageCount": 0,
-          "sessionId": "bb14cfa9-b571-477e-b44a-c5830fc3ff05"
-        },
-        "codeModeEngaged": false,
-        "assistantTurns": 1,
-        "costUsd": 0,
-        "terminalReceipt": {
-          "runId": "add540ea-5bd6-4d85-959f-b34f2f56d883",
-          "sessionId": "bb14cfa9-b571-477e-b44a-c5830fc3ff05",
-          "turnId": "add540ea-5bd6-4d85-959f-b34f2f56d883",
-          "requested": {
-            "provider": "groq",
-            "model": "openai/gpt-oss-20b"
-          },
-          "effective": {
-            "provider": "groq",
-            "model": "openai/gpt-oss-20b",
-            "responseModel": "openai/gpt-oss-20b"
-          },
-          "successfulToolNames": [],
-          "rerouted": false
-        }
-      },
-      "aborted": false,
-      "systemPromptReport": {
-        "source": "run",
-        "generatedAt": 1789049165992,
-        "sessionId": "bb14cfa9-b571-477e-b44a-c5830fc3ff05",
-        "sessionKey": "agent:main:weather-2c-535383",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "workspaceDir": "/data/state/workspace",
-        "bootstrapMaxChars": 20000,
-        "bootstrapTotalMaxChars": 60000,
-        "bootstrapTruncation": {
-          "warningMode": "always",
-          "warningShown": false,
-          "truncatedFiles": 0,
-          "nearLimitFiles": 0,
-          "totalNearLimit": false
-        },
-        "sandbox": {
-          "mode": "off",
-          "sandboxed": false
-        },
-        "systemPrompt": {
-          "chars": 23007,
-          "hash": "7dec272203e802055ef84c01b55eba1445b815df9cab886d8c7ee6804a28cfa6",
-          "projectContextChars": 16015,
-          "nonProjectContextChars": 6992
-        },
-        "injectedWorkspaceFiles": [
-          {
-            "name": "AGENTS.md",
-            "path": "/data/state/workspace/AGENTS.md",
-            "missing": false,
-            "rawChars": 7926,
-            "injectedChars": 7926,
-            "truncated": false
-          },
-          {
-            "name": "SOUL.md",
-            "path": "/data/state/workspace/SOUL.md",
-            "missing": false,
-            "rawChars": 1509,
-            "injectedChars": 1509,
-            "truncated": false
-          },
-          {
-            "name": "IDENTITY.md",
-            "path": "/data/state/workspace/IDENTITY.md",
-            "missing": false,
-            "rawChars": 1275,
-            "injectedChars": 1275,
-            "truncated": false
-          },
-          {
-            "name": "USER.md",
-            "path": "/data/state/workspace/USER.md",
-            "missing": false,
-            "rawChars": 870,
-            "injectedChars": 870,
-            "truncated": false
-          },
-          {
-            "name": "BOOTSTRAP.md",
-            "path": "/data/state/workspace/BOOTSTRAP.md",
-            "missing": false,
-            "rawChars": 4022,
-            "injectedChars": 4022,
-            "truncated": false
-          }
-        ],
-        "skills": {
-          "promptChars": 0,
-          "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-          "entries": []
-        },
-        "tools": {
-          "listChars": 0,
-          "schemaChars": 1778,
-          "entries": [
-            {
-              "name": "read",
-              "summaryChars": 164,
-              "summaryHash": "d136f5b09e28d671addad4ca800b75b8aa6a36002bc739ead964f618d3e34829",
-              "schemaChars": 481,
-              "schemaHash": "b1b9b637dfe1dfade40f50c37cf840a298f1992b534cb9425b7470233a6b0cbb",
-              "propertiesCount": 5
-            },
-            {
-              "name": "edit",
-              "summaryChars": 130,
-              "summaryHash": "4149500b1f6501ec6450e4c048bdb6844764dd4a888a10846726cbbc7256152e",
-              "schemaChars": 501,
-              "schemaHash": "adf3140833ca927b84c66c989d6833fdcbd9de011dd2ffc59f9a2c4d3c25f127",
-              "propertiesCount": 2
-            },
-            {
-              "name": "write",
-              "summaryChars": 49,
-              "summaryHash": "f9ce3d8ac929a51498c03331b97c59bfaa2bb4d25580a5ddf0102e6a8e173aec",
-              "schemaChars": 191,
-              "schemaHash": "b61d2da23febf5fbda55e391526f36d283e9e9fb7f1a1dbadcf5c618a0632287",
-              "propertiesCount": 2
-            },
-            {
-              "name": "apply_patch",
-              "summaryChars": 71,
-              "summaryHash": "5c1173efe93d080a386a23216bc3e58db2e0033eb3ddea697eb2439938b7cae4",
-              "schemaChars": 153,
-              "schemaHash": "05521268363ff4f191472c90d69ef08a503ba9acf1d2febc50b3ee68db32ab65",
-              "propertiesCount": 1
-            },
-            {
-              "name": "session_status",
-              "summaryChars": 192,
-              "summaryHash": "23343479c1bf552695627bd580795ca22cdc1020232f6984bf0cad5557f74dbd",
-              "schemaChars": 135,
-              "schemaHash": "528432b98ffdb5d86d4f09f43cb85eb3647387388109b84fc01183040a2406bd",
-              "propertiesCount": 3
-            },
-            {
-              "name": "web_fetch",
-              "summaryChars": 78,
-              "summaryHash": "616ac805dfdeaeadbb5e03504e84d52b01ecaa88c7e7100fa4c06eca8eb6195f",
-              "schemaChars": 317,
-              "schemaHash": "eca30c487911c9e897ba27b4650770cf23137fc6ed8d77756ea3952fa496ea61",
-              "propertiesCount": 3
-            }
-          ]
-        },
-        "currentTurn": {
-          "promptChars": 632,
-          "runtimeContextChars": 0,
-          "modelOnlyPromptChars": 0
-        }
-      },
-      "finalPromptText": "Read only the current workspace Skill-weather.md and the current workspace config/aihome/home-location.json. Apply the weather skill exactly for this user intent: \"Thời tiết tại nhà hôm nay thế nào?\" Follow the skill execution contract: read and validate home-location.json, then use the mandatory web_fetch tool directly with an HTTP GET only to api.open-meteo.com using the configured latitude, longitude, and timezone. Do NOT use browser_search or any other weather source. Do not invent or answer from memory. Parse the Open-Meteo JSON and return the required weather result. Finish with the exact marker SKILL_ROUTING_EXECUTED.",
-      "finalAssistantVisibleText": "I’m sorry, but I can’t read the workspace files needed for this request (Skill‑weather.md and config/aihome/home-location.json). If you can provide the contents of those files or give me the latitude, longitude, and timezone, I’ll be able to fetch the weather data for you.",
-      "finalAssistantRawText": "I’m sorry, but I can’t read the workspace files needed for this request (Skill‑weather.md and config/aihome/home-location.json). If you can provide the contents of those files or give me the latitude, longitude, and timezone, I’ll be able to fetch the weather data for you.",
-      "replayInvalid": false,
-      "livenessState": "working",
-      "stopReason": "stop",
-      "executionTrace": {
-        "winnerProvider": "groq",
-        "winnerModel": "openai/gpt-oss-20b",
-        "attempts": [
-          {
-            "provider": "groq",
-            "model": "openai/gpt-oss-20b",
-            "result": "success",
-            "stage": "assistant"
-          }
-        ],
-        "fallbackUsed": false,
-        "runner": "embedded"
-      },
-      "requestShaping": {
-        "thinking": "medium"
-      },
-      "completion": {
-        "stopReason": "stop",
-        "finishReason": "stop"
-      }
-    }
+  "ok": false,
+  "runId": "13e25718-b7c3-4dee-bc03-5421f876c1d0",
+  "origin": "gateway",
+  "error": {
+    "type": "cli_error",
+    "message": "⚠️ groq/openai/gpt-oss-20b request failed (request timed out). This is usually temporary — try again shortly."
   }
 }
+[openclaw] Could not start the CLI.
+[openclaw] Reason: ⚠️ groq/openai/gpt-oss-20b request failed (request timed out). This is usually temporary — try again shortly.
+[openclaw] Stack:
+[openclaw] GatewayClientRequestError: ⚠️ groq/openai/gpt-oss-20b request failed (request timed out). This is usually temporary — try again shortly.
+[openclaw]     at Object.createRequestError (file:///app/dist/client-ChEgSWmY.js:797:35)
+[openclaw]     at GatewayPendingRequests.handleResponse (file:///app/dist/client-ChEgSWmY.js:225:47)
+[openclaw]     at GatewayProtocolClient.handleMessage (file:///app/dist/client-ChEgSWmY.js:567:17)
+[openclaw]     at Object.message (file:///app/dist/client-ChEgSWmY.js:391:29)
+[openclaw]     at WebSocket.<anonymous> (file:///app/dist/client-ChEgSWmY.js:942:39)
+[openclaw]     at WebSocket.emit (node:events:509:28)
+[openclaw]     at Receiver.receiverOnMessage (/app/node_modules/ws/lib/websocket.js:1239:20)
+[openclaw]     at Receiver.emit (node:events:509:28)
+[openclaw]     at Receiver.dataMessage (/app/node_modules/ws/lib/receiver.js:633:14)
+[openclaw]     at Receiver.getData (/app/node_modules/ws/lib/receiver.js:532:10)
+[openclaw] Try: openclaw doctor
+[openclaw] Help: openclaw --help
 Error: Process completed with exit code 1.
