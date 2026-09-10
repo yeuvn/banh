@@ -1,50 +1,325 @@
-aihome@AIHome:/opt/aihome-test/source$ cd /opt/aihome-test/source
-
-docker compose -f compose/openclaw.yml up -d --force-recreate openclaw
-
-echo "=== CONTAINER ==="
-docker compose -f compose/openclaw.yml ps
-
-echo "=== WEATHER MOUNT ==="
-docker compose -f compose/openclaw.yml exec openclaw sh -lc '
-ls -l /data/source-skills/weather/Skill-weather.md
-echo "---"
-ls -l /tmp/aihome-skills/weather/SKILL.md
-echo "---"
-sed -n "1,25p" /tmp/aihome-skills/weather/SKILL.md
-'
-[+] up 1/1
- ✔ Container aihome-openclaw-test Started                                                       2.3s
-=== CONTAINER ===
-NAME                   IMAGE                                                                                                             COMMAND                  SERVICE    CREATED         STATUS                                     PORTS
-aihome-openclaw-test   ghcr.io/openclaw/openclaw:2026.8.2-slim@sha256:5d25165995041caa6a7175bec82b25ad98c44eb269bb42435da8e27ec06e6be4   "tini -s -- sh -lc '…"   openclaw   2 seconds ago   Up Less than a second (health: starting)   127.0.0.1:18789->18789/tcp
-=== WEATHER MOUNT ===
--rw-r--r-- 1 node node 3992 Sep 10 21:54 /data/source-skills/weather/Skill-weather.md
----
--rw-r--r-- 1 node node 3992 Sep 10 21:57 /tmp/aihome-skills/weather/SKILL.md
----
----
-name: weather
-description: Cung cấp forecast thời tiết AIHome từ Open-Meteo bằng web_fetch và home-location.json.
----
-
-# AIHome Weather Skill
-
-## Mục đích
-Cung cấp forecast thời tiết cho AIHome từ nguồn Open-Meteo.
-
-Skill này đồng thời là **Weather capability contract + execution instruction** cho OpenClaw. Khi nhận request thời tiết, OpenClaw phải thực thi trực tiếp bằng tool `web_fetch` theo các quy tắc dưới đây.
-
-## Nguồn dữ liệu
-- **Nguồn forecast duy nhất:** Open-Meteo.
-- Runtime chỉ được gọi endpoint thuộc `api.open-meteo.com`.
-- Không sử dụng NCHMF hoặc nguồn forecast khác.
-- Không có fallback nguồn dữ liệu.
-- Nếu Open-Meteo lỗi hoặc không trả dữ liệu hợp lệ, trả `status=error`; không tự chuyển nguồn và không giả lập dữ liệu.
-
-## Input contract
-Input tối thiểu là:
-- `request`: ý định thời tiết của người dùng, ví dụ forecast hôm nay, ngày mai hoặc khoảng thời gian được hệ thống hỗ trợ.
-- `location`: **không truyền từ người dùng và không hard-code trong Skill**; runtime phải lấy từ `config/aihome/home-location.json`.
-
-`home-location.json` phải có tối thiểu:
+aihome@AIHome:/opt/aihome-test/source$ docker compose -f compose/openclaw.yml logs --since=2m openclaw
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=119.84 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | Config observe anomaly: /data/config/openclaw.json5 (missing-meta-vs-last-good)
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=1.29 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.67 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=114.41 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.39 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.52 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=107.06 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.36 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.28 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [config] warnings: gateway.auth.token: *** env var "OPENCLAW_GATEWAY_TOKEN" - feature using this value will be unavailable
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=0.29 status=ok scope="scoped" extraPathCount=0
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=49.66 status=ok scope="shared"
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.47 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.51 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.58 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=133.79 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=0.01 status=ok scope="scoped" extraPathCount=0
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=36.23 status=ok scope="shared"
+aihome-openclaw-test  | No tracked plugin or hook pack found for "npm:@openclaw/groq-provider@2026.8.2". Run "openclaw plugins list" or "openclaw hooks list" to inspect installed packages.
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=117.38 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=0.21 status=ok scope="scoped" extraPathCount=0
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=42.14 status=ok scope="shared"
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.91 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.61 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [config] warnings: gateway.auth.token: *** env var "OPENCLAW_GATEWAY_TOKEN" - feature using this value will be unavailable
+aihome-openclaw-test  | [plugins:lifecycle] phase="marketplace shortcut resolution" ms=0.16 status=ok command="install"
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=96.00 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="config read" ms=184.01 status=ok command="install"
+aihome-openclaw-test  | Installing @openclaw/groq-provider@2026.8.2 into /data/state/npm/projects/openclaw-groq-provider-d726e35179__openclaw-generation__g-bfe1ec8dd6700cd8…
+aihome-openclaw-test  | Linked peerDependency "openclaw" -> /app
+aihome-openclaw-test  | Plugin manifest id "groq" differs from npm package name "@openclaw/groq-provider"; using manifest id as the config key.
+aihome-openclaw-test  | [plugins:lifecycle] phase="install records load" ms=0.18 status=ok command="install"
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=0.02 status=ok scope="scoped" extraPathCount=0
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=50.88 status=ok scope="shared"
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=0.01 status=ok scope="scoped" extraPathCount=0
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=39.42 status=ok scope="shared"
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.42 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="runtime plugin registry load" ms=555.80 status=ok surface="status" onlyPluginCount=1
+aihome-openclaw-test  | [plugins:lifecycle] phase="slot selection" ms=772.59 status=ok command="install" pluginId="groq"
+aihome-openclaw-test  | Config write will strip JSON5 comments from /data/config/openclaw.json5.
+aihome-openclaw-test  | Config (/data/config/openclaw.json5): missing env var "OPENCLAW_GATEWAY_TOKEN" at gateway.auth.token - feature using this value will be unavailable
+aihome-openclaw-test  | [plugins:lifecycle] phase="config mutation" ms=214.52 status=ok command="install"
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=0.16 status=ok scope="scoped" extraPathCount=0
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=103.57 status=ok scope="shared"
+aihome-openclaw-test  | [plugins:lifecycle] phase="registry refresh" ms=162.94 status=ok command="install" reason="source-changed"
+aihome-openclaw-test  | Installed plugin: groq
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=0.02 status=ok scope="scoped" extraPathCount=0
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=11.07 status=ok scope="shared"
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=6.87 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="plugin registry snapshot" ms=2.24 status=ok surface="status" onlyPluginCount=2
+aihome-openclaw-test  | Restart the gateway to load plugins.
+aihome-openclaw-test  | Pinned npm install record to @openclaw/groq-provider@2026.8.2.
+aihome-openclaw-test  | [plugins:lifecycle] phase="install command" ms=10765.11 status=ok command="install"
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=126.10 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=1.13 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.58 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=78.35 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.41 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.35 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=74.38 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.44 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.35 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [config] warnings: gateway.auth.token: *** env var "OPENCLAW_GATEWAY_TOKEN" - feature using this value will be unavailable
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=0.21 status=ok scope="scoped" extraPathCount=0
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=51.19 status=ok scope="shared"
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.48 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.39 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.42 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=83.66 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="plugin registry snapshot" ms=0.27 status=ok surface="status"
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=0.01 status=ok scope="scoped" extraPathCount=0
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=38.95 status=ok scope="shared"
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.40 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="runtime plugin registry load" ms=118.86 status=ok surface="status" onlyPluginCount=1
+aihome-openclaw-test  | Config (/data/config/openclaw.json5): missing env var "OPENCLAW_GATEWAY_TOKEN" at gateway.auth.token - feature using this value will be unavailable
+aihome-openclaw-test  | [plugins:lifecycle] phase="install records load" ms=3.56 status=ok command="registry-refresh"
+aihome-openclaw-test  | [plugins:lifecycle] phase="registry refresh" ms=20.74 status=ok command="registry-refresh" reason="policy-changed"
+aihome-openclaw-test  | Enabled plugin "groq". Restart the gateway to apply.
+aihome-openclaw-test  | Config (/data/config/openclaw.json5): missing env var "OPENCLAW_GATEWAY_TOKEN" at gateway.auth.token - feature using this value will be unavailable
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=116.32 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="plugin registry snapshot" ms=0.58 status=ok surface="status"
+aihome-openclaw-test  | Plugins (30/30 enabled)
+aihome-openclaw-test  | @openclaw/alibaba-provider (alibaba) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/alibaba/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  | 
+aihome-openclaw-test  | Anthropic (anthropic) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/anthropic/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  |   providers: anthropic
+aihome-openclaw-test  | 
+aihome-openclaw-test  | Azure Speech (azure-speech) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/azure-speech/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/clawrouter (clawrouter) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/clawrouter/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  |   providers: clawrouter
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/copilot-proxy (copilot-proxy) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/copilot-proxy/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  |   providers: copilot-proxy
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/deepgram-provider (deepgram) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/deepgram/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/elevenlabs-speech (elevenlabs) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/elevenlabs/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/fal-provider (fal) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/fal/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  |   providers: fal
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/github-copilot-provider (github-copilot) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/github-copilot/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  |   providers: github-copilot
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/google-plugin (google) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/google/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  |   providers: google, google-gemini-cli, google-vertex
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/huggingface-provider (huggingface) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/huggingface/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  |   providers: huggingface
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/litellm-provider (litellm) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/litellm/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  |   providers: litellm
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/lmstudio-provider (lmstudio) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/lmstudio/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  |   providers: lmstudio
+aihome-openclaw-test  | 
+aihome-openclaw-test  | OpenClaw Memory (memory-core) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/memory-core/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/microsoft-speech (microsoft) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/microsoft/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/microsoft-foundry (microsoft-foundry) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/microsoft-foundry/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  |   providers: microsoft-foundry
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/minimax-provider (minimax) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/minimax/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  |   providers: minimax, minimax-portal
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/nvidia-provider (nvidia) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/nvidia/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  |   providers: nvidia
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/ollama-provider (ollama) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/ollama/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  |   providers: ollama, ollama-cloud
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/openai-provider (openai) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/openai/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  |   providers: openai
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/opencode-go-provider (opencode-go) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/opencode-go/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  |   providers: opencode-go
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/openrouter-provider (openrouter) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/openrouter/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  |   providers: openrouter
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/runway-provider (runway) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/runway/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/senseaudio-provider (senseaudio) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/senseaudio/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/sglang-provider (sglang) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/sglang/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  |   providers: sglang
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/together-provider (together) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/together/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  |   providers: together
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/tts-local-cli (tts-local-cli) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/tts-local-cli/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/vllm-provider (vllm) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/vllm/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  |   providers: vllm
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/xai-plugin (xai) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: /app/dist/extensions/xai/index.js
+aihome-openclaw-test  |   origin: bundled
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  |   providers: xai
+aihome-openclaw-test  | 
+aihome-openclaw-test  | @openclaw/groq-provider (groq) enabled
+aihome-openclaw-test  |   format: openclaw
+aihome-openclaw-test  |   source: $OPENCLAW_HOME/npm/projects/openclaw-groq-provider-d726e35179__openclaw-generation__g-bfe1ec8dd6700cd8/node_modules/@openclaw/groq-provider/dist/index.js
+aihome-openclaw-test  |   origin: global
+aihome-openclaw-test  |   version: 2026.8.2
+aihome-openclaw-test  |   providers: groq
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=116.57 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=1.06 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.36 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=116.43 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.44 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.43 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [config] warnings: gateway.auth.token: *** env var "OPENCLAW_GATEWAY_TOKEN" - feature using this value will be unavailable
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=0.22 status=ok scope="scoped" extraPathCount=0
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=98.13 status=ok scope="shared"
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=0.02 status=ok scope="scoped" extraPathCount=0
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=70.77 status=ok scope="shared"
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.41 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=0.01 status=ok scope="scoped" extraPathCount=0
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=138.42 status=ok scope="shared"
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.37 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=0.01 status=ok scope="scoped" extraPathCount=0
+aihome-openclaw-test  | [plugins:lifecycle] phase="discovery scan" ms=13.75 status=ok scope="shared"
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=75.48 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.55 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | [plugins:lifecycle] phase="manifest registry" ms=0.28 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | 2026-09-10T21:58:16.184+07:00 [gateway] loading configuration…
+aihome-openclaw-test  | 2026-09-10T21:58:16.240+07:00 [gateway] resolving authentication…
+aihome-openclaw-test  | 2026-09-10T21:58:16.258+07:00 [gateway] starting...
+aihome-openclaw-test  | 2026-09-10T21:58:18.814+07:00 [gateway] auth token was missing. Generated a runtime token for this startup without changing config; restart will generate a different token. Persist one with `openclaw config set gateway.auth.mode token` and `openclaw config set gateway.auth.token <token>`.
+aihome-openclaw-test  | 2026-09-10T21:58:20.259+07:00 [plugins:lifecycle] phase="discovery scan" ms=16.85 status=ok scope="shared"
+aihome-openclaw-test  | 2026-09-10T21:58:20.694+07:00 [gateway] runtime-only gateway auth paired the local CLI device before readiness
+aihome-openclaw-test  | 2026-09-10T21:58:20.728+07:00 [gateway] starting HTTP server...
+aihome-openclaw-test  | 2026-09-10T21:58:21.304+07:00 [health-monitor] started (interval: 300s, startup-grace: 60s, channel-connect-grace: 120s)
+aihome-openclaw-test  | 2026-09-10T21:58:22.016+07:00 [gateway] starting channels and sidecars...
+aihome-openclaw-test  | 2026-09-10T21:58:22.038+07:00 [gateway] agent model: groq/openai/gpt-oss-20b (thinking=medium, fast=off)
+aihome-openclaw-test  | 2026-09-10T21:58:22.039+07:00 [gateway] http server listening (1 plugin: memory-core; 5.1s)
+aihome-openclaw-test  | 2026-09-10T21:58:22.040+07:00 [gateway] log file: /tmp/openclaw/openclaw-2026-09-10.log
+aihome-openclaw-test  | 2026-09-10T21:58:22.584+07:00 [skills] Skill precedence collision: skill="weather" winner=openclaw-bundled:/app/skills/weather/SKILL.md loser=openclaw-extra:/tmp/aihome-skills/weather/SKILL.md
+aihome-openclaw-test  | 2026-09-10T21:58:22.624+07:00 [plugins:lifecycle] phase="manifest registry" ms=0.56 status=ok includeDisabled=true indexPluginCount=62
+aihome-openclaw-test  | 2026-09-10T21:58:22.809+07:00 [gateway] startup outcomes: internal-hooks=skipped (not-configured); internal-startup-hook=skipped (no-handlers-loaded); gateway-start-hooks=scheduled; gmail-watcher=skipped (hooks-disabled); gmail-model=skipped (not-configured)
+aihome-openclaw-test  | 2026-09-10T21:58:22.818+07:00 [gateway] ready
+aihome-openclaw-test  | 2026-09-10T21:58:22.965+07:00 [heartbeat] scheduled heartbeats are disabled because the cron scheduler is disabled; enable cron and restart the gateway
+aihome-openclaw-test  | 2026-09-10T21:58:22.966+07:00 [skill-workshop] scheduled skill collection reviews are disabled because the cron scheduler is disabled; enable cron and restart the gateway
+aihome-openclaw-test  | 2026-09-10T21:58:22.970+07:00 [heartbeat] started
+aihome@AIHome:/opt/aihome-test/source$ Thời tiết hôm nay thế nào?
+bash: Thời: command not found
