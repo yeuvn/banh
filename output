@@ -1,137 +1,94 @@
-aihome@AIHome:/opt/aihome-test/source$ cd /opt/aihome-test/source && GIT_TRACE=1 GIT_CURL_VERBOSE=1 git -c credential.helper= -c 'credential.https://github.com.helper=!/usr/bin/gh auth git-credential' ls-remote origin Test 2>&1 | sed -E 's/(Authorization: Basic )[A-Za-z0-9+/=]+/\1[REDACTED]/g'
-07:24:22.112308 git.c:479               trace: built-in: git ls-remote origin Test
-07:24:22.113516 run-command.c:666       trace: run_command: GIT_DIR=.git git remote-https origin https://github.com/yeuvn/AIHome
-07:24:22.113578 run-command.c:758       trace: start_command: /usr/lib/git-core/git remote-https origin https://github.com/yeuvn/AIHome
-07:24:22.119485 git.c:781               trace: exec: git-remote-https origin https://github.com/yeuvn/AIHome
-07:24:22.119936 run-command.c:666       trace: run_command: git-remote-https origin https://github.com/yeuvn/AIHome
-07:24:22.121356 run-command.c:758       trace: start_command: /usr/lib/git-core/git-remote-https origin https://github.com/yeuvn/AIHome
-07:24:22.147413 http.c:913              == Info: Couldn't find host github.com in the .netrc file; using defaults
-07:24:22.198084 http.c:913              == Info: Host github.com:443 was resolved.
-07:24:22.198127 http.c:913              == Info: IPv6: (none)
-07:24:22.198136 http.c:913              == Info: IPv4: 20.205.243.166
-07:24:22.198257 http.c:913              == Info:   Trying 20.205.243.166:443...
-07:24:22.269080 http.c:913              == Info: GnuTLS priority: NORMAL:-ARCFOUR-128:-CTYPE-ALL:+CTYPE-X509:-VERS-SSL3.0
-07:24:22.269304 http.c:913              == Info: ALPN: curl offers h2,http/1.1
-07:24:22.309214 http.c:913              == Info: found 150 certificates in /etc/ssl/certs/ca-certificates.crt
-07:24:22.374123 http.c:913              == Info: found 452 certificates in /etc/ssl/certs
-07:24:22.375416 http.c:913              == Info: SSL connection using TLS1.3 / ECDHE_RSA_AES_128_GCM_SHA256
-07:24:22.379188 http.c:913              == Info:   server certificate verification OK
-07:24:22.379216 http.c:913              == Info:   server certificate status verification SKIPPED
-07:24:22.379410 http.c:913              == Info:   common name: github.com (matched)
-07:24:22.379419 http.c:913              == Info:   server certificate expiration date OK
-07:24:22.379424 http.c:913              == Info:   server certificate activation date OK
-07:24:22.379439 http.c:913              == Info:   certificate public key: EC/ECDSA
-07:24:22.379443 http.c:913              == Info:   certificate version: #3
-07:24:22.379468 http.c:913              == Info:   subject: CN=github.com
-07:24:22.379477 http.c:913              == Info:   start date: Tue, 01 Sep 2026 00:00:00 GMT
-07:24:22.379484 http.c:913              == Info:   expire date: Sun, 29 Nov 2026 23:59:59 GMT
-07:24:22.379505 http.c:913              == Info:   issuer: C=GB,O=Sectigo Limited,CN=Sectigo Public Server Authentication CA DV E36
-07:24:22.379526 http.c:913              == Info: ALPN: server accepted h2
-07:24:22.379592 http.c:913              == Info: Connected to github.com (20.205.243.166) port 443
-07:24:22.379596 http.c:913              == Info: using HTTP/2
-07:24:22.379654 http.c:913              == Info: [HTTP/2] [1] OPENED stream for https://github.com/yeuvn/AIHome/info/refs?service=git-upload-pack
-07:24:22.379660 http.c:913              == Info: [HTTP/2] [1] [:method: GET]
-07:24:22.379664 http.c:913              == Info: [HTTP/2] [1] [:scheme: https]
-07:24:22.379668 http.c:913              == Info: [HTTP/2] [1] [:authority: github.com]
-07:24:22.379672 http.c:913              == Info: [HTTP/2] [1] [:path: /yeuvn/AIHome/info/refs?service=git-upload-pack]
-07:24:22.379676 http.c:913              == Info: [HTTP/2] [1] [user-agent: git/2.47.3]
-07:24:22.379679 http.c:913              == Info: [HTTP/2] [1] [accept: */*]
-07:24:22.379683 http.c:913              == Info: [HTTP/2] [1] [accept-encoding: deflate, gzip, br, zstd]
-07:24:22.379690 http.c:913              == Info: [HTTP/2] [1] [authorization: basic <redacted>]
-07:24:22.379694 http.c:913              == Info: [HTTP/2] [1] [accept-language: en-US, *;q=0.9]
-07:24:22.379697 http.c:913              == Info: [HTTP/2] [1] [pragma: no-cache]
-07:24:22.379701 http.c:913              == Info: [HTTP/2] [1] [git-protocol: version=2]
-07:24:22.379765 http.c:860              => Send header, 0000000782 bytes (0x0000030e)
-07:24:22.379785 http.c:872              => Send header: GET /yeuvn/AIHome/info/refs?service=git-upload-pack HTTP/2
-07:24:22.379789 http.c:872              => Send header: Host: github.com
-07:24:22.379792 http.c:872              => Send header: User-Agent: git/2.47.3
-07:24:22.379796 http.c:872              => Send header: Accept: */*
-07:24:22.379800 http.c:872              => Send header: Accept-Encoding: deflate, gzip, br, zstd
-07:24:22.379803 http.c:872              => Send header: AUTHORIZATION: basic <redacted>
-07:24:22.379806 http.c:872              => Send header: Accept-Language: en-US, *;q=0.9
-07:24:22.379809 http.c:872              => Send header: Pragma: no-cache
-07:24:22.379812 http.c:872              => Send header: Git-Protocol: version=2
-07:24:22.379815 http.c:872              => Send header:
-07:24:22.379836 http.c:913              == Info: Request completely sent off
-07:24:22.663229 http.c:860              <= Recv header, 0000000013 bytes (0x0000000d)
-07:24:22.663273 http.c:872              <= Recv header: HTTP/2 401
-07:24:22.663303 http.c:860              <= Recv header, 0000000026 bytes (0x0000001a)
-07:24:22.663314 http.c:872              <= Recv header: server: GitHub-Babel/3.0
-07:24:22.663333 http.c:860              <= Recv header, 0000000054 bytes (0x00000036)
-07:24:22.663344 http.c:872              <= Recv header: content-security-policy: default-src 'none'; sandbox
-07:24:22.663360 http.c:860              <= Recv header, 0000000041 bytes (0x00000029)
-07:24:22.663370 http.c:872              <= Recv header: content-type: text/plain; charset=UTF-8
-07:24:22.663381 http.c:860              <= Recv header, 0000000045 bytes (0x0000002d)
-07:24:22.663391 http.c:872              <= Recv header: strict-transport-security: max-age=31536000
-07:24:22.663405 http.c:860              <= Recv header, 0000000040 bytes (0x00000028)
-07:24:22.663413 http.c:872              <= Recv header: www-authenticate: Basic realm="GitHub"
-07:24:22.663428 http.c:860              <= Recv header, 0000000020 bytes (0x00000014)
-07:24:22.663437 http.c:872              <= Recv header: content-length: 87
-07:24:22.663448 http.c:860              <= Recv header, 0000000037 bytes (0x00000025)
-07:24:22.663457 http.c:872              <= Recv header: date: Thu, 10 Sep 2026 00:24:22 GMT
-07:24:22.663468 http.c:860              <= Recv header, 0000000023 bytes (0x00000017)
-07:24:22.663477 http.c:872              <= Recv header: x-frame-options: DENY
-07:24:22.663489 http.c:860              <= Recv header, 0000000057 bytes (0x00000039)
-07:24:22.663498 http.c:872              <= Recv header: x-github-request-id: 756D:35D29D:28DEF7:2EE000:6AA1F8B6
-07:24:22.663509 http.c:860              <= Recv header, 0000000037 bytes (0x00000025)
-07:24:22.663517 http.c:872              <= Recv header: x-github-edge-region: southeastasia
-07:24:22.663533 http.c:860              <= Recv header, 0000000002 bytes (0x00000002)
-07:24:22.663544 http.c:872              <= Recv header:
-07:24:22.663623 http.c:913              == Info: Connection #0 to host github.com left intact
-07:24:22.663792 run-command.c:666       trace: run_command: '/usr/bin/gh auth git-credential get'
-07:24:22.663811 run-command.c:758       trace: start_command: /bin/sh -c '/usr/bin/gh auth git-credential get' '/usr/bin/gh auth git-credential get'
-07:24:22.806275 http.c:913              == Info: Re-using existing https: connection with host github.com
-07:24:22.808480 http.c:913              == Info: [HTTP/2] [3] OPENED stream for https://github.com/yeuvn/AIHome/info/refs?service=git-upload-pack
-07:24:22.808510 http.c:913              == Info: [HTTP/2] [3] [:method: GET]
-07:24:22.808520 http.c:913              == Info: [HTTP/2] [3] [:scheme: https]
-07:24:22.808527 http.c:913              == Info: [HTTP/2] [3] [:authority: github.com]
-07:24:22.808533 http.c:913              == Info: [HTTP/2] [3] [:path: /yeuvn/AIHome/info/refs?service=git-upload-pack]
-07:24:22.808539 http.c:913              == Info: [HTTP/2] [3] [user-agent: git/2.47.3]
-07:24:22.808543 http.c:913              == Info: [HTTP/2] [3] [accept: */*]
-07:24:22.808549 http.c:913              == Info: [HTTP/2] [3] [accept-encoding: deflate, gzip, br, zstd]
-07:24:22.808561 http.c:913              == Info: [HTTP/2] [3] [authorization: basic <redacted>]
-07:24:22.808567 http.c:913              == Info: [HTTP/2] [3] [accept-language: en-US, *;q=0.9]
-07:24:22.808573 http.c:913              == Info: [HTTP/2] [3] [pragma: no-cache]
-07:24:22.808579 http.c:913              == Info: [HTTP/2] [3] [git-protocol: version=2]
-07:24:22.808687 http.c:860              => Send header, 0000000782 bytes (0x0000030e)
-07:24:22.808709 http.c:872              => Send header: GET /yeuvn/AIHome/info/refs?service=git-upload-pack HTTP/2
-07:24:22.808717 http.c:872              => Send header: Host: github.com
-07:24:22.808725 http.c:872              => Send header: User-Agent: git/2.47.3
-07:24:22.808732 http.c:872              => Send header: Accept: */*
-07:24:22.808745 http.c:872              => Send header: Accept-Encoding: deflate, gzip, br, zstd
-07:24:22.808751 http.c:872              => Send header: AUTHORIZATION: basic <redacted>
-07:24:22.808759 http.c:872              => Send header: Accept-Language: en-US, *;q=0.9
-07:24:22.808766 http.c:872              => Send header: Pragma: no-cache
-07:24:22.808774 http.c:872              => Send header: Git-Protocol: version=2
-07:24:22.808779 http.c:872              => Send header:
-07:24:22.808810 http.c:913              == Info: Request completely sent off
-07:24:23.080207 http.c:860              <= Recv header, 0000000013 bytes (0x0000000d)
-07:24:23.080272 http.c:872              <= Recv header: HTTP/2 401
-07:24:23.080310 http.c:860              <= Recv header, 0000000026 bytes (0x0000001a)
-07:24:23.080321 http.c:872              <= Recv header: server: GitHub-Babel/3.0
-07:24:23.080353 http.c:860              <= Recv header, 0000000054 bytes (0x00000036)
-07:24:23.080369 http.c:872              <= Recv header: content-security-policy: default-src 'none'; sandbox
-07:24:23.080397 http.c:860              <= Recv header, 0000000041 bytes (0x00000029)
-07:24:23.080442 http.c:872              <= Recv header: content-type: text/plain; charset=UTF-8
-07:24:23.080483 http.c:860              <= Recv header, 0000000045 bytes (0x0000002d)
-07:24:23.080516 http.c:872              <= Recv header: strict-transport-security: max-age=31536000
-07:24:23.080545 http.c:913              == Info: Basic authentication problem, ignoring.
-07:24:23.080557 http.c:860              <= Recv header, 0000000040 bytes (0x00000028)
-07:24:23.080578 http.c:872              <= Recv header: www-authenticate: Basic realm="GitHub"
-07:24:23.080600 http.c:860              <= Recv header, 0000000020 bytes (0x00000014)
-07:24:23.080614 http.c:872              <= Recv header: content-length: 87
-07:24:23.080631 http.c:860              <= Recv header, 0000000037 bytes (0x00000025)
-07:24:23.080670 http.c:872              <= Recv header: date: Thu, 10 Sep 2026 00:24:22 GMT
-07:24:23.080688 http.c:860              <= Recv header, 0000000023 bytes (0x00000017)
-07:24:23.080702 http.c:872              <= Recv header: x-frame-options: DENY
-07:24:23.080720 http.c:860              <= Recv header, 0000000057 bytes (0x00000039)
-07:24:23.080740 http.c:872              <= Recv header: x-github-request-id: 756D:35D29D:28DF77:2EE075:6AA1F8B6
-07:24:23.080751 http.c:860              <= Recv header, 0000000037 bytes (0x00000025)
-07:24:23.080766 http.c:872              <= Recv header: x-github-edge-region: southeastasia
-07:24:23.080786 http.c:860              <= Recv header, 0000000002 bytes (0x00000002)
-07:24:23.080800 http.c:872              <= Recv header:
-07:24:23.082810 http.c:913              == Info: Connection #0 to host github.com left intact
-07:24:23.082939 run-command.c:666       trace: run_command: '/usr/bin/gh auth git-credential erase'
-07:24:23.082960 run-command.c:758       trace: start_command: /bin/sh -c '/usr/bin/gh auth git-credential erase' '/usr/bin/gh auth git-credential erase'
-remote: Invalid username or token. Password authentication is not supported for Git operations.
-fatal: Authentication failed for 'https://github.com/yeuvn/AIHome/'
+#!/usr/bin/env bash
+set -euo pipefail
+
+SKILL_FILE="skills/weather/Skill.md"
+LOCATION_FILE="config/aihome/home-location.json"
+
+fail() {
+  echo "WEATHER_OPEN_METEO=FAIL"
+  echo "ERROR=$1"
+  exit 1
+}
+
+test -f "$SKILL_FILE" || fail "missing $SKILL_FILE"
+test -f "$LOCATION_FILE" || fail "missing $LOCATION_FILE"
+
+grep -Fq 'Nguồn forecast duy nhất:** Open-Meteo' "$SKILL_FILE" || fail "Open-Meteo-only rule missing"
+grep -Fq 'api.open-meteo.com' "$SKILL_FILE" || fail "Open-Meteo endpoint rule missing"
+grep -Fq 'Không sử dụng NCHMF' "$SKILL_FILE" || fail "NCHMF prohibition missing"
+grep -Fq 'Không có fallback nguồn dữ liệu' "$SKILL_FILE" || fail "fallback prohibition missing"
+grep -Fq 'request' "$SKILL_FILE" || fail "request input missing"
+grep -Fq 'home-location.json' "$SKILL_FILE" || fail "home location source missing"
+grep -Fq 'status' "$SKILL_FILE" || fail "status output missing"
+grep -Fq 'source' "$SKILL_FILE" || fail "source output missing"
+grep -Fq 'forecast' "$SKILL_FILE" || fail "forecast output missing"
+
+python3 - "$LOCATION_FILE" <<'PY'
+import json, sys
+from pathlib import Path
+
+p = Path(sys.argv[1])
+data = json.loads(p.read_text(encoding='utf-8'))
+assert isinstance(data, dict)
+lat = data.get('latitude')
+lon = data.get('longitude')
+tz = data.get('timezone')
+assert isinstance(lat, (int, float)) and not isinstance(lat, bool) and -90 <= lat <= 90
+assert isinstance(lon, (int, float)) and not isinstance(lon, bool) and -180 <= lon <= 180
+assert isinstance(tz, str) and tz
+print(f'LOCATION=PASS latitude={lat} longitude={lon} timezone={tz}')
+PY
+
+# Whole Weather/Open-Meteo data-path test for the current repository implementation.
+# This calls Open-Meteo directly and never calls Groq.
+python3 - "$LOCATION_FILE" <<'PY'
+import json, sys, urllib.parse, urllib.request
+from pathlib import Path
+
+cfg = json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
+params = urllib.parse.urlencode({
+    'latitude': cfg['latitude'],
+    'longitude': cfg['longitude'],
+    'timezone': cfg['timezone'],
+    'forecast_days': 1,
+    'daily': 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum',
+})
+url = f'https://api.open-meteo.com/v1/forecast?{params}'
+parsed = urllib.parse.urlparse(url)
+assert parsed.scheme == 'https'
+assert parsed.hostname == 'api.open-meteo.com'
+assert parsed.path == '/v1/forecast'
+
+req = urllib.request.Request(url, headers={'User-Agent': 'AIHome-Weather-Open-Meteo-test/1.0'})
+with urllib.request.urlopen(req, timeout=15) as response:
+    assert response.status == 200
+    body = json.load(response)
+
+assert isinstance(body, dict)
+assert isinstance(body.get('latitude'), (int, float))
+assert isinstance(body.get('longitude'), (int, float))
+assert abs(float(body['latitude']) - cfg['latitude']) < 0.01
+assert abs(float(body['longitude']) - cfg['longitude']) < 0.01
+assert body.get('timezone') == cfg['timezone']
+
+daily = body.get('daily')
+assert isinstance(daily, dict)
+required_daily_fields = [
+    'time',
+    'weather_code',
+    'temperature_2m_max',
+    'temperature_2m_min',
+    'precipitation_sum',
+]
+for field in required_daily_fields:
+    values = daily.get(field)
+    assert isinstance(values, list), field
+    assert len(values) >= 1, field
+
+assert isinstance(daily['time'][0], str)
+print('OPEN_METEO=PASS')
+print('FORECAST_FIELDS=PASS daily.time,daily.weather_code,daily.temperature_2m_max,daily.temperature_2m_min,daily.precipitation_sum')
+print('GROQ_CALLS=0')
+PY
+
+echo 'WEATHER_OPEN_METEO=PASS'
