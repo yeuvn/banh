@@ -1,6 +1,3 @@
-Run set -euo pipefail
-  set -euo pipefail
-  response="$(docker exec aihome-openclaw-test node openclaw.mjs gateway status --require-rpc 2>&1)"
   printf '%s\n' "${response}"
   grep -Fq 'RPC probe: ok' <<<"${response}"
   echo 'OPENCLAW_API=PASS'
@@ -11,7 +8,7 @@ Run set -euo pipefail
     MODEL: groq/openai/gpt-oss-20b
     GROQ_API_KEY: ***
     OPENCLAW_GATEWAY_TOKEN: ***
-[plugins:lifecycle] phase="manifest registry" ms=112.62 status=ok includeDisabled=true indexPluginCount=62
+[plugins:lifecycle] phase="manifest registry" ms=113.23 status=ok includeDisabled=true indexPluginCount=62
 Service: systemd user (disabled)
 File logs: /tmp/openclaw/openclaw-2026-09-10.log
 Host desktop: disabled
