@@ -1,81 +1,50 @@
 aihome@AIHome:/opt/aihome-test/source$ cd /opt/aihome-test/source
 
-echo '=== 1. COMPOSE WEATHER MOUNT ==='
-grep -n -A3 -B3 'source-skills/weather' compose/openclaw.yml
+docker compose -f compose/openclaw.yml up -d --force-recreate openclaw
 
-echo '=== 2. CONTAINER MOUNT ==='
+echo "=== CONTAINER ==="
+docker compose -f compose/openclaw.yml ps
+
+echo "=== WEATHER MOUNT ==="
 docker compose -f compose/openclaw.yml exec openclaw sh -lc '
-ls -la /data/source-skills/weather 2>&1 || true
+ls -l /data/source-skills/weather/Skill-weather.md
 echo "---"
-ls -la /tmp/aihome-skills 2>&1 || true
+ls -l /tmp/aihome-skills/weather/SKILL.md
 echo "---"
-ls -la /tmp/aihome-skills/weather 2>&1 || true
+sed -n "1,25p" /tmp/aihome-skills/weather/SKILL.md
 '
+[+] up 1/1
+ ✔ Container aihome-openclaw-test Started                                                       2.3s
+=== CONTAINER ===
+NAME                   IMAGE                                                                                                             COMMAND                  SERVICE    CREATED         STATUS                                     PORTS
+aihome-openclaw-test   ghcr.io/openclaw/openclaw:2026.8.2-slim@sha256:5d25165995041caa6a7175bec82b25ad98c44eb269bb42435da8e27ec06e6be4   "tini -s -- sh -lc '…"   openclaw   2 seconds ago   Up Less than a second (health: starting)   127.0.0.1:18789->18789/tcp
+=== WEATHER MOUNT ===
+-rw-r--r-- 1 node node 3992 Sep 10 21:54 /data/source-skills/weather/Skill-weather.md
+---
+-rw-r--r-- 1 node node 3992 Sep 10 21:57 /tmp/aihome-skills/weather/SKILL.md
+---
+---
+name: weather
+description: Cung cấp forecast thời tiết AIHome từ Open-Meteo bằng web_fetch và home-location.json.
+---
 
-echo '=== 3. CONTAINER COMMAND ==='
-docker compose -f compose/openclaw.yml config | grep -n -A15 -B5 'source-skills/weather'
-=== 1. COMPOSE WEATHER MOUNT ===
-32-      - /opt/aihome-test/openclaw/workspace:/home/node/.openclaw/workspace
-33-      - /opt/aihome-test/source/config/aihome:/home/node/.openclaw/workspace/config/aihome:ro
-34-      - /opt/aihome-test/source/config/aihome:/data/state/workspace/config/aihome:ro
-35:      - /opt/aihome-test/source/skills/weather:/data/source-skills/weather:ro
-36-      - /opt/aihome-test/openclaw/runtime-config:/data/config
-37-      - /opt/aihome-test/source/config/openclaw/openclaw.json5:/data/source-config/openclaw.json5:ro
-38-    command:
---
-43-        cp /data/source-config/openclaw.json5 /data/config/openclaw.json5;
-44-        rm -rf /tmp/aihome-skills;
-45-        mkdir -p /tmp/aihome-skills/weather;
-46:        cp /data/source-skills/weather/Skill-weather.md /tmp/aihome-skills/weather/SKILL.md;
-47-        set +e;
-48-        update_output="$$(node openclaw.mjs plugins update npm:@openclaw/groq-provider@2026.8.2 2>&1)";
-49-        update_rc=$$?;
-=== 2. CONTAINER MOUNT ===
-ls: cannot access '/data/source-skills/weather': No such file or directory
----
-ls: cannot access '/tmp/aihome-skills': No such file or directory
----
-ls: cannot access '/tmp/aihome-skills/weather': No such file or directory
-=== 3. CONTAINER COMMAND ===
-6-    cpus: 1.5
-7-    command:
-8-      - sh
-9-      - -lc
-10-      - |-
-11:        set -eu; cp /data/source-config/openclaw.json5 /data/config/openclaw.json5; rm -rf /tmp/aihome-skills; mkdir -p /tmp/aihome-skills/weather; cp /data/source-skills/weather/Skill-weather.md /tmp/aihome-skills/weather/SKILL.md; set +e; update_output="$$(node openclaw.mjs plugins update npm:@openclaw/groq-provider@2026.8.2 2>&1)"; update_rc=$$?; set -e; printf '%s\n' "$$update_output"; if [ "$$update_rc" -ne 0 ]; then
-12-          if printf '%s\n' "$$update_output" | grep -Fq 'No tracked plugin or hook pack found'; then
-13-            node openclaw.mjs plugins install npm:@openclaw/groq-provider@2026.8.2 --force --pin;
-14-          else
-15-            exit "$$update_rc";
-16-          fi;
-17-        fi; node openclaw.mjs plugins enable groq; node openclaw.mjs plugins list --enabled --verbose; exec node openclaw.mjs gateway run
-18-    container_name: aihome-openclaw-test
-19-    environment:
-20-      GROQ_API_KEY: ""
-21-      NODE_OPTIONS: --max-old-space-size=1536
-22-      OPENCLAW_CONFIG_PATH: /data/config/openclaw.json5
-23-      OPENCLAW_GATEWAY_TOKEN: ""
-24-      OPENCLAW_HOME: /data/state
-25-      OPENCLAW_PLUGIN_LIFECYCLE_TRACE: "1"
-26-      OPENCLAW_PLUGIN_LOAD_DEBUG: "1"
---
-62-        target: /data/state/workspace/config/aihome
-63-        read_only: true
-64-        bind: {}
-65-      - type: bind
-66-        source: /opt/aihome-test/source/skills/weather
-67:        target: /data/source-skills/weather
-68-        read_only: true
-69-        bind: {}
-70-      - type: bind
-71-        source: /opt/aihome-test/openclaw/runtime-config
-72-        target: /data/config
-73-        bind: {}
-74-      - type: bind
-75-        source: /opt/aihome-test/source/config/openclaw/openclaw.json5
-76-        target: /data/source-config/openclaw.json5
-77-        read_only: true
-78-        bind: {}
-79-networks:
-80-  default:
-81-    name: aihome-openclaw-test_default
+# AIHome Weather Skill
+
+## Mục đích
+Cung cấp forecast thời tiết cho AIHome từ nguồn Open-Meteo.
+
+Skill này đồng thời là **Weather capability contract + execution instruction** cho OpenClaw. Khi nhận request thời tiết, OpenClaw phải thực thi trực tiếp bằng tool `web_fetch` theo các quy tắc dưới đây.
+
+## Nguồn dữ liệu
+- **Nguồn forecast duy nhất:** Open-Meteo.
+- Runtime chỉ được gọi endpoint thuộc `api.open-meteo.com`.
+- Không sử dụng NCHMF hoặc nguồn forecast khác.
+- Không có fallback nguồn dữ liệu.
+- Nếu Open-Meteo lỗi hoặc không trả dữ liệu hợp lệ, trả `status=error`; không tự chuyển nguồn và không giả lập dữ liệu.
+
+## Input contract
+Input tối thiểu là:
+- `request`: ý định thời tiết của người dùng, ví dụ forecast hôm nay, ngày mai hoặc khoảng thời gian được hệ thống hỗ trợ.
+- `location`: **không truyền từ người dùng và không hard-code trong Skill**; runtime phải lấy từ `config/aihome/home-location.json`.
+
+`home-location.json` phải có tối thiểu:
