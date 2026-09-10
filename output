@@ -1,125 +1,60 @@
 aihome@AIHome:/opt/aihome-test/source$ cd /opt/aihome-test/source
 
-echo "=== 1. OPENCLAW CLI ==="
 docker compose -f compose/openclaw.yml exec openclaw sh -lc '
-command -v openclaw || true
-openclaw --help 2>&1 | head -80
+openclaw agent --help 2>&1
 '
-
-echo "=== 2. GATEWAY STATUS ==="
-docker compose -f compose/openclaw.yml exec openclaw sh -lc '
-openclaw gateway status 2>&1 || true
-'
-=== 1. OPENCLAW CLI ===
-/usr/local/bin/openclaw
-[plugins:lifecycle] phase="manifest registry" ms=119.57 status=ok includeDisabled=true indexPluginCount=62
-[plugins:lifecycle] phase="discovery scan" ms=0.22 status=ok scope="scoped" extraPathCount=0
-[plugins:lifecycle] phase="discovery scan" ms=40.63 status=ok scope="shared"
+│
+◇  
 
 OpenClaw 2026.8.2 (0965053) — All your chats, one OpenClaw.
 
-Usage: openclaw [options] [command]
+Usage: openclaw agent [options] [command]
+
+Run an agent turn via the Gateway (use --local for embedded)
 
 Options:
-  --container <name>   Run the CLI inside a running Podman/Docker container
-                       named <name> (default: env OPENCLAW_CONTAINER)
-  --dev                Dev profile: isolate state under ~/.openclaw-dev, default
-                       gateway port 19001, and shift derived ports
-                       (browser/canvas)
-  -h, --help           Display help for command
-  --log-level <level>  Global log level override for file + console
-                       (silent|fatal|error|warn|info|debug|trace)
-  --no-color           Disable ANSI colors
-  --profile <name>     Use a named profile (isolates
-                       OPENCLAW_STATE_DIR/OPENCLAW_CONFIG_PATH under
-                       ~/.openclaw-<name>)
-  -V, --version        output the version number
+  --agent <id>               Agent id (overrides routing bindings)
+  --channel <channel>        Delivery channel:
+                             last|telegram|whatsapp|discord|irc|googlechat|slack|signal|imessage|feishu|nostr|buzz|msteams|mattermost|nextcloud-talk|matrix|raft|a2a|line|zalo|clickclack|zalouser|sms|synology-chat|tlon|qa-channel|reef|twitch
+                             (omit to use the main session channel)
+  --deliver                  Send the agent's reply back to the selected channel (default: false)
+  -h, --help                 Display help for command
+  --json                     Output result as JSON (default: false)
+  --local                    Run the embedded agent locally using configured provider credentials or
+                             local CLI logins (default: false)
+  -m, --message <text>       Message body for the agent
+  --message-file <path>      Read the agent message body from a UTF-8 file (max 4 MiB)
+  --model <id>               Model override for this run (provider/model or model id)
+  --reply-account <id>       Delivery account id override
+  --reply-channel <channel>  Delivery channel override (separate from routing)
+  --reply-to <target>        Delivery target override (separate from session routing)
+  --session-id <id>          Use an explicit session id
+  --session-key <key>        Explicit session key (agent:<id>:<key>, or scoped to --agent)
+  -t, --to <number>          Recipient number in E.164 used to derive the session key
+  --thinking <level>         Thinking level: off | minimal | low | medium | high | xhigh | adaptive
+                             | max | ultra where supported
+  --timeout <seconds>        Override agent command timeout (seconds, default 600 or config value)
+  --verbose <on|off>         Persist agent verbose level for the session
 
 Commands:
-  Hint: commands suffixed with * have subcommands. Run <command> --help for details.
-  acp *                Run an ACP bridge backed by the Gateway
-  agent *              Run an agent turn via the Gateway (use --local for
-                       embedded)
-  agents *             Manage isolated agents (workspaces + auth + routing)
-  approvals *          Manage approval policy and pending requests
-  attach               Attach Claude Code to a gateway session with scoped MCP
-                       tools
-  audit                Inspect activity records and exact-run identity context
-  automations *        Manage automations (alias for cron)
-  backup *             Create, verify, and restore backup archives and SQLite
-                       snapshots
-  capability *         Run provider capability commands (fallback alias: infer)
-  channels *           Manage connected chat channels and accounts
-  chat                 Open a local terminal UI (alias for tui --local)
-  clawbot *            Legacy clawbot command aliases
-  completion           Generate shell completion script
-  config *             Non-interactive config helpers
-                       (get/set/patch/unset/file/schema/validate). Run without
-                       subcommand for guided setup.
-  configure            Interactive configuration for credentials, channels,
-                       gateway, and agent defaults
-  connect              Connect this machine to an OpenClaw Gateway as a node
-  cron *               Manage automations (via Gateway)
-  daemon *             Manage the Gateway service (launchd/systemd/schtasks)
-  dashboard            Open the Control UI with your current token
-  database *           Inspect shared-state schema compatibility and write
-                       ownership
-  devices *            Device pairing and auth tokens
-  directory *          Lookup contact and group IDs (self, peers, groups) for
-                       supported chat channels
-  dns *                DNS helpers for wide-area discovery (Tailscale + CoreDNS)
-  docs                 Search the live OpenClaw docs
-  doctor               Health checks + quick fixes for the gateway and channels
-  exec-approvals *     Manage exec approvals (alias for approvals)
-  exec-policy *        Show or synchronize requested exec policy with host
-                       approvals
-  fleet *              Provision and manage isolated tenant cells (experimental)
-  gateway *            Run, inspect, and query the WebSocket Gateway
-  health               Fetch health from the running gateway
-  help                 Display help for command
-  hooks *              Manage internal agent hooks
-  infer *              Run provider-backed inference commands through a stable
-                       CLI surface
-  logs                 Tail gateway file logs via RPC
-  mcp *                Manage OpenClaw mcp.servers config and channel bridge
-  memory *             Search, inspect, and reindex memory files
-  message *            Send, read, and manage messages and channel actions
-  migrate *            Import state from another agent system
-  models *             Model discovery, scanning, and configuration
-  node *               Run and manage the headless node host service
-  nodes *              Manage gateway-owned nodes (pairing, status, invoke, and
-                       media)
-  onboard *            Guided setup for auth, models, Gateway, workspace,
-                       channels, and skills
-  pairing *            Secure DM pairing (approve inbound requests)
-=== 2. GATEWAY STATUS ===
+  exec                       Run one isolated headless embedded agent turn
 
-OpenClaw 2026.8.2 (0965053) — 47 tabs open and not one of them is the documentation.
+Examples:
+  openclaw agent --to +15555550123 --message "status update"
+    Start a new session.
+  openclaw agent --agent ops --message "Summarize logs"
+    Use a specific agent.
+  openclaw agent --agent ops --message-file ./task.md
+    Read a multiline message file.
+  openclaw agent --session-key agent:ops:incident-42 --message "Summarize status"
+    Target an exact session key.
+  openclaw agent --session-id 1234 --message "Summarize inbox" --thinking medium
+    Target a session with explicit thinking level.
+  openclaw agent --to +15555550123 --message "Trace logs" --verbose on --json
+    Enable verbose logging and JSON output.
+  openclaw agent --to +15555550123 --message "Summon reply" --deliver
+    Deliver reply.
+  openclaw agent --agent ops --message "Generate report" --deliver --reply-channel slack --reply-to "#reports"
+    Send reply to a different channel/target.
 
-[plugins:lifecycle] phase="manifest registry" ms=116.79 status=ok includeDisabled=true indexPluginCount=62
-│
-◇  
-Service: systemd user (disabled)
-File logs: /tmp/openclaw/openclaw-2026-09-10.log
-Host desktop: disabled
-
-Config (cli): /data/config/openclaw.json5
-Config warnings:
-- gateway.auth.token: *** env var "OPENCLAW_GATEWAY_TOKEN" - feature using this value will be unavailable
-Config (service): /data/config/openclaw.json5
-
-Gateway: bind=loopback (127.0.0.1), port=18789 (env/config)
-Probe target: ws://127.0.0.1:18789
-Dashboard: http://127.0.0.1:18789/
-Probe note: Loopback-only gateway; only local clients can connect.
-
-CLI version: 2026.8.2 (/usr/local/bin/openclaw)
-Gateway version: 2026.8.2
-
-Runtime: unknown (systemctl not available; systemd user services are required on Linux.)
-Connectivity probe: ok
-Capability: read-only
-
-Listening: 127.0.0.1:18789
-Troubles: run openclaw status
-Troubleshooting: https://docs.openclaw.ai/troubleshooting
+Docs: docs.openclaw.ai/cli/agent
