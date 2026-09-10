@@ -10,18 +10,11 @@ echo "=== 2. GATEWAY STATUS ==="
 docker compose -f compose/openclaw.yml exec openclaw sh -lc '
 openclaw gateway status 2>&1 || true
 '
-
-echo "=== 3. WEATHER SKILL ==="
-docker compose -f compose/openclaw.yml exec openclaw sh -lc '
-ls -l /tmp/aihome-skills/weather/SKILL.md
-echo "---"
-cat /tmp/aihome-skills/weather/SKILL.md
-'
 === 1. OPENCLAW CLI ===
 /usr/local/bin/openclaw
-[plugins:lifecycle] phase="manifest registry" ms=131.78 status=ok includeDisabled=true indexPluginCount=62
-[plugins:lifecycle] phase="discovery scan" ms=0.21 status=ok scope="scoped" extraPathCount=0
-[plugins:lifecycle] phase="discovery scan" ms=45.99 status=ok scope="shared"
+[plugins:lifecycle] phase="manifest registry" ms=119.57 status=ok includeDisabled=true indexPluginCount=62
+[plugins:lifecycle] phase="discovery scan" ms=0.22 status=ok scope="scoped" extraPathCount=0
+[plugins:lifecycle] phase="discovery scan" ms=40.63 status=ok scope="shared"
 
 OpenClaw 2026.8.2 (0965053) — All your chats, one OpenClaw.
 
@@ -101,10 +94,9 @@ Commands:
   pairing *            Secure DM pairing (approve inbound requests)
 === 2. GATEWAY STATUS ===
 
-OpenClaw 2026.8.2 (0965053)
-Reading the error message remains undefeated. You should try it sometime.
+OpenClaw 2026.8.2 (0965053) — 47 tabs open and not one of them is the documentation.
 
-[plugins:lifecycle] phase="manifest registry" ms=126.38 status=ok includeDisabled=true indexPluginCount=62
+[plugins:lifecycle] phase="manifest registry" ms=116.79 status=ok includeDisabled=true indexPluginCount=62
 │
 ◇  
 Service: systemd user (disabled)
@@ -131,85 +123,3 @@ Capability: read-only
 Listening: 127.0.0.1:18789
 Troubles: run openclaw status
 Troubleshooting: https://docs.openclaw.ai/troubleshooting
-=== 3. WEATHER SKILL ===
--rw-r--r-- 1 node node 3992 Sep 10 21:57 /tmp/aihome-skills/weather/SKILL.md
----
----
-name: weather
-description: Cung cấp forecast thời tiết AIHome từ Open-Meteo bằng web_fetch và home-location.json.
----
-
-# AIHome Weather Skill
-
-## Mục đích
-Cung cấp forecast thời tiết cho AIHome từ nguồn Open-Meteo.
-
-Skill này đồng thời là **Weather capability contract + execution instruction** cho OpenClaw. Khi nhận request thời tiết, OpenClaw phải thực thi trực tiếp bằng tool `web_fetch` theo các quy tắc dưới đây.
-
-## Nguồn dữ liệu
-- **Nguồn forecast duy nhất:** Open-Meteo.
-- Runtime chỉ được gọi endpoint thuộc `api.open-meteo.com`.
-- Không sử dụng NCHMF hoặc nguồn forecast khác.
-- Không có fallback nguồn dữ liệu.
-- Nếu Open-Meteo lỗi hoặc không trả dữ liệu hợp lệ, trả `status=error`; không tự chuyển nguồn và không giả lập dữ liệu.
-
-## Input contract
-Input tối thiểu là:
-- `request`: ý định thời tiết của người dùng, ví dụ forecast hôm nay, ngày mai hoặc khoảng thời gian được hệ thống hỗ trợ.
-- `location`: **không truyền từ người dùng và không hard-code trong Skill**; runtime phải lấy từ `config/aihome/home-location.json`.
-
-`home-location.json` phải có tối thiểu:
-- `latitude`: số thực trong khoảng `[-90, 90]`.
-- `longitude`: số thực trong khoảng `[-180, 180]`.
-- `timezone`: chuỗi IANA timezone hợp lệ.
-
-## Location
-- Không hard-code địa điểm trong Skill.
-- Runtime phải đọc `config/aihome/home-location.json`.
-- Nếu file thiếu, JSON không hợp lệ hoặc tọa độ/timezone không hợp lệ, trả `status=error` với lỗi thiếu/không hợp lệ location.
-- Không được tự đoán hoặc thay thế location.
-
-## OpenClaw tool execution
-Weather **không dùng Groq Agent và không dùng `browser_search`**.
-
-Tool bắt buộc:
-- `web_fetch`
-
-Request phải là HTTP GET tới Open-Meteo Forecast API, với URL được tạo từ location đã validate và request thời tiết. Đối với test cơ bản, dùng dạng:
-
-`https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone={timezone}`
-
-Trong đó `{latitude}`, `{longitude}` và `{timezone}` phải lấy từ `config/aihome/home-location.json`; không được thay bằng giá trị hard-code.
-
-Quy trình thực thi:
-1. Đọc và validate `config/aihome/home-location.json`.
-2. Phân tích `request` để xác định dữ liệu current/daily cần trả.
-3. Tạo URL chỉ tới `api.open-meteo.com`.
-4. Gọi `web_fetch` với URL đó.
-5. Parse JSON response của Open-Meteo.
-6. Kiểm tra response có dữ liệu forecast hợp lệ.
-7. Trả kết quả theo Output contract.
-
-Nếu `web_fetch` lỗi, HTTP response lỗi hoặc JSON không hợp lệ thì trả `status=error` và nêu nguyên nhân. Không gọi nguồn khác.
-
-## Output contract
-Output tối thiểu phải có:
-- `status`: `ok` hoặc `error`.
-- `source`: `open-meteo` khi đã truy vấn Open-Meteo; khi lỗi trước khi truy vấn, ghi rõ lỗi và không được giả lập forecast.
-- `location`: object chứa `latitude`, `longitude`, `timezone` đã được dùng.
-- `forecast`: dữ liệu forecast cần thiết cho `request` khi `status=ok`.
-
-Khi `status=error`:
-- phải nêu nguyên nhân ngắn gọn;
-- không được trả forecast giả lập;
-- không được fallback sang nguồn khác.
-
-## Tiêu chí test trực tiếp
-Test PASS khi chứng minh được đường đi:
-
-`OpenClaw → web_fetch → api.open-meteo.com → JSON → OpenClaw → KIRA`
-
-và Weather không phát sinh gọi Groq/`browser_search`.
-
-## Phạm vi C05
-C05 xác định Skill/contract và đường dữ liệu weather. Weather capability trực tiếp dùng `web_fetch`; không yêu cầu Groq inference hoặc Agent orchestration.
