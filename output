@@ -1,47 +1,22 @@
-aihome@AIHome:/opt/aihome-test/source$ cd /opt/aihome-test/source
+=== 1. COMPOSE ENV REFERENCES ===
+compose/openclaw.yml:24:      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN:-}
+=== 2. CONTAINER ENV (VALUE HIDDEN) ===
+NODE_OPTIONS=--max-old-space-size=1536
+OPENCLAW_STATE_DIR=/data/state
+OPENCLAW_GATEWAY_TOKEN=<SET>
+OPENCLAW_PLUGIN_LOAD_DEBUG=1
+OPENCLAW_PLUGIN_LIFECYCLE_TRACE=1
+GROQ_API_KEY=
+TZ=Asia/Ho_Chi_Minh
+OPENCLAW_HOME=/data/state
+OPENCLAW_CONFIG_PATH=/data/config/openclaw.json5
+PATH=/home/node/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+NODE_VERSION=24.19.0
+YARN_VERSION=1.22.22
+COREPACK_HOME=/usr/local/share/corepack
+PLAYWRIGHT_BROWSERS_PATH=/home/node/.cache/ms-playwright
+NODE_ENV=production
 
-docker compose -f compose/openclaw.yml exec openclaw sh -lc '
-echo "=== TOKEN ENV ==="
-if [ -n "${OPENCLAW_GATEWAY_TOKEN:-}" ]; then
-  echo "OPENCLAW_GATEWAY_TOKEN=SET"
-else
-  echo "OPENCLAW_GATEWAY_TOKEN=EMPTY"
-fi
-
-echo "=== GATEWAY STATUS ==="
-openclaw gateway status 2>&1
-'
-=== TOKEN ENV ===
-OPENCLAW_GATEWAY_TOKEN=EMPTY
-=== GATEWAY STATUS ===
-
-OpenClaw 2026.8.2 (0965053)
-Type the command with confidence—nature will provide the stack trace if needed.
-
-[plugins:lifecycle] phase="manifest registry" ms=124.34 status=ok includeDisabled=true indexPluginCount=62
-│
-◇  
-Service: systemd user (disabled)
-File logs: /tmp/openclaw/openclaw-2026-09-10.log
-Host desktop: disabled
-
-Config (cli): /data/config/openclaw.json5
-Config warnings:
-- gateway.auth.token: *** env var "OPENCLAW_GATEWAY_TOKEN" - feature using this value will be unavailable
-Config (service): /data/config/openclaw.json5
-
-Gateway: bind=loopback (127.0.0.1), port=18789 (env/config)
-Probe target: ws://127.0.0.1:18789
-Dashboard: http://127.0.0.1:18789/
-Probe note: Loopback-only gateway; only local clients can connect.
-
-CLI version: 2026.8.2 (/usr/local/bin/openclaw)
-Gateway version: 2026.8.2
-
-Runtime: unknown (systemctl not available; systemd user services are required on Linux.)
-Connectivity probe: ok
-Capability: read-only
-
-Listening: 127.0.0.1:18789
-Troubles: run openclaw status
-Troubleshooting: https://docs.openclaw.ai/troubleshooting
+=== 3. COMPOSE CONFIG ===
+19:    environment:
+23:      OPENCLAW_GATEWAY_TOKEN: ""
