@@ -1,281 +1,179 @@
-Run set -euo pipefail
-  set -euo pipefail
-  case "2B+" in
-    2A-only)
-      bash scripts/test-groq-openclaw.sh
-      ;;
-    2B-only)
-      bash scripts/test-groq-built-in-tools.sh
-      ;;
-    2B+)
-      bash scripts/test-groq-agent-skill.sh
-      ;;
-    full)
-      bash scripts/test-groq-openclaw.sh
-      bash scripts/test-groq-built-in-tools.sh
-      bash scripts/test-groq-agent-skill.sh
-      ;;
-    *)
-      echo "Unsupported test mode: 2B+"
-      exit 1
-      ;;
-  esac
+ set -euo pipefail
+  test -n "${GROQ_API_KEY:-}"
+  STATE_DIR="${RUNNER_TEMP}/aihome-weather-state"
+  RUNTIME_CONFIG="${RUNNER_TEMP}/aihome-weather-config"
+  mkdir -p "${STATE_DIR}" "${RUNTIME_CONFIG}"
+  GATEWAY_TOKEN="$(openssl rand -hex 32)"
+  printf '%s\n' "GATEWAY_TOKEN" > /dev/null
+  printf '::add-mask::%s\n' "${GATEWAY_TOKEN}"
+  echo "OPENCLAW_GATEWAY_TOKEN=${GATEWAY_TOKEN}" >> "${GITHUB_ENV}"
+  docker rm -f aihome-openclaw-weather-test >/dev/null 2>&1 || true
+  docker run -d \
+    --name aihome-openclaw-weather-test \
+    --memory 4g \
+    --memory-swap 8g \
+    --cpus 1.50 \
+    --pids-limit 256 \
+    --security-opt no-new-privileges:true \
+    --cap-drop ALL \
+    -e TZ=Asia/Ho_Chi_Minh \
+    -e OPENCLAW_HOME=/data/state \
+    -e OPENCLAW_STATE_DIR=/data/state \
+    -e OPENCLAW_CONFIG_PATH=/data/config/openclaw.json5 \
+    -e OPENCLAW_GATEWAY_TOKEN="${GATEWAY_TOKEN}" \
+    -e GROQ_API_KEY="${GROQ_API_KEY}" \
+    -e OPENCLAW_PLUGIN_LOAD_DEBUG=1 \
+    -v "${STATE_DIR}:/data/state" \
+    -v "${RUNTIME_CONFIG}:/data/config" \
+    -v "${GITHUB_WORKSPACE}/config/openclaw/openclaw.json5:/data/source-config/openclaw.json5:ro" \
+    -v "${GITHUB_WORKSPACE}/config/aihome:/home/node/.openclaw/workspace/config/aihome:ro" \
+    -v "${GITHUB_WORKSPACE}/skills/weather:/home/node/.openclaw/workspace/skills/weather:ro" \
+    "${OPENCLAW_IMAGE}" \
+    sh -lc 'set -eu; cp /data/source-config/openclaw.json5 /data/config/openclaw.json5; set +e; update_output="$$(node openclaw.mjs plugins update npm:@openclaw/groq-provider@2026.8.2 2>&1)"; update_rc=$$?; set -e; printf "%s\\n" "$$update_output"; if [ "$$update_rc" -ne 0 ]; then if printf "%s\\n" "$$update_output" | grep -Fq "No tracked plugin or hook pack found"; then node openclaw.mjs plugins install npm:@openclaw/groq-provider@2026.8.2 --force --pin; else exit "$$update_rc"; fi; fi; node openclaw.mjs plugins enable groq; exec node openclaw.mjs gateway run' >/tmp/aihome-weather-openclaw.log 2>&1
+  
+  for i in $(seq 1 24); do
+    if docker exec -e OPENCLAW_GATEWAY_TOKEN="${GATEWAY_TOKEN}" aihome-openclaw-weather-test node openclaw.mjs gateway status --require-rpc >/tmp/aihome-weather-gateway-status 2>&1; then
+      cat /tmp/aihome-weather-gateway-status
+      echo 'OPENCLAW_GATEWAY=PASS'
+      exit 0
+    fi
+    sleep 5
+  done
+  echo 'OPENCLAW_GATEWAY=FAIL'
+  cat /tmp/aihome-weather-openclaw.log || true
+  docker logs --tail 300 aihome-openclaw-weather-test || true
+  exit 1
   shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
   env:
-    EXPECTED_BRANCH: Test
-    SOURCE_DIR: /opt/aihome-test/source
-    MODEL: groq/openai/gpt-oss-20b
+    OPENCLAW_IMAGE: ghcr.io/openclaw/openclaw:2026.8.2-slim@sha256:5d25165995041caa6a7175bec82b25ad98c44eb269bb42435da8e27ec06e6be4
     GROQ_API_KEY: ***
-    OPENCLAW_GATEWAY_TOKEN: ***
-HOME_LOCATION_CONFIG=PASS
-2B_PLUS_CONTEXT=Skill-weather.md+home-location.json
-SKILL_FILE=PASS
-HOME_LOCATION_FILE=PASS
-SKILL_OPEN_METEO_RULE=PASS
-SKILL_HOME_LOCATION_RULE=PASS
-{
-  "runId": "9a18eef6-c15c-4a85-8209-b175d758388a",
-  "status": "ok",
-  "summary": "completed",
-  "result": {
-    "payloads": [
-      {
-        "text": "I’m currently unable to read files directly from the workspace. To apply the weather routing rule, I’ll need the contents of `Skill‑weather.md` and `config/aihome/home-location.json`. Could you please share those files or at least provide the latitude, longitude, and timezone from `home-location.json`? Once I have that information, I can perform the Open‑Meteo query and return the structured forecast with the required marker.",
-        "mediaUrl": null
-      }
-    ],
-    "meta": {
-      "durationMs": 11006,
-      "agentMeta": {
-        "sessionId": "7d1b8e65-6ed1-4c25-aa15-429dd85db0a3",
-        "sessionFile": "agent:main:groq-2b-plus-525028",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "contextTokens": 131072,
-        "contextTokensSource": "resolved",
-        "agentHarnessId": "openclaw",
-        "credentialSource": {
-          "kind": "direct",
-          "evidence": "environment",
-          "authorization": "ambient"
-        },
-        "usage": {
-          "input": 30272,
-          "output": 739,
-          "reasoningTokens": 572,
-          "total": 31011,
-          "cost": {
-            "total": 0
-          }
-        },
-        "lastCallUsage": {
-          "input": 30272,
-          "output": 739,
-          "cacheRead": 0,
-          "cacheWrite": 0,
-          "cost": {
-            "total": 0
-          },
-          "reasoningTokens": 572,
-          "total": 31011
-        },
-        "promptTokens": 30272,
-        "contextBudgetStatus": {
-          "schemaVersion": 1,
-          "source": "pre-prompt-estimate",
-          "updatedAt": 1789028530822,
-          "provider": "groq",
-          "model": "openai/gpt-oss-20b",
-          "route": "fits",
-          "shouldCompact": false,
-          "estimatedPromptTokens": 7133,
-          "contextTokenBudget": 131072,
-          "promptBudgetBeforeReserve": 111072,
-          "reserveTokens": 20000,
-          "effectiveReserveTokens": 20000,
-          "remainingPromptBudgetTokens": 103939,
-          "overflowTokens": 0,
-          "toolResultReducibleChars": 0,
-          "messageCount": 0,
-          "unwindowedMessageCount": 0,
-          "sessionId": "7d1b8e65-6ed1-4c25-aa15-429dd85db0a3"
-        },
-        "codeModeEngaged": false,
-        "assistantTurns": 1,
-        "costUsd": 0,
-        "terminalReceipt": {
-          "runId": "9a18eef6-c15c-4a85-8209-b175d758388a",
-          "sessionId": "7d1b8e65-6ed1-4c25-aa15-429dd85db0a3",
-          "turnId": "9a18eef6-c15c-4a85-8209-b175d758388a",
-          "requested": {
-            "provider": "groq",
-            "model": "openai/gpt-oss-20b"
-          },
-          "effective": {
-            "provider": "groq",
-            "model": "openai/gpt-oss-20b",
-            "responseModel": "openai/gpt-oss-20b"
-          },
-          "successfulToolNames": [],
-          "rerouted": false
-        }
-      },
-      "aborted": false,
-2B_PLUS_HOME_LOCATION=FAIL: configured home coordinates not present in Agent trace/result
-      "systemPromptReport": {
-        "source": "run",
-        "generatedAt": 1789028530655,
-        "sessionId": "7d1b8e65-6ed1-4c25-aa15-429dd85db0a3",
-        "sessionKey": "agent:main:groq-2b-plus-525028",
-        "provider": "groq",
-        "model": "openai/gpt-oss-20b",
-        "workspaceDir": "/data/state/workspace",
-        "bootstrapMaxChars": 20000,
-        "bootstrapTotalMaxChars": 60000,
-        "bootstrapTruncation": {
-          "warningMode": "always",
-          "warningShown": false,
-          "truncatedFiles": 0,
-          "nearLimitFiles": 0,
-          "totalNearLimit": false
-        },
-        "sandbox": {
-          "mode": "off",
-          "sandboxed": false
-        },
-        "systemPrompt": {
-          "chars": 22978,
-          "hash": "0577874e3dd648fe76650d80062a317ffa77f33d9149dd71308f01db4c3d9b5b",
-          "projectContextChars": 16015,
-          "nonProjectContextChars": 6963
-        },
-        "injectedWorkspaceFiles": [
-          {
-            "name": "AGENTS.md",
-            "path": "/data/state/workspace/AGENTS.md",
-            "missing": false,
-            "rawChars": 7926,
-            "injectedChars": 7926,
-            "truncated": false
-          },
-          {
-            "name": "SOUL.md",
-            "path": "/data/state/workspace/SOUL.md",
-            "missing": false,
-            "rawChars": 1509,
-            "injectedChars": 1509,
-            "truncated": false
-          },
-          {
-            "name": "IDENTITY.md",
-            "path": "/data/state/workspace/IDENTITY.md",
-            "missing": false,
-            "rawChars": 1275,
-            "injectedChars": 1275,
-            "truncated": false
-          },
-          {
-            "name": "USER.md",
-            "path": "/data/state/workspace/USER.md",
-            "missing": false,
-            "rawChars": 870,
-            "injectedChars": 870,
-            "truncated": false
-          },
-          {
-            "name": "BOOTSTRAP.md",
-            "path": "/data/state/workspace/BOOTSTRAP.md",
-            "missing": false,
-            "rawChars": 4022,
-            "injectedChars": 4022,
-            "truncated": false
-          }
-        ],
-        "skills": {
-          "promptChars": 0,
-          "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-          "entries": []
-        },
-        "tools": {
-          "listChars": 0,
-          "schemaChars": 1461,
-          "entries": [
-            {
-              "name": "read",
-              "summaryChars": 164,
-              "summaryHash": "d136f5b09e28d671addad4ca800b75b8aa6a36002bc739ead964f618d3e34829",
-              "schemaChars": 481,
-              "schemaHash": "b1b9b637dfe1dfade40f50c37cf840a298f1992b534cb9425b7470233a6b0cbb",
-              "propertiesCount": 5
-            },
-            {
-              "name": "edit",
-              "summaryChars": 130,
-              "summaryHash": "4149500b1f6501ec6450e4c048bdb6844764dd4a888a10846726cbbc7256152e",
-              "schemaChars": 501,
-              "schemaHash": "adf3140833ca927b84c66c989d6833fdcbd9de011dd2ffc59f9a2c4d3c25f127",
-              "propertiesCount": 2
-            },
-            {
-              "name": "write",
-              "summaryChars": 49,
-              "summaryHash": "f9ce3d8ac929a51498c03331b97c59bfaa2bb4d25580a5ddf0102e6a8e173aec",
-              "schemaChars": 191,
-              "schemaHash": "b61d2da23febf5fbda55e391526f36d283e9e9fb7f1a1dbadcf5c618a0632287",
-              "propertiesCount": 2
-            },
-            {
-              "name": "apply_patch",
-              "summaryChars": 71,
-              "summaryHash": "5c1173efe93d080a386a23216bc3e58db2e0033eb3ddea697eb2439938b7cae4",
-              "schemaChars": 153,
-              "schemaHash": "05521268363ff4f191472c90d69ef08a503ba9acf1d2febc50b3ee68db32ab65",
-              "propertiesCount": 1
-            },
-            {
-              "name": "session_status",
-              "summaryChars": 192,
-              "summaryHash": "23343479c1bf552695627bd580795ca22cdc1020232f6984bf0cad5557f74dbd",
-              "schemaChars": 135,
-              "schemaHash": "528432b98ffdb5d86d4f09f43cb85eb3647387388109b84fc01183040a2406bd",
-              "propertiesCount": 3
-            }
-          ]
-        },
-        "currentTurn": {
-          "promptChars": 670,
-          "runtimeContextChars": 0,
-          "modelOnlyPromptChars": 0
-        }
-      },
-      "finalPromptText": "Read only the current workspace Skill-weather.md and the current workspace config/aihome/home-location.json. Apply the weather routing rule exactly. Answer this exact user intent: \"Thời tiết tại nhà hôm nay thế nào?\" Use the existing Groq browser_search built-in tool to retrieve Open-Meteo structured forecast data for the latitude, longitude, and timezone from home-location.json. The search/query must target Open-Meteo and must use the configured coordinates rather than geocoding the home location. Do not answer from memory. After the server-side Open-Meteo search completes, summarize the structured weather data and finish with the marker SKILL_ROUTING_EXECUTED.",
-      "finalAssistantVisibleText": "I’m currently unable to read files directly from the workspace. To apply the weather routing rule, I’ll need the contents of `Skill‑weather.md` and `config/aihome/home-location.json`. Could you please share those files or at least provide the latitude, longitude, and timezone from `home-location.json`? Once I have that information, I can perform the Open‑Meteo query and return the structured forecast with the required marker.",
-      "finalAssistantRawText": "I’m currently unable to read files directly from the workspace. To apply the weather routing rule, I’ll need the contents of `Skill‑weather.md` and `config/aihome/home-location.json`. Could you please share those files or at least provide the latitude, longitude, and timezone from `home-location.json`? Once I have that information, I can perform the Open‑Meteo query and return the structured forecast with the required marker.",
-      "replayInvalid": false,
-      "livenessState": "working",
-      "stopReason": "stop",
-      "executionTrace": {
-        "winnerProvider": "groq",
-        "winnerModel": "openai/gpt-oss-20b",
-        "attempts": [
-          {
-            "provider": "groq",
-            "model": "openai/gpt-oss-20b",
-            "result": "success",
-            "stage": "assistant"
-          }
-        ],
-        "fallbackUsed": false,
-        "runner": "embedded"
-      },
-      "requestShaping": {
-        "thinking": "medium"
-      },
-      "completion": {
-        "stopReason": "stop",
-        "finishReason": "stop"
-      }
-    }
-  }
-}
+OPENCLAW_GATEWAY=FAIL
+Unable to find image 'ghcr.io/openclaw/openclaw:2026.8.2-slim@sha256:5d25165995041caa6a7175bec82b25ad98c44eb269bb42435da8e27ec06e6be4' locally
+ghcr.io/openclaw/openclaw@sha256:5d25165995041caa6a7175bec82b25ad98c44eb269bb42435da8e27ec06e6be4: Pulling from openclaw/openclaw
+039e6f9f9752: Pulling fs layer
+a6144b671d9d: Pulling fs layer
+de581f349ca7: Pulling fs layer
+d46110e39e33: Pulling fs layer
+9899b563237d: Pulling fs layer
+35c63d3cf01c: Pulling fs layer
+c903a0fccc01: Pulling fs layer
+cdbdcbc38630: Pulling fs layer
+d01d7e2445c7: Pulling fs layer
+e9ac4d485177: Pulling fs layer
+ee7e9a381498: Pulling fs layer
+fb65e92d57e8: Pulling fs layer
+95ade74d03a5: Pulling fs layer
+39ccc5bbc6cf: Pulling fs layer
+1af5cdb39ae2: Pulling fs layer
+dfe83dfe6f6d: Pulling fs layer
+37d5457052c5: Pulling fs layer
+8606e4185a58: Pulling fs layer
+009d59bffc16: Pulling fs layer
+41b9e12ab517: Pulling fs layer
+4f4fb700ef54: Pulling fs layer
+ed8932a1cb4a: Pulling fs layer
+3ba1bec0559a: Pulling fs layer
+d75e26ac6474: Pulling fs layer
+e48d6eb2c2e3: Pulling fs layer
+cdbdcbc38630: Waiting
+d01d7e2445c7: Waiting
+e9ac4d485177: Waiting
+ee7e9a381498: Waiting
+fb65e92d57e8: Waiting
+95ade74d03a5: Waiting
+39ccc5bbc6cf: Waiting
+1af5cdb39ae2: Waiting
+dfe83dfe6f6d: Waiting
+37d5457052c5: Waiting
+8606e4185a58: Waiting
+009d59bffc16: Waiting
+41b9e12ab517: Waiting
+4f4fb700ef54: Waiting
+ed8932a1cb4a: Waiting
+3ba1bec0559a: Waiting
+d75e26ac6474: Waiting
+e48d6eb2c2e3: Waiting
+9899b563237d: Waiting
+35c63d3cf01c: Waiting
+c903a0fccc01: Waiting
+d46110e39e33: Waiting
+a6144b671d9d: Verifying Checksum
+a6144b671d9d: Download complete
+039e6f9f9752: Verifying Checksum
+039e6f9f9752: Download complete
+d46110e39e33: Verifying Checksum
+d46110e39e33: Download complete
+9899b563237d: Verifying Checksum
+9899b563237d: Download complete
+35c63d3cf01c: Verifying Checksum
+35c63d3cf01c: Download complete
+de581f349ca7: Verifying Checksum
+de581f349ca7: Download complete
+cdbdcbc38630: Verifying Checksum
+cdbdcbc38630: Download complete
+d01d7e2445c7: Verifying Checksum
+d01d7e2445c7: Download complete
+039e6f9f9752: Pull complete
+c903a0fccc01: Verifying Checksum
+c903a0fccc01: Download complete
+fb65e92d57e8: Verifying Checksum
+fb65e92d57e8: Download complete
+95ade74d03a5: Verifying Checksum
+95ade74d03a5: Download complete
+e9ac4d485177: Verifying Checksum
+e9ac4d485177: Download complete
+39ccc5bbc6cf: Verifying Checksum
+39ccc5bbc6cf: Download complete
+1af5cdb39ae2: Verifying Checksum
+1af5cdb39ae2: Download complete
+dfe83dfe6f6d: Verifying Checksum
+dfe83dfe6f6d: Download complete
+37d5457052c5: Verifying Checksum
+37d5457052c5: Download complete
+8606e4185a58: Verifying Checksum
+8606e4185a58: Download complete
+41b9e12ab517: Verifying Checksum
+41b9e12ab517: Download complete
+009d59bffc16: Verifying Checksum
+009d59bffc16: Download complete
+4f4fb700ef54: Verifying Checksum
+4f4fb700ef54: Download complete
+3ba1bec0559a: Verifying Checksum
+3ba1bec0559a: Download complete
+d75e26ac6474: Verifying Checksum
+d75e26ac6474: Download complete
+ed8932a1cb4a: Verifying Checksum
+ed8932a1cb4a: Download complete
+e48d6eb2c2e3: Verifying Checksum
+e48d6eb2c2e3: Download complete
+ee7e9a381498: Verifying Checksum
+ee7e9a381498: Download complete
+a6144b671d9d: Pull complete
+de581f349ca7: Pull complete
+d46110e39e33: Pull complete
+9899b563237d: Pull complete
+35c63d3cf01c: Pull complete
+c903a0fccc01: Pull complete
+cdbdcbc38630: Pull complete
+d01d7e2445c7: Pull complete
+e9ac4d485177: Pull complete
+ee7e9a381498: Pull complete
+fb65e92d57e8: Pull complete
+95ade74d03a5: Pull complete
+39ccc5bbc6cf: Pull complete
+1af5cdb39ae2: Pull complete
+dfe83dfe6f6d: Pull complete
+37d5457052c5: Pull complete
+8606e4185a58: Pull complete
+009d59bffc16: Pull complete
+41b9e12ab517: Pull complete
+4f4fb700ef54: Pull complete
+ed8932a1cb4a: Pull complete
+3ba1bec0559a: Pull complete
+d75e26ac6474: Pull complete
+e48d6eb2c2e3: Pull complete
+Digest: sha256:5d25165995041caa6a7175bec82b25ad98c44eb269bb42435da8e27ec06e6be4
+Status: Downloaded newer image for ghcr.io/openclaw/openclaw@sha256:5d25165995041caa6a7175bec82b25ad98c44eb269bb42435da8e27ec06e6be4
+de23f235b502c7ef1d95402ee173b53ab7bd38ba837f20f981be7e5b82a88a30
+cp: cannot create regular file '/data/config/openclaw.json5': Permission denied
 Error: Process completed with exit code 1.
