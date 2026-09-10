@@ -1,6 +1,26 @@
-  printf '%s\n' "${response}"
-  grep -Fq 'RPC probe: ok' <<<"${response}"
-  echo 'OPENCLAW_API=PASS'
+0s
+Run set -euo pipefail
+  set -euo pipefail
+  case "2B+" in
+    2A-only)
+      bash scripts/test-groq-openclaw.sh
+      ;;
+    2B-only)
+      bash scripts/test-groq-built-in-tools.sh
+      ;;
+    2B+)
+      bash scripts/test-groq-agent-skill.sh
+      ;;
+    full)
+      bash scripts/test-groq-openclaw.sh
+      bash scripts/test-groq-built-in-tools.sh
+      bash scripts/test-groq-agent-skill.sh
+      ;;
+    *)
+      echo "Unsupported test mode: 2B+"
+      exit 1
+      ;;
+  esac
   shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
   env:
     EXPECTED_BRANCH: Test
@@ -8,27 +28,4 @@
     MODEL: groq/openai/gpt-oss-20b
     GROQ_API_KEY: ***
     OPENCLAW_GATEWAY_TOKEN: ***
-[plugins:lifecycle] phase="manifest registry" ms=113.23 status=ok includeDisabled=true indexPluginCount=62
-Service: systemd user (disabled)
-File logs: /tmp/openclaw/openclaw-2026-09-10.log
-Host desktop: disabled
-
-Config (cli): /data/config/openclaw.json5
-Config (service): /data/config/openclaw.json5
-
-Gateway: bind=loopback (127.0.0.1), port=18789 (env/config)
-Probe target: ws://127.0.0.1:18789
-Dashboard: http://127.0.0.1:18789/
-Probe note: Loopback-only gateway; only local clients can connect.
-
-CLI version: 2026.8.2 (/app/openclaw.mjs)
-Gateway version: 2026.8.2
-
-Runtime: unknown (systemctl not available; systemd user services are required on Linux.)
-Read probe: ok
-Capability: read-only
-
-Listening: 127.0.0.1:18789
-Troubles: run openclaw status
-Troubleshooting: https://docs.openclaw.ai/troubleshooting
-Error: Process completed with exit code 1.
+Error: Process completed with exit code 1
