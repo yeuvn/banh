@@ -1,14 +1,3 @@
-set -euo pipefail
-  test -x scripts/test-weather-agent-skill.sh || chmod +x scripts/test-weather-agent-skill.sh
-  bash scripts/test-weather-agent-skill.sh
-  echo 'BUOC_3_WEATHER=PASS'
-  shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
-  env:
-    EXPECTED_BRANCH: Test
-    SOURCE_DIR: /opt/aihome-test/source
-    MODEL: groq/openai/gpt-oss-20b
-    GROQ_API_KEY: ***
-    OPENCLAW_GATEWAY_TOKEN: ***
 2C_CONTEXT=Skill-weather.md+home-location.json
 SKILL_FILE=PASS
 HOME_LOCATION_FILE=PASS
@@ -30,7 +19,6 @@ ROUTE=weather-direct
 2C_AGENT_SKILL_ROUTING=PASS
 === WEATHER CONTRACT START ===
 LOCATION=PASS latitude=20.976127975008882 longitude=105.77268944367343 timezone=Asia/Ho_Chi_Minh
-/home/aihome/actions-runner/_work/AIHome/AIHome/scripts/test-weather-contract.sh: line 236: warning: here-document at line 62 delimited by end-of-file (wanted `PY')
 === OPEN-METEO DIAGNOSTIC START ===
 CONFIG_LATITUDE=20.976127975008882
 CONFIG_LONGITUDE=105.77268944367343
@@ -45,15 +33,15 @@ WEATHER_RESPONSE_KEYS=['current', 'current_units', 'daily', 'daily_units', 'elev
 === WEATHER RAW JSON START ===
 {
   "current": {
-    "apparent_temperature": 31.7,
+    "apparent_temperature": 32.1,
     "interval": 900,
     "rain": 0.0,
-    "relative_humidity_2m": 63,
-    "temperature_2m": 28.2,
-    "time": "2026-09-11T10:45",
+    "relative_humidity_2m": 62,
+    "temperature_2m": 28.5,
+    "time": "2026-09-11T11:00",
     "weather_code": 0,
     "wind_gusts_10m": 36.7,
-    "wind_speed_10m": 15.0
+    "wind_speed_10m": 14.8
   },
   "current_units": {
     "apparent_temperature": "°C",
@@ -95,7 +83,7 @@ WEATHER_RESPONSE_KEYS=['current', 'current_units', 'daily', 'daily_units', 'elev
     "uv_index_max": ""
   },
   "elevation": 15.0,
-  "generationtime_ms": 0.2747774124145508,
+  "generationtime_ms": 0.2936124801635742,
   "latitude": 20.984182,
   "longitude": 105.79108,
   "timezone": "Asia/Ho_Chi_Minh",
@@ -115,11 +103,11 @@ CURRENT_TYPE=dict
 CURRENT_KEYS=['apparent_temperature', 'interval', 'rain', 'relative_humidity_2m', 'temperature_2m', 'time', 'weather_code', 'wind_gusts_10m', 'wind_speed_10m']
 DAILY_TYPE=dict
 DAILY_KEYS=['precipitation_probability_max', 'precipitation_sum', 'temperature_2m_max', 'temperature_2m_min', 'time', 'uv_index_max']
-CURRENT_FIELD=temperature_2m TYPE=float VALUE=28.2
-CURRENT_FIELD=apparent_temperature TYPE=float VALUE=31.7
-CURRENT_FIELD=relative_humidity_2m TYPE=int VALUE=63
+CURRENT_FIELD=temperature_2m TYPE=float VALUE=28.5
+CURRENT_FIELD=apparent_temperature TYPE=float VALUE=32.1
+CURRENT_FIELD=relative_humidity_2m TYPE=int VALUE=62
 CURRENT_FIELD=rain TYPE=float VALUE=0.0
-CURRENT_FIELD=wind_speed_10m TYPE=float VALUE=15.0
+CURRENT_FIELD=wind_speed_10m TYPE=float VALUE=14.8
 CURRENT_FIELD=wind_gusts_10m TYPE=float VALUE=36.7
 CURRENT_FIELD=weather_code TYPE=int VALUE=0
 DAILY_FIELD=temperature_2m_max TYPE=list VALUE=[30.3]
@@ -143,8 +131,8 @@ AIR_QUALITY_RESPONSE_KEYS=['current', 'current_units', 'elevation', 'generationt
 {
   "current": {
     "interval": 3600,
-    "pm2_5": 34.5,
-    "time": "2026-09-11T10:00"
+    "pm2_5": 35.5,
+    "time": "2026-09-11T11:00"
   },
   "current_units": {
     "interval": "seconds",
@@ -152,7 +140,7 @@ AIR_QUALITY_RESPONSE_KEYS=['current', 'current_units', 'elevation', 'generationt
     "time": "iso8601"
   },
   "elevation": 15.0,
-  "generationtime_ms": 0.09167194366455078,
+  "generationtime_ms": 0.10979175567626953,
   "latitude": 21.0,
   "longitude": 105.80002,
   "timezone": "Asia/Ho_Chi_Minh",
@@ -162,7 +150,7 @@ AIR_QUALITY_RESPONSE_KEYS=['current', 'current_units', 'elevation', 'generationt
 === AIR_QUALITY RAW JSON END ===
 AIR_CURRENT_TYPE=dict
 AIR_CURRENT_KEYS=['interval', 'pm2_5', 'time']
-AIR_CURRENT_FIELD=pm2_5 TYPE=float VALUE=34.5
+AIR_CURRENT_FIELD=pm2_5 TYPE=float VALUE=35.5
 PM2_5=PASS
 AIR_QUALITY_OPEN_METEO=PASS
 === AIR-QUALITY DIAGNOSTIC END ===
