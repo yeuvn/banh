@@ -19,6 +19,7 @@ ROUTE=weather-direct
 2C_AGENT_SKILL_ROUTING=PASS
 === WEATHER CONTRACT START ===
 LOCATION=PASS latitude=20.976127975008882 longitude=105.77268944367343 timezone=Asia/Ho_Chi_Minh
+/home/aihome/actions-runner/_work/AIHome/AIHome/scripts/test-weather-contract.sh: line 247: warning: here-document at line 67 delimited by end-of-file (wanted `PY')
 === OPEN-METEO DIAGNOSTIC START ===
 CONFIG_LATITUDE=20.976127975008882
 CONFIG_LONGITUDE=105.77268944367343
@@ -26,22 +27,23 @@ CONFIG_TIMEZONE='Asia/Ho_Chi_Minh'
 WEATHER_REQUEST_SCHEME='https'
 WEATHER_REQUEST_HOST='api.open-meteo.com'
 WEATHER_REQUEST_PATH='/v1/forecast'
-WEATHER_REQUEST_URL=https://api.open-meteo.com/v1/forecast?latitude=20.976127975008882&longitude=105.77268944367343&timezone=Asia%2FHo_Chi_Minh&forecast_days=1&current=temperature_2m%2Capparent_temperature%2Crelative_humidity_2m%2Crain%2Cwind_speed_10m%2Cwind_gusts_10m%2Cweather_code&daily=temperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_probability_max%2Cprecipitation_sum%2Cuv_index_max
+WEATHER_REQUEST_URL=https://api.open-meteo.com/v1/forecast?latitude=20.976127975008882&longitude=105.77268944367343&timezone=Asia%2FHo_Chi_Minh&forecast_days=1&current=temperature_2m%2Capparent_temperature%2Crelative_humidity_2m%2Cvisibility%2Crain%2Cwind_speed_10m%2Cwind_gusts_10m%2Cweather_code&daily=temperature_2m_max%2Ctemperature_2m_min%2Csunrise%2Csunset%2Cprecipitation_probability_max%2Cprecipitation_sum%2Cuv_index_max
 WEATHER_HTTP_STATUS=200
 WEATHER_RESPONSE_TYPE=dict
 WEATHER_RESPONSE_KEYS=['current', 'current_units', 'daily', 'daily_units', 'elevation', 'generationtime_ms', 'latitude', 'longitude', 'timezone', 'timezone_abbreviation', 'utc_offset_seconds']
 === WEATHER RAW JSON START ===
 {
   "current": {
-    "apparent_temperature": 32.1,
+    "apparent_temperature": 32.6,
     "interval": 900,
     "rain": 0.0,
-    "relative_humidity_2m": 62,
-    "temperature_2m": 28.5,
-    "time": "2026-09-11T11:00",
+    "relative_humidity_2m": 60,
+    "temperature_2m": 28.9,
+    "time": "2026-09-11T11:30",
+    "visibility": 11000.0,
     "weather_code": 0,
-    "wind_gusts_10m": 36.7,
-    "wind_speed_10m": 14.8
+    "wind_gusts_10m": 36.0,
+    "wind_speed_10m": 14.5
   },
   "current_units": {
     "apparent_temperature": "°C",
@@ -50,6 +52,7 @@ WEATHER_RESPONSE_KEYS=['current', 'current_units', 'daily', 'daily_units', 'elev
     "relative_humidity_2m": "%",
     "temperature_2m": "°C",
     "time": "iso8601",
+    "visibility": "m",
     "weather_code": "wmo code",
     "wind_gusts_10m": "km/h",
     "wind_speed_10m": "km/h"
@@ -60,6 +63,12 @@ WEATHER_RESPONSE_KEYS=['current', 'current_units', 'daily', 'daily_units', 'elev
     ],
     "precipitation_sum": [
       6.3
+    ],
+    "sunrise": [
+      "2026-09-11T05:42"
+    ],
+    "sunset": [
+      "2026-09-11T18:03"
     ],
     "temperature_2m_max": [
       30.3
@@ -77,13 +86,15 @@ WEATHER_RESPONSE_KEYS=['current', 'current_units', 'daily', 'daily_units', 'elev
   "daily_units": {
     "precipitation_probability_max": "%",
     "precipitation_sum": "mm",
+    "sunrise": "iso8601",
+    "sunset": "iso8601",
     "temperature_2m_max": "°C",
     "temperature_2m_min": "°C",
     "time": "iso8601",
     "uv_index_max": ""
   },
   "elevation": 15.0,
-  "generationtime_ms": 0.2936124801635742,
+  "generationtime_ms": 0.21338462829589844,
   "latitude": 20.984182,
   "longitude": 105.79108,
   "timezone": "Asia/Ho_Chi_Minh",
@@ -100,24 +111,27 @@ LONGITUDE_DIFF=0.018390556326565388
 COORDINATE_NORMALIZATION=ACCEPTED
 TIMEZONE=PASS
 CURRENT_TYPE=dict
-CURRENT_KEYS=['apparent_temperature', 'interval', 'rain', 'relative_humidity_2m', 'temperature_2m', 'time', 'weather_code', 'wind_gusts_10m', 'wind_speed_10m']
+CURRENT_KEYS=['apparent_temperature', 'interval', 'rain', 'relative_humidity_2m', 'temperature_2m', 'time', 'visibility', 'weather_code', 'wind_gusts_10m', 'wind_speed_10m']
 DAILY_TYPE=dict
-DAILY_KEYS=['precipitation_probability_max', 'precipitation_sum', 'temperature_2m_max', 'temperature_2m_min', 'time', 'uv_index_max']
-CURRENT_FIELD=temperature_2m TYPE=float VALUE=28.5
-CURRENT_FIELD=apparent_temperature TYPE=float VALUE=32.1
-CURRENT_FIELD=relative_humidity_2m TYPE=int VALUE=62
+DAILY_KEYS=['precipitation_probability_max', 'precipitation_sum', 'sunrise', 'sunset', 'temperature_2m_max', 'temperature_2m_min', 'time', 'uv_index_max']
+CURRENT_FIELD=temperature_2m TYPE=float VALUE=28.9
+CURRENT_FIELD=apparent_temperature TYPE=float VALUE=32.6
+CURRENT_FIELD=relative_humidity_2m TYPE=int VALUE=60
+CURRENT_FIELD=visibility TYPE=float VALUE=11000.0
 CURRENT_FIELD=rain TYPE=float VALUE=0.0
-CURRENT_FIELD=wind_speed_10m TYPE=float VALUE=14.8
-CURRENT_FIELD=wind_gusts_10m TYPE=float VALUE=36.7
+CURRENT_FIELD=wind_speed_10m TYPE=float VALUE=14.5
+CURRENT_FIELD=wind_gusts_10m TYPE=float VALUE=36.0
 CURRENT_FIELD=weather_code TYPE=int VALUE=0
 DAILY_FIELD=temperature_2m_max TYPE=list VALUE=[30.3]
 DAILY_FIELD=temperature_2m_min TYPE=list VALUE=[22.0]
+DAILY_FIELD=sunrise TYPE=list VALUE=['2026-09-11T05:42']
+DAILY_FIELD=sunset TYPE=list VALUE=['2026-09-11T18:03']
 DAILY_FIELD=precipitation_probability_max TYPE=list VALUE=[100]
 DAILY_FIELD=precipitation_sum TYPE=list VALUE=[6.3]
 DAILY_FIELD=uv_index_max TYPE=list VALUE=[8.45]
 DAILY_FIELD=time TYPE=list VALUE=['2026-09-11']
-WEATHER_12_FIELDS=PASS
-WEATHER_FIELDS=PASS current.temperature_2m,current.apparent_temperature,current.relative_humidity_2m,current.rain,current.wind_speed_10m,current.wind_gusts_10m,current.weather_code,daily.temperature_2m_max,daily.temperature_2m_min,daily.precipitation_probability_max,daily.precipitation_sum,daily.uv_index_max
+WEATHER_15_FIELDS=PASS
+WEATHER_FIELDS=PASS current.temperature_2m,current.apparent_temperature,current.relative_humidity_2m,current.visibility,current.rain,current.wind_speed_10m,current.wind_gusts_10m,current.weather_code,daily.temperature_2m_max,daily.temperature_2m_min,daily.sunrise,daily.sunset,daily.precipitation_probability_max,daily.precipitation_sum,daily.uv_index_max
 WEATHER_OPEN_METEO=PASS
 === AIR-QUALITY DIAGNOSTIC START ===
 AIR_QUALITY_REQUEST_SCHEME='https'
@@ -140,7 +154,7 @@ AIR_QUALITY_RESPONSE_KEYS=['current', 'current_units', 'elevation', 'generationt
     "time": "iso8601"
   },
   "elevation": 15.0,
-  "generationtime_ms": 0.10979175567626953,
+  "generationtime_ms": 0.08249282836914062,
   "latitude": 21.0,
   "longitude": 105.80002,
   "timezone": "Asia/Ho_Chi_Minh",
