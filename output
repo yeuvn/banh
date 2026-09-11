@@ -19,6 +19,7 @@ ROUTE=weather-direct
 2C_AGENT_SKILL_ROUTING=PASS
 === WEATHER CONTRACT START ===
 LOCATION=PASS latitude=20.976127975008882 longitude=105.77268944367343 timezone=Asia/Ho_Chi_Minh
+/home/aihome/actions-runner/_work/AIHome/AIHome/scripts/test-weather-contract.sh: line 352: warning: here-document at line 72 delimited by end-of-file (wanted `PY')
 === OPEN-METEO DIAGNOSTIC START ===
 CONFIG_LATITUDE=20.976127975008882
 CONFIG_LONGITUDE=105.77268944367343
@@ -26,150 +27,26 @@ CONFIG_TIMEZONE='Asia/Ho_Chi_Minh'
 WEATHER_REQUEST_SCHEME='https'
 WEATHER_REQUEST_HOST='api.open-meteo.com'
 WEATHER_REQUEST_PATH='/v1/forecast'
-WEATHER_REQUEST_URL=https://api.open-meteo.com/v1/forecast?latitude=20.976127975008882&longitude=105.77268944367343&timezone=Asia%2FHo_Chi_Minh&forecast_days=1&current=temperature_2m%2Capparent_temperature%2Crelative_humidity_2m%2Cvisibility%2Crain%2Cwind_speed_10m%2Cwind_gusts_10m%2Cweather_code&daily=temperature_2m_max%2Ctemperature_2m_min%2Csunrise%2Csunset%2Cprecipitation_probability_max%2Cprecipitation_sum%2Cuv_index_max
-WEATHER_HTTP_STATUS=200
-WEATHER_RESPONSE_TYPE=dict
-WEATHER_RESPONSE_KEYS=['current', 'current_units', 'daily', 'daily_units', 'elevation', 'generationtime_ms', 'latitude', 'longitude', 'timezone', 'timezone_abbreviation', 'utc_offset_seconds']
-=== WEATHER RAW JSON START ===
-{
-  "current": {
-    "apparent_temperature": 33.0,
-    "interval": 900,
-    "rain": 0.0,
-    "relative_humidity_2m": 59,
-    "temperature_2m": 29.2,
-    "time": "2026-09-11T12:00",
-    "visibility": 8040.0,
-    "weather_code": 0,
-    "wind_gusts_10m": 34.9,
-    "wind_speed_10m": 14.3
-  },
-  "current_units": {
-    "apparent_temperature": "°C",
-    "interval": "seconds",
-    "rain": "mm",
-    "relative_humidity_2m": "%",
-    "temperature_2m": "°C",
-    "time": "iso8601",
-    "visibility": "m",
-    "weather_code": "wmo code",
-    "wind_gusts_10m": "km/h",
-    "wind_speed_10m": "km/h"
-  },
-  "daily": {
-    "precipitation_probability_max": [
-      100
-    ],
-    "precipitation_sum": [
-      6.3
-    ],
-    "sunrise": [
-      "2026-09-11T05:42"
-    ],
-    "sunset": [
-      "2026-09-11T18:03"
-    ],
-    "temperature_2m_max": [
-      30.3
-    ],
-    "temperature_2m_min": [
-      22.0
-    ],
-    "time": [
-      "2026-09-11"
-    ],
-    "uv_index_max": [
-      8.45
-    ]
-  },
-  "daily_units": {
-    "precipitation_probability_max": "%",
-    "precipitation_sum": "mm",
-    "sunrise": "iso8601",
-    "sunset": "iso8601",
-    "temperature_2m_max": "°C",
-    "temperature_2m_min": "°C",
-    "time": "iso8601",
-    "uv_index_max": ""
-  },
-  "elevation": 15.0,
-  "generationtime_ms": 0.33986568450927734,
-  "latitude": 20.984182,
-  "longitude": 105.79108,
-  "timezone": "Asia/Ho_Chi_Minh",
-  "timezone_abbreviation": "GMT+7",
-  "utc_offset_seconds": 25200
-}
-=== WEATHER RAW JSON END ===
-RESPONSE_LATITUDE=20.984182
-RESPONSE_LONGITUDE=105.79108
-RESPONSE_TIMEZONE='Asia/Ho_Chi_Minh'
-RESPONSE_TIMEZONE_ABBREVIATION='GMT+7'
-LATITUDE_DIFF=0.00805402499111807
-LONGITUDE_DIFF=0.018390556326565388
-COORDINATE_NORMALIZATION=ACCEPTED
-TIMEZONE=PASS
-CURRENT_TYPE=dict
-CURRENT_KEYS=['apparent_temperature', 'interval', 'rain', 'relative_humidity_2m', 'temperature_2m', 'time', 'visibility', 'weather_code', 'wind_gusts_10m', 'wind_speed_10m']
-DAILY_TYPE=dict
-DAILY_KEYS=['precipitation_probability_max', 'precipitation_sum', 'sunrise', 'sunset', 'temperature_2m_max', 'temperature_2m_min', 'time', 'uv_index_max']
-CURRENT_FIELD=temperature_2m TYPE=float VALUE=29.2
-CURRENT_FIELD=apparent_temperature TYPE=float VALUE=33.0
-CURRENT_FIELD=relative_humidity_2m TYPE=int VALUE=59
-CURRENT_FIELD=visibility TYPE=float VALUE=8040.0
-CURRENT_FIELD=rain TYPE=float VALUE=0.0
-CURRENT_FIELD=wind_speed_10m TYPE=float VALUE=14.3
-CURRENT_FIELD=wind_gusts_10m TYPE=float VALUE=34.9
-CURRENT_FIELD=weather_code TYPE=int VALUE=0
-DAILY_FIELD=temperature_2m_max TYPE=list VALUE=[30.3]
-DAILY_FIELD=temperature_2m_min TYPE=list VALUE=[22.0]
-DAILY_FIELD=sunrise TYPE=list VALUE=['2026-09-11T05:42']
-DAILY_FIELD=sunset TYPE=list VALUE=['2026-09-11T18:03']
-DAILY_FIELD=precipitation_probability_max TYPE=list VALUE=[100]
-DAILY_FIELD=precipitation_sum TYPE=list VALUE=[6.3]
-DAILY_FIELD=uv_index_max TYPE=list VALUE=[8.45]
-DAILY_FIELD=time TYPE=list VALUE=['2026-09-11']
-WEATHER_15_FIELDS=PASS
-WEATHER_FIELDS=PASS current.temperature_2m,current.apparent_temperature,current.relative_humidity_2m,current.visibility,current.rain,current.wind_speed_10m,current.wind_gusts_10m,current.weather_code,daily.temperature_2m_max,daily.temperature_2m_min,daily.sunrise,daily.sunset,daily.precipitation_probability_max,daily.precipitation_sum,daily.uv_index_max
-WEATHER_OPEN_METEO=PASS
-=== AIR-QUALITY DIAGNOSTIC START ===
-AIR_QUALITY_REQUEST_SCHEME='https'
-AIR_QUALITY_REQUEST_HOST='air-quality-api.open-meteo.com'
-AIR_QUALITY_REQUEST_PATH='/v1/air-quality'
-AIR_QUALITY_REQUEST_URL=https://air-quality-api.open-meteo.com/v1/air-quality?latitude=20.976127975008882&longitude=105.77268944367343&timezone=Asia%2FHo_Chi_Minh&forecast_days=1&current=pm2_5
-AIR_QUALITY_HTTP_STATUS=200
-AIR_QUALITY_RESPONSE_TYPE=dict
-AIR_QUALITY_RESPONSE_KEYS=['current', 'current_units', 'elevation', 'generationtime_ms', 'latitude', 'longitude', 'timezone', 'timezone_abbreviation', 'utc_offset_seconds']
-=== AIR_QUALITY RAW JSON START ===
-{
-  "current": {
-    "interval": 3600,
-    "pm2_5": 35.2,
-    "time": "2026-09-11T12:00"
-  },
-  "current_units": {
-    "interval": "seconds",
-    "pm2_5": "μg/m³",
-    "time": "iso8601"
-  },
-  "elevation": 15.0,
-  "generationtime_ms": 0.14913082122802734,
-  "latitude": 21.0,
-  "longitude": 105.80002,
-  "timezone": "Asia/Ho_Chi_Minh",
-  "timezone_abbreviation": "GMT+7",
-  "utc_offset_seconds": 25200
-}
-=== AIR_QUALITY RAW JSON END ===
-AIR_CURRENT_TYPE=dict
-AIR_CURRENT_KEYS=['interval', 'pm2_5', 'time']
-AIR_CURRENT_FIELD=pm2_5 TYPE=float VALUE=35.2
-PM2_5=PASS
-AIR_QUALITY_OPEN_METEO=PASS
-=== AIR-QUALITY DIAGNOSTIC END ===
-GROQ_CALLS=0
-=== OPEN-METEO DIAGNOSTIC END ===
-WEATHER_OPEN_METEO=PASS
-=== WEATHER CONTRACT END ===
-2C=PASS
-BUOC_3_WEATHER=PASS
+WEATHER_REQUEST_URL=https://api.open-meteo.com/v1/forecast?latitude=20.976127975008882&longitude=105.77268944367343&timezone=Asia%2FHo_Chi_Minh&forecast_days=1&current=temperature_2m%2Capparent_temperature%2Crelative_humidity_2m%2Cvisibility%2Crain%2Cwind_speed_10m%2Cwind_gusts_10m%2Cweather_code&daily=temperature_2m_max%2Ctemperature_2m_min%2Csunrise%2Csunset%2Cprecipitation_probability_max%2Cprecipitation_sum%2Cuv_index_max&hourly=time%2Crain%2Cprecipitation%2Cprecipitation_probability%2Cweather_code
+WEATHER_HTTP_ERROR=400
+WEATHER_HTTP_ERROR_BODY={"reason":"Invalid value: Cannot initialize SurfacePressureAndHeightVariable<VariableAndPreviousDay, VariableOrSpread<ForecastPressureVariable>, ForecastHeightVariable> from invalid String value time,rain,precipitation,precipitation_probability,weather_code","error":true}
+Traceback (most recent call last):
+  File "<stdin>", line 95, in <module>
+  File "<stdin>", line 55, in get_json
+  File "/usr/lib/python3.13/urllib/request.py", line 189, in urlopen
+    return opener.open(url, data, timeout)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/urllib/request.py", line 495, in open
+    response = meth(req, response)
+  File "/usr/lib/python3.13/urllib/request.py", line 604, in http_response
+    response = self.parent.error(
+        'http', request, response, code, msg, hdrs)
+  File "/usr/lib/python3.13/urllib/request.py", line 533, in error
+    return self._call_chain(*args)
+           ~~~~~~~~~~~~~~~~^^^^^^^
+  File "/usr/lib/python3.13/urllib/request.py", line 466, in _call_chain
+    result = func(*args)
+  File "/usr/lib/python3.13/urllib/request.py", line 613, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+Error: Process completed with exit code 1.
