@@ -1,4 +1,4 @@
-2C_CONTEXT=Skill-weather.md+home-location.json
+C_CONTEXT=Skill-weather.md+home-location.json
 SKILL_FILE=PASS
 HOME_LOCATION_FILE=PASS
 SKILL_OPEN_METEO_RULE=PASS
@@ -19,7 +19,6 @@ ROUTE=weather-direct
 2C_AGENT_SKILL_ROUTING=PASS
 === WEATHER CONTRACT START ===
 LOCATION=PASS latitude=20.976127975008882 longitude=105.77268944367343 timezone=Asia/Ho_Chi_Minh
-/home/aihome/actions-runner/_work/AIHome/AIHome/scripts/test-weather-contract.sh: line 352: warning: here-document at line 72 delimited by end-of-file (wanted `PY')
 === OPEN-METEO DIAGNOSTIC START ===
 CONFIG_LATITUDE=20.976127975008882
 CONFIG_LONGITUDE=105.77268944367343
@@ -27,26 +26,57 @@ CONFIG_TIMEZONE='Asia/Ho_Chi_Minh'
 WEATHER_REQUEST_SCHEME='https'
 WEATHER_REQUEST_HOST='api.open-meteo.com'
 WEATHER_REQUEST_PATH='/v1/forecast'
-WEATHER_REQUEST_URL=https://api.open-meteo.com/v1/forecast?latitude=20.976127975008882&longitude=105.77268944367343&timezone=Asia%2FHo_Chi_Minh&forecast_days=1&current=temperature_2m%2Capparent_temperature%2Crelative_humidity_2m%2Cvisibility%2Crain%2Cwind_speed_10m%2Cwind_gusts_10m%2Cweather_code&daily=temperature_2m_max%2Ctemperature_2m_min%2Csunrise%2Csunset%2Cprecipitation_probability_max%2Cprecipitation_sum%2Cuv_index_max&hourly=time%2Crain%2Cprecipitation%2Cprecipitation_probability%2Cweather_code
-WEATHER_HTTP_ERROR=400
-WEATHER_HTTP_ERROR_BODY={"reason":"Invalid value: Cannot initialize SurfacePressureAndHeightVariable<VariableAndPreviousDay, VariableOrSpread<ForecastPressureVariable>, ForecastHeightVariable> from invalid String value time,rain,precipitation,precipitation_probability,weather_code","error":true}
-Traceback (most recent call last):
-  File "<stdin>", line 95, in <module>
-  File "<stdin>", line 55, in get_json
-  File "/usr/lib/python3.13/urllib/request.py", line 189, in urlopen
-    return opener.open(url, data, timeout)
-           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.13/urllib/request.py", line 495, in open
-    response = meth(req, response)
-  File "/usr/lib/python3.13/urllib/request.py", line 604, in http_response
-    response = self.parent.error(
-        'http', request, response, code, msg, hdrs)
-  File "/usr/lib/python3.13/urllib/request.py", line 533, in error
-    return self._call_chain(*args)
-           ~~~~~~~~~~~~~~~~^^^^^^^
-  File "/usr/lib/python3.13/urllib/request.py", line 466, in _call_chain
-    result = func(*args)
-  File "/usr/lib/python3.13/urllib/request.py", line 613, in http_error_default
-    raise HTTPError(req.full_url, code, msg, hdrs, fp)
-urllib.error.HTTPError: HTTP Error 400: Bad Request
-Error: Process completed with exit code 1.
+WEATHER_REQUEST_URL=https://api.open-meteo.com/v1/forecast?latitude=20.976127975008882&longitude=105.77268944367343&timezone=Asia%2FHo_Chi_Minh&forecast_days=1&current=temperature_2m%2Capparent_temperature%2Crelative_humidity_2m%2Cvisibility%2Crain%2Cwind_speed_10m%2Cwind_gusts_10m%2Cweather_code&daily=temperature_2m_max%2Ctemperature_2m_min%2Csunrise%2Csunset%2Cprecipitation_probability_max%2Cprecipitation_sum%2Cuv_index_max&hourly=rain%2Cprecipitation%2Cprecipitation_probability%2Cweather_code
+WEATHER_HTTP_STATUS=200
+RESPONSE_TIMEZONE='Asia/Ho_Chi_Minh'
+TIMEZONE=PASS
+CURRENT_FIELD=temperature_2m TYPE=float VALUE=29.5
+CURRENT_FIELD=apparent_temperature TYPE=float VALUE=33.2
+CURRENT_FIELD=relative_humidity_2m TYPE=int VALUE=57
+CURRENT_FIELD=visibility TYPE=float VALUE=8120.0
+CURRENT_FIELD=rain TYPE=float VALUE=0.0
+CURRENT_FIELD=wind_speed_10m TYPE=float VALUE=14.0
+CURRENT_FIELD=wind_gusts_10m TYPE=float VALUE=34.2
+CURRENT_FIELD=weather_code TYPE=int VALUE=0
+DAILY_FIELD=temperature_2m_max TYPE=list VALUE=[30.3]
+DAILY_FIELD=temperature_2m_min TYPE=list VALUE=[22.0]
+DAILY_FIELD=sunrise TYPE=list VALUE=['2026-09-11T05:42']
+DAILY_FIELD=sunset TYPE=list VALUE=['2026-09-11T18:03']
+DAILY_FIELD=precipitation_probability_max TYPE=list VALUE=[100]
+DAILY_FIELD=precipitation_sum TYPE=list VALUE=[6.3]
+DAILY_FIELD=uv_index_max TYPE=list VALUE=[8.45]
+WEATHER_15_FIELDS=PASS
+WEATHER_OPEN_METEO=PASS
+=== HOURLY RAIN-START DIAGNOSTIC START ===
+HOURLY_FIELD=rain LENGTH=24
+HOURLY_FIELD=precipitation LENGTH=24
+HOURLY_FIELD=precipitation_probability LENGTH=24
+HOURLY_FIELD=weather_code LENGTH=24
+HOURLY_REFERENCE_CURRENT_TIME=2026-09-11T12:30
+HOURLY_REFERENCE_LOCAL_DATE=2026-09-11
+RAIN_STATUS=FORECAST
+RAIN_START_HOUR=13:00
+RAIN_START_TIME_SOURCE=2026-09-11T13:00
+RAIN_START_RAIN_MM=0.1
+RAIN_START_PRECIPITATION_MM=0.1
+RAIN_START_PROBABILITY=22
+RAIN_START_WEATHER_CODE=51
+HOURLY_POINTS_REMAINING_TODAY=11
+HOURLY_RAIN_START=PASS
+=== HOURLY RAIN-START DIAGNOSTIC END ===
+=== AIR-QUALITY DIAGNOSTIC START ===
+AIR_QUALITY_REQUEST_SCHEME='https'
+AIR_QUALITY_REQUEST_HOST='air-quality-api.open-meteo.com'
+AIR_QUALITY_REQUEST_PATH='/v1/air-quality'
+AIR_QUALITY_REQUEST_URL=https://air-quality-api.open-meteo.com/v1/air-quality?latitude=20.976127975008882&longitude=105.77268944367343&timezone=Asia%2FHo_Chi_Minh&forecast_days=1&current=pm2_5
+AIR_QUALITY_HTTP_STATUS=200
+AIR_CURRENT_FIELD=pm2_5 TYPE=float VALUE=35.2
+PM2_5=PASS
+AIR_QUALITY_OPEN_METEO=PASS
+=== AIR-QUALITY DIAGNOSTIC END ===
+GROQ_CALLS=0
+=== OPEN-METEO DIAGNOSTIC END ===
+WEATHER_OPEN_METEO=PASS
+=== WEATHER CONTRACT END ===
+2C=PASS
+BUOC_3_WEATHER=PASS
