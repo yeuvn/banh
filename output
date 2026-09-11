@@ -33,16 +33,16 @@ WEATHER_RESPONSE_KEYS=['current', 'current_units', 'daily', 'daily_units', 'elev
 === WEATHER RAW JSON START ===
 {
   "current": {
-    "apparent_temperature": 32.8,
+    "apparent_temperature": 33.0,
     "interval": 900,
     "rain": 0.0,
     "relative_humidity_2m": 59,
-    "temperature_2m": 29.1,
-    "time": "2026-09-11T11:45",
-    "visibility": 9520.0,
+    "temperature_2m": 29.2,
+    "time": "2026-09-11T12:00",
+    "visibility": 8040.0,
     "weather_code": 0,
-    "wind_gusts_10m": 35.3,
-    "wind_speed_10m": 14.5
+    "wind_gusts_10m": 34.9,
+    "wind_speed_10m": 14.3
   },
   "current_units": {
     "apparent_temperature": "°C",
@@ -93,7 +93,7 @@ WEATHER_RESPONSE_KEYS=['current', 'current_units', 'daily', 'daily_units', 'elev
     "uv_index_max": ""
   },
   "elevation": 15.0,
-  "generationtime_ms": 0.27501583099365234,
+  "generationtime_ms": 0.33986568450927734,
   "latitude": 20.984182,
   "longitude": 105.79108,
   "timezone": "Asia/Ho_Chi_Minh",
@@ -113,13 +113,13 @@ CURRENT_TYPE=dict
 CURRENT_KEYS=['apparent_temperature', 'interval', 'rain', 'relative_humidity_2m', 'temperature_2m', 'time', 'visibility', 'weather_code', 'wind_gusts_10m', 'wind_speed_10m']
 DAILY_TYPE=dict
 DAILY_KEYS=['precipitation_probability_max', 'precipitation_sum', 'sunrise', 'sunset', 'temperature_2m_max', 'temperature_2m_min', 'time', 'uv_index_max']
-CURRENT_FIELD=temperature_2m TYPE=float VALUE=29.1
-CURRENT_FIELD=apparent_temperature TYPE=float VALUE=32.8
+CURRENT_FIELD=temperature_2m TYPE=float VALUE=29.2
+CURRENT_FIELD=apparent_temperature TYPE=float VALUE=33.0
 CURRENT_FIELD=relative_humidity_2m TYPE=int VALUE=59
-CURRENT_FIELD=visibility TYPE=float VALUE=9520.0
+CURRENT_FIELD=visibility TYPE=float VALUE=8040.0
 CURRENT_FIELD=rain TYPE=float VALUE=0.0
-CURRENT_FIELD=wind_speed_10m TYPE=float VALUE=14.5
-CURRENT_FIELD=wind_gusts_10m TYPE=float VALUE=35.3
+CURRENT_FIELD=wind_speed_10m TYPE=float VALUE=14.3
+CURRENT_FIELD=wind_gusts_10m TYPE=float VALUE=34.9
 CURRENT_FIELD=weather_code TYPE=int VALUE=0
 DAILY_FIELD=temperature_2m_max TYPE=list VALUE=[30.3]
 DAILY_FIELD=temperature_2m_min TYPE=list VALUE=[22.0]
@@ -144,8 +144,8 @@ AIR_QUALITY_RESPONSE_KEYS=['current', 'current_units', 'elevation', 'generationt
 {
   "current": {
     "interval": 3600,
-    "pm2_5": 35.5,
-    "time": "2026-09-11T11:00"
+    "pm2_5": 35.2,
+    "time": "2026-09-11T12:00"
   },
   "current_units": {
     "interval": "seconds",
@@ -153,7 +153,7 @@ AIR_QUALITY_RESPONSE_KEYS=['current', 'current_units', 'elevation', 'generationt
     "time": "iso8601"
   },
   "elevation": 15.0,
-  "generationtime_ms": 0.17452239990234375,
+  "generationtime_ms": 0.14913082122802734,
   "latitude": 21.0,
   "longitude": 105.80002,
   "timezone": "Asia/Ho_Chi_Minh",
@@ -163,7 +163,7 @@ AIR_QUALITY_RESPONSE_KEYS=['current', 'current_units', 'elevation', 'generationt
 === AIR_QUALITY RAW JSON END ===
 AIR_CURRENT_TYPE=dict
 AIR_CURRENT_KEYS=['interval', 'pm2_5', 'time']
-AIR_CURRENT_FIELD=pm2_5 TYPE=float VALUE=35.5
+AIR_CURRENT_FIELD=pm2_5 TYPE=float VALUE=35.2
 PM2_5=PASS
 AIR_QUALITY_OPEN_METEO=PASS
 === AIR-QUALITY DIAGNOSTIC END ===
