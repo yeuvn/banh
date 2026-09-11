@@ -1,8 +1,8 @@
 @yeuvn ➜ /workspaces/AIHome/frontend (kira-ui) $ cd /workspaces/AIHome/frontend
-npm install -D @types/react @types/react-dom
+npm install -D @types/three
 npm run build
 
-added 3 packages, and audited 71 packages in 2s
+added 7 packages, and audited 78 packages in 2s
 
 9 packages are looking for funding
   run `npm fund` for details
@@ -27,11 +27,7 @@ src/kira/JarvisOrb.tsx:11:201 - error TS2322: Type 'false | void | undefined' is
                                    ~~~~~~~~~~~~~~~~~~~~~~~
     The expected type comes from the return type of this signature.
 
-src/kira/renderer.ts:1:24 - error TS7016: Could not find a declaration file for module 'three'. '/workspaces/AIHome/frontend/node_modules/three/build/three.module.js' implicitly has an 'any' type.
-  Try `npm i --save-dev @types/three` if it exists or add a new declaration (.d.ts) file containing `declare module 'three';`
 
-1 import * as THREE from 'three';
-                         ~~~~~~~
+Found 1 error.
 
-
-Found 2 errors.
+@yeuvn ➜ /workspaces/AIHome/frontend (kira-ui) $ 
