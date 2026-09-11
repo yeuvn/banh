@@ -1,54 +1,34 @@
-aihome@AIHome:/opt/aihome-test/source$ cd /opt/aihome-test/source
-
-docker compose \
-  --env-file /opt/aihome-test/source/.env \
-  -f compose/openclaw.yml \
-  exec openclaw sh -lc '
-echo "=== LISTENING PORTS ==="
-ss -ltnp 2>&1 || true
-
-echo "=== OPENCLAW GATEWAY STATUS ==="
-openclaw gateway status 2>&1 || true
-
-echo "=== PORT 18789 ==="
-nc -zv 127.0.0.1 18789 2>&1 || true
-
-echo "=== PORT 8000 ==="
-nc -zv 127.0.0.1 8000 2>&1 || true
-'
-=== LISTENING PORTS ===
-sh: 3: ss: not found
-=== OPENCLAW GATEWAY STATUS ===
-
-OpenClaw 2026.8.2 (0965053)
-I'm not saying your workflow is chaotic... I'm just bringing a linter and a helmet.
-
-[plugins:lifecycle] phase="manifest registry" ms=166.96 status=ok includeDisabled=true indexPluginCount=62
-│
-◇  
-Service: systemd user (disabled)
-File logs: /tmp/openclaw/openclaw-2026-09-10.log
-Host desktop: disabled
-
-Config (cli): /data/config/openclaw.json5
-Config (service): /data/config/openclaw.json5
-
-Gateway: bind=loopback (127.0.0.1), port=18789 (env/config)
-Probe target: ws://127.0.0.1:18789
-Dashboard: http://127.0.0.1:18789/
-Probe note: Loopback-only gateway; only local clients can connect.
-
-CLI version: 2026.8.2 (/usr/local/bin/openclaw)
-Gateway version: 2026.8.2
-
-Runtime: unknown (systemctl not available; systemd user services are required on Linux.)
-Connectivity probe: ok
-Capability: read-only
-
-Listening: 127.0.0.1:18789
-Troubles: run openclaw status
-Troubleshooting: https://docs.openclaw.ai/troubleshooting
-=== PORT 18789 ===
-sh: 9: nc: not found
-=== PORT 8000 ===
-sh: 12: nc: not found
+1s
+Run set -euo pipefail
+  set -euo pipefail
+  test -x scripts/test-weather-agent-skill.sh || chmod +x scripts/test-weather-agent-skill.sh
+  bash scripts/test-weather-agent-skill.sh
+  echo 'BUOC_3_WEATHER=PASS'
+  shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+  env:
+    EXPECTED_BRANCH: Test
+    SOURCE_DIR: /opt/aihome-test/source
+    MODEL: groq/openai/gpt-oss-20b
+    GROQ_API_KEY: ***
+    OPENCLAW_GATEWAY_TOKEN: ***
+2C_CONTEXT=Skill-weather.md+home-location.json
+SKILL_FILE=PASS
+HOME_LOCATION_FILE=PASS
+SKILL_OPEN_METEO_RULE=PASS
+SKILL_HOME_LOCATION_RULE=PASS
+SKILL_WEB_FETCH_RULE=PASS
+INTENT=weather
+GROQ_CALLS=0
+ROUTE=weather-direct
+2C_INTENT=weather
+2C_GROQ_PRE_INFERENCE=0
+2C_ROUTING=PASS
+2C_ROUTER_AGENT_GUARD=PASS
+2C_OPEN_METEO=DELEGATED_TO_WEATHER_CONTRACT
+2C_PROVIDER_HTTP_TEST=DELEGATED_TO_WEATHER_CONTRACT
+2C_BROWSER_SEARCH=NOT_USED
+2C_AGENT_INFERENCE=NOT_USED
+2C_GROQ_CALLS=0
+2C_AGENT_SKILL_ROUTING=PASS
+2C=PASS
+BUOC_3_WEATHER=PASS
