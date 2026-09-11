@@ -19,7 +19,6 @@ ROUTE=weather-direct
 2C_AGENT_SKILL_ROUTING=PASS
 === WEATHER CONTRACT START ===
 LOCATION=PASS latitude=20.976127975008882 longitude=105.77268944367343 timezone=Asia/Ho_Chi_Minh
-/home/aihome/actions-runner/_work/AIHome/AIHome/scripts/test-weather-contract.sh: line 247: warning: here-document at line 67 delimited by end-of-file (wanted `PY')
 === OPEN-METEO DIAGNOSTIC START ===
 CONFIG_LATITUDE=20.976127975008882
 CONFIG_LONGITUDE=105.77268944367343
@@ -34,15 +33,15 @@ WEATHER_RESPONSE_KEYS=['current', 'current_units', 'daily', 'daily_units', 'elev
 === WEATHER RAW JSON START ===
 {
   "current": {
-    "apparent_temperature": 32.6,
+    "apparent_temperature": 32.8,
     "interval": 900,
     "rain": 0.0,
-    "relative_humidity_2m": 60,
-    "temperature_2m": 28.9,
-    "time": "2026-09-11T11:30",
-    "visibility": 11000.0,
+    "relative_humidity_2m": 59,
+    "temperature_2m": 29.1,
+    "time": "2026-09-11T11:45",
+    "visibility": 9520.0,
     "weather_code": 0,
-    "wind_gusts_10m": 36.0,
+    "wind_gusts_10m": 35.3,
     "wind_speed_10m": 14.5
   },
   "current_units": {
@@ -94,7 +93,7 @@ WEATHER_RESPONSE_KEYS=['current', 'current_units', 'daily', 'daily_units', 'elev
     "uv_index_max": ""
   },
   "elevation": 15.0,
-  "generationtime_ms": 0.21338462829589844,
+  "generationtime_ms": 0.27501583099365234,
   "latitude": 20.984182,
   "longitude": 105.79108,
   "timezone": "Asia/Ho_Chi_Minh",
@@ -114,13 +113,13 @@ CURRENT_TYPE=dict
 CURRENT_KEYS=['apparent_temperature', 'interval', 'rain', 'relative_humidity_2m', 'temperature_2m', 'time', 'visibility', 'weather_code', 'wind_gusts_10m', 'wind_speed_10m']
 DAILY_TYPE=dict
 DAILY_KEYS=['precipitation_probability_max', 'precipitation_sum', 'sunrise', 'sunset', 'temperature_2m_max', 'temperature_2m_min', 'time', 'uv_index_max']
-CURRENT_FIELD=temperature_2m TYPE=float VALUE=28.9
-CURRENT_FIELD=apparent_temperature TYPE=float VALUE=32.6
-CURRENT_FIELD=relative_humidity_2m TYPE=int VALUE=60
-CURRENT_FIELD=visibility TYPE=float VALUE=11000.0
+CURRENT_FIELD=temperature_2m TYPE=float VALUE=29.1
+CURRENT_FIELD=apparent_temperature TYPE=float VALUE=32.8
+CURRENT_FIELD=relative_humidity_2m TYPE=int VALUE=59
+CURRENT_FIELD=visibility TYPE=float VALUE=9520.0
 CURRENT_FIELD=rain TYPE=float VALUE=0.0
 CURRENT_FIELD=wind_speed_10m TYPE=float VALUE=14.5
-CURRENT_FIELD=wind_gusts_10m TYPE=float VALUE=36.0
+CURRENT_FIELD=wind_gusts_10m TYPE=float VALUE=35.3
 CURRENT_FIELD=weather_code TYPE=int VALUE=0
 DAILY_FIELD=temperature_2m_max TYPE=list VALUE=[30.3]
 DAILY_FIELD=temperature_2m_min TYPE=list VALUE=[22.0]
@@ -154,7 +153,7 @@ AIR_QUALITY_RESPONSE_KEYS=['current', 'current_units', 'elevation', 'generationt
     "time": "iso8601"
   },
   "elevation": 15.0,
-  "generationtime_ms": 0.08249282836914062,
+  "generationtime_ms": 0.17452239990234375,
   "latitude": 21.0,
   "longitude": 105.80002,
   "timezone": "Asia/Ho_Chi_Minh",
