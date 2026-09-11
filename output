@@ -1,6 +1,4 @@
-1s
-Run set -euo pipefail
-  set -euo pipefail
+set -euo pipefail
   test -x scripts/test-weather-agent-skill.sh || chmod +x scripts/test-weather-agent-skill.sh
   bash scripts/test-weather-agent-skill.sh
   echo 'BUOC_3_WEATHER=PASS'
@@ -24,11 +22,80 @@ ROUTE=weather-direct
 2C_GROQ_PRE_INFERENCE=0
 2C_ROUTING=PASS
 2C_ROUTER_AGENT_GUARD=PASS
-2C_OPEN_METEO=DELEGATED_TO_WEATHER_CONTRACT
-2C_PROVIDER_HTTP_TEST=DELEGATED_TO_WEATHER_CONTRACT
+2C_OPEN_METEO=RUN_WEATHER_CONTRACT
+2C_PROVIDER_HTTP_TEST=RUN_WEATHER_CONTRACT
 2C_BROWSER_SEARCH=NOT_USED
 2C_AGENT_INFERENCE=NOT_USED
 2C_GROQ_CALLS=0
 2C_AGENT_SKILL_ROUTING=PASS
+=== WEATHER CONTRACT START ===
+LOCATION=PASS latitude=20.976127975008882 longitude=105.77268944367343 timezone=Asia/Ho_Chi_Minh
+=== OPEN-METEO DIAGNOSTIC START ===
+CONFIG_LATITUDE=20.976127975008882
+CONFIG_LONGITUDE=105.77268944367343
+CONFIG_TIMEZONE='Asia/Ho_Chi_Minh'
+REQUEST_SCHEME='https'
+REQUEST_HOST='api.open-meteo.com'
+REQUEST_PATH='/v1/forecast'
+REQUEST_URL=https://api.open-meteo.com/v1/forecast?latitude=20.976127975008882&longitude=105.77268944367343&timezone=Asia%2FHo_Chi_Minh&forecast_days=1&daily=weather_code%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_sum
+HTTP_STATUS=200
+RESPONSE_TYPE=dict
+RESPONSE_KEYS=['daily', 'daily_units', 'elevation', 'generationtime_ms', 'latitude', 'longitude', 'timezone', 'timezone_abbreviation', 'utc_offset_seconds']
+=== OPEN-METEO RAW JSON START ===
+{
+  "daily": {
+    "precipitation_sum": [
+      6.3
+    ],
+    "temperature_2m_max": [
+      30.3
+    ],
+    "temperature_2m_min": [
+      22.0
+    ],
+    "time": [
+      "2026-09-11"
+    ],
+    "weather_code": [
+      80
+    ]
+  },
+  "daily_units": {
+    "precipitation_sum": "mm",
+    "temperature_2m_max": "°C",
+    "temperature_2m_min": "°C",
+    "time": "iso8601",
+    "weather_code": "wmo code"
+  },
+  "elevation": 15.0,
+  "generationtime_ms": 0.16510486602783203,
+  "latitude": 20.984182,
+  "longitude": 105.79108,
+  "timezone": "Asia/Ho_Chi_Minh",
+  "timezone_abbreviation": "GMT+7",
+  "utc_offset_seconds": 25200
+}
+=== OPEN-METEO RAW JSON END ===
+RESPONSE_LATITUDE=20.984182
+RESPONSE_LONGITUDE=105.79108
+RESPONSE_TIMEZONE='Asia/Ho_Chi_Minh'
+RESPONSE_TIMEZONE_ABBREVIATION='GMT+7'
+LATITUDE_DIFF=0.00805402499111807
+LONGITUDE_DIFF=0.018390556326565388
+COORDINATE_NORMALIZATION=ACCEPTED
+TIMEZONE=PASS
+DAILY_TYPE=dict
+DAILY_KEYS=['precipitation_sum', 'temperature_2m_max', 'temperature_2m_min', 'time', 'weather_code']
+DAILY_FIELD=time TYPE=list VALUE=['2026-09-11']
+DAILY_FIELD=weather_code TYPE=list VALUE=[80]
+DAILY_FIELD=temperature_2m_max TYPE=list VALUE=[30.3]
+DAILY_FIELD=temperature_2m_min TYPE=list VALUE=[22.0]
+DAILY_FIELD=precipitation_sum TYPE=list VALUE=[6.3]
+OPEN_METEO=PASS
+FORECAST_FIELDS=PASS daily.time,daily.weather_code,daily.temperature_2m_max,daily.temperature_2m_min,daily.precipitation_sum
+GROQ_CALLS=0
+=== OPEN-METEO DIAGNOSTIC END ===
+WEATHER_OPEN_METEO=PASS
+=== WEATHER CONTRACT END ===
 2C=PASS
 BUOC_3_WEATHER=PASS
