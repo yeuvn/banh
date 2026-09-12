@@ -1,9 +1,46 @@
-@yeuvn ➜ /workspaces/AIHome/frontend (kira-ui) $ git status --short
-cat frontend/package.json
- M package.json
-?? dist/
-?? node_modules/
-?? package-lock.json
-?? tsconfig.tsbuildinfo
-?? ../package-lock.json
-cat: frontend/package.json: No such file or directory
+@yeuvn ➜ /workspaces/AIHome/frontend (kira-ui) $ cat package.json
+git diff -- package.json
+{
+  "name": "kira-ui",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "three": "^0.184.0",
+    "typescript": "^5.6.3",
+    "vite": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.185.4",
+    "@vitejs/plugin-react": "5.2.0"
+  }
+}
+diff --git a/frontend/package.json b/frontend/package.json
+index f8e0db4..9c516f5 100644
+--- a/frontend/package.json
++++ b/frontend/package.json
+@@ -12,10 +12,13 @@
+     "react": "^19.0.0",
+     "react-dom": "^19.0.0",
+     "three": "^0.184.0",
+-    "vite": "^7.0.0",
+-    "typescript": "^5.6.3"
++    "typescript": "^5.6.3",
++    "vite": "^7.0.0"
+   },
+   "devDependencies": {
++    "@types/react": "^19.3.0",
++    "@types/react-dom": "^19.3.0",
++    "@types/three": "^0.185.4",
+     "@vitejs/plugin-react": "5.2.0"
+   }
+ }
