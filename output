@@ -2,7 +2,7 @@
 npm run typecheck
 npm run build
 
-added 77 packages, and audited 78 packages in 4s
+added 77 packages, and audited 78 packages in 6s
 
 9 packages are looking for funding
   run `npm fund` for details
@@ -16,7 +16,7 @@ npm error Missing script: "typecheck"
 npm error
 npm error To see a list of scripts, run:
 npm error   npm run
-npm error A complete log of this run can be found in: /home/codespace/.npm/_logs/2026-09-12T08_24_31_398Z-debug-0.log
+npm error A complete log of this run can be found in: /home/codespace/.npm/_logs/2026-09-12T08_25_40_102Z-debug-0.log
 
 > kira-ui@0.1.0 build
 > tsc -b && vite build
@@ -31,4 +31,4 @@ dist/assets/index-B9379LS6.js   737.72 kB │ gzip: 201.12 kB
 - Using dynamic import() to code-split the application
 - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
-✓ built in 3.08s
+✓ built in 5.94s
