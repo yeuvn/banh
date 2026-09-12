@@ -1,31 +1,248 @@
-@yeuvn ➜ /workspaces/AIHome (kira-ui) $ cd /workspaces/AIHome/frontend
-cat package.json
-{
-  "name": "kira-ui",
-  "private": true,
-  "version": "0.1.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "three": "^0.184.0",
-    "vite": "^7.0.0",
-    "typescript": "^5.6.3"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "5.2.0"
-  }
-}
-@yeuvn ➜ /workspaces/AIHome/frontend (kira-ui) $ npm run
-Scripts available in kira-ui@0.1.0 via `npm run`:
-  dev
-    vite
-  build
-    tsc -b && vite build
-  preview
-    vite preview
+# AIHome — Bản đồ chức năng sống
+
+
+## 0. Sơ đồ xây dựng AIHome
+
+```text
+                         AIHOME — BUILD MAP (TEST)
+
+ [NGƯỜI DÙNG]
+ Voice / PTT / Wake-word
+          │
+          ▼
+ [ENDPOINT: Oppo Reno5 / ESP32]
+ tai + miệng + màn hình + PTT + wake-word
+ STATUS: PLANNED
+          │ User intent
+          ▼
+ [AI GATEWAY — HP Chromebox G2]
+ OpenClaw Gateway
+ STATUS: PASS
+          │
+          ├──────────────────────────────────────────────┐
+          │                                              │
+          ▼                                              ▼
+ [GENERAL AI / WEB RESEARCH]                    [WEATHER CAPABILITY]
+ Groq inference ............... PASS (2A)        Weather routing ......... PASS (2C / CP4)
+ browser_search ............... PASS (2B)        OpenClaw web_fetch ..... CONFIGURED
+ code_interpreter ............. PASS (2B)*       Groq .................... NOT USED
+          │                                      browser_search .......... NOT USED
+          │ * hiện deactive, giữ cấu hình                 │
+          │                                               ▼
+          │                                      [OPEN-METEO]
+          │                                      HTTPS / HTTP 200 / forecast
+          │                                      timezone: Asia_Chi_Ho_Chi_Minh
+          │                                      STATUS: PASS (CP3)
+          │                                               │ JSON
+          │                                               ▼
+          │                                      [OPENCLAW → KIRA]
+          │                                      trả dữ liệu thời tiết
+          │                                      STATUS: PASS (2C / CP4)
+          │
+          ▼
+ [AGENT / CLOUD AI]
+ Dùng cho các yêu cầu cần suy luận hoặc tra cứu web nói chung
+ Không nằm trong đường Weather trực tiếp
+          │
+          ├───────────────────────────────┐
+          │                               │
+          ▼                               ▼
+ [LOCAL KNOWLEDGE / MEMORY — BOX]       [TTS CAPABILITY]
+ home-location.json ...........         Google Cloud TTS
+ IMPLEMENTED / CHƯA TEST               lựa chọn mặc định
+ Memory gia đình ..............         STATUS: PLANNED
+ PLANNED
+
+ CHECKPOINTS
+ CP1 PASS ────────> CP2 PASS ────────> CP3 PASS ────────> CP4 PASS ────────> CP5 PASS
+ fa807b3             126ecc2             7e6aefc             ec4b46d             dd6741e
+ Groq-only           Native Tools        Weather/Open-Meteo   Weather Routing 2C   Weather E2E Workflow
+
+ WEATHER DIRECT = PASS
+ KIRA → OpenClaw → Weather routing
+ → Skill-weather.md → home-location.json
+ → web_fetch → Open-Meteo → JSON
+ → OpenClaw → KIRA
+
+ WEATHER TEST AUTOMATION = PASS
+ GitHub/Test → OpenClaw TEST Box deploy workflow
+ → scripts/test-weather-agent-skill.sh
+ → BUOC_3_WEATHER=PASS
+
+ TTS TARGET = PLANNED
+ KIRA → AI Gateway → TTS adapter
+ → Google Cloud Text-to-Speech → audio
+ → Endpoint → speaker
+
+ LƯU Ý KIẾN TRÚC
+ - Weather không gọi Groq.
+ - Weather không dùng Groq browser_search.
+ - browser_search vẫn giữ cho tra cứu web nói chung.
+ - `Skill-weather.md` là Weather contract; `web_fetch` là HTTP tool hiện có
+   của OpenClaw. Hai thành phần được sử dụng như một Weather capability.
+ - Routing Weather xảy ra trước Agent/model inference.
+ - `2C` đã PASS: Weather request được route `weather-direct`, `GROQ_CALLS=0`.
+ - Bước 3 Weather đã được tích hợp trực tiếp vào workflow deploy/check TEST Box.
+ - **Google Cloud Text-to-Speech là lựa chọn TTS mặc định của AIHome.**
+ - TTS nên nằm sau AIHome Gateway dưới dạng adapter; không để OpenClaw phụ thuộc trực tiếp vào provider.
+ - TTS mục tiêu dùng cloud neural voice và hướng tới streaming/chunk playback để giảm latency.
+
+ PHẦN PHỤ TRỢ:
+ ┌──────────────────────────────────────────────────────────────┐
+ │ Observability: quota probe + /api/groq/quota   IMPLEMENTED  │
+ │ nhưng CHƯA TEST runtime                                    │
+ │ Network boundary + audit log                 PLANNED         │
+ ├──────────────────────────────────────────────────────────────┤
+ │ GitHub ↔ BOX sync: union / dedupe / conflict fail-closed   │
+ │ / workflow đã code nhưng CHƯA TEST                         │
+ └──────────────────────────────────────────────────────────────┘
+```
+
+## 1. Core AI / OpenClaw
+
+| ID | Chức năng | Trạng thái | Ghi chú / dependency |
+|---|---|---|---|
+| `C01` | OpenClaw Gateway trên TEST Box | `PASS` | Gateway TEST đang chạy trên Box. |
+| `C02` | Groq inference độc lập qua OpenClaw | `PASS` | Đã xác nhận ở `2A`. Model kiểm thử: `groq/openai/gpt-oss-20b`. |
+| `C03` | Groq Built-in Tools qua Agent | `PASS` | Đã xác nhận ở `2B`: `browser_search`; `code_interpreter` đã deactive nhưng giữ cấu hình để dùng sau. |
+| `C04` | Weather capability trực tiếp | `PASS` | `2C` đã PASS: Weather routing xảy ra trước Agent/model inference; route `weather-direct`; không qua Groq/browser_search. |
+| `C05` | Weather/Open-Meteo contract | `PASS` | Checkpoint 3 đã PASS contract độc lập: location config, HTTPS tới Open-Meteo, HTTP 200, timezone `Asia_Chi_Minh`, forecast fields và `GROQ_CALLS=0`. |
+| `C06` | General web research qua Groq | `PASS` | `browser_search` tiếp tục dành cho các yêu cầu tra cứu web nói chung; không dùng cho Weather. |
+| `C07` | Weather end-to-end test trong OpenClaw TEST workflow | `PASS` | Checkpoint 5: workflow `AIHome OpenClaw TEST Box` tự động chạy `scripts/test-weather-agent-skill.sh` và đạt `BUOC_3_WEATHER=PASS`. |
+| `C08` | TTS mặc định của AIHome | `PLANNED` | **Google Cloud Text-to-Speech** là provider mặc định. TTS đặt sau AI Gateway qua adapter; mục tiêu hỗ trợ cloud neural voice và streaming/chunk playback. |
+
+## 2. Security / Network Boundary
+
+| ID | Chức năng | Trạng thái | Ghi chú / dependency |
+|---|---|---|---|
+| `S01` | Kiểm soát outbound network tại BOX | `PLANNED` | BOX là enforcement point; mục tiêu mặc định DENY, chỉ allowlist các đích cần thiết. |
+| `S02` | Network-boundary audit | `PLANNED` | Phải phát hiện/chặn cả request đi vòng ngoài cơ chế request chuẩn của OpenClaw. |
+| `S03` | Audit log OpenClaw/Groq trên BOX | `PLANNED` | Ghi nhận request/response metadata để người dùng kiểm tra luồng Internet. |
+| `S04` | Audit log tương ứng trên GitHub | `PLANNED` | GitHub là nơi lưu/quan sát log; không phải live network-control plane. |
+
+## 3. Sync Github-Box
+
+| ID | Chức năng | Trạng thái | Ghi chú / dependency |
+|---|---|---|---|
+| `Y01` | Union sync GitHub ↔ BOX cho audit logs | `IMPLEMENTED / CHƯA TEST` | `scripts/sync-github-box.sh`; kết quả phải là **hợp của hai phía**. |
+| `Y02` | Deduplicate event | `IMPLEMENTED / CHƯA TEST` | Dùng `event_id`; cùng event ở hai phía chỉ giữ một bản. |
+| `Y03` | Conflict detection / fail closed | `IMPLEMENTED / CHƯA TEST` | Cùng `event_id` nhưng nội dung khác nhau → dừng, không tự chọn. |
+| `Y04` | Workflow `Sync Github-Box` thủ công | `IMPLEMENTED / CHƯA TEST` | `.github/workflows/sync-github-box.yml`; chỉ `workflow_dispatch`, không tự trigger. |
+
+## 4. Workspace / Local Knowledge
+
+| ID | Chức năng | Trạng thái | Ghi chú / dependency |
+|---|---|---|---|
+| `L01` | Weather contract trong repo | `IMPLEMENTED / CHƯA TEST` | `skills/weather/Skill-weather.md`; mô tả đường Weather trực tiếp, không phụ thuộc Groq. |
+| `L02` | Local home configuration | `IMPLEMENTED / CHƯA TEST` | `config/aihome/home-location.json`; dùng làm nguồn latitude, longitude và timezone cho Open-Meteo. |
+| `L03` | Memory / Local Knowledge của gia đình | `PLANNED` | Lưu tại AI Gateway/BOX; cloud AI không tự biết dữ liệu riêng này. |
+
+## 5. Quota / Observability
+
+| ID | Chức năng | Trạng thái | Ghi chú / dependency |
+|---|---|---|---|
+| `O01` | Groq quota metadata probe | `IMPLEMENTED / CHƯA TEST` | `config/gateway/app/groq_quota.py`; metadata-only, không inference. |
+| `O02` | Gateway endpoint `/api/groq/quota` | `IMPLEMENTED / CHƯA TEST` | Đã expose trạng thái quota; cần kiểm tra runtime trên TEST Box. |
+| `O03` | Chặn test Groq khi quota chưa hồi phục | `IMPLEMENTED / QUY TRÌNH` | Không rerun test Groq khi quota chưa reset; Weather direct không phụ thuộc Groq quota. |
+
+## 6. Test / Checkpoint
+
+| ID | Chức năng | Trạng thái | Ghi chú |
+|---|---|---|---|
+| `T01` | `2A` | `PASS` | Groq inference độc lập qua OpenClaw. |
+| `T02` | `2B` | `PASS` | Groq Built-in Tools qua Agent. |
+| `T03` | Weather direct / `2C` | `PASS` | Weather routing trước Agent/model inference; route `weather-direct`, `GROQ_CALLS=0`, không dùng `browser_search`; đã đạt Checkpoint 4. |
+| `T04` | Checkpoint 2 | `PASS / OFFICIAL` | `126ecc28430c3fd7d91dc69e612cb492a1341c9a`. |
+| `T05` | Checkpoint 3 | `PASS / OFFICIAL` | `Weather Open-Meteo PASS`; code commit `7e6aefc3be59585e3793eb0fc7e640dd924c23a5`. |
+| `T06` | Checkpoint 4 | `PASS / OFFICIAL` | `Weather Routing 2C PASS`; commit kỹ thuật `ec4b46d7ecb002ad0de3603a4e986e09994484fa`. |
+| `T07` | Checkpoint 5 | `PASS / OFFICIAL` | Weather end-to-end được tích hợp vào `openclaw-test-box-deploy.yml`; commit `dd6741e94f1e32346308d2e3216c318f557ebf7b`; workflow thực tế PASS với `BUOC_3_WEATHER=PASS`. |
+
+## 7. Nguyên tắc vận hành hiện hành
+
+- TEST runtime là `/opt/aihome-test`; MAIN/KIRA là `/opt/KIRA`; `/opt/web` là project riêng, không đụng tới.
+- Không tạo branch/workflow mới nếu chưa có xác nhận của người dùng. Các workflow đã tồn tại phải được ưu tiên tái sử dụng.
+- `TOKEN` chỉ chạy bằng `workflow_dispatch`; không để commit vào `Test` tự gọi Groq.
+- `openclaw-test-box-deploy` chỉ chạy thủ công; push thực tế vào `Test` đã bị chặn bằng filter branch không tồn tại.
+- **Open-Meteo là nguồn forecast mặc định/duy nhất của AIHome; không sử dụng NCHMF.**
+- **Weather không gọi Groq và không dùng `browser_search`;** đường Weather dùng OpenClaw `web_fetch` để gọi trực tiếp Open-Meteo.
+- **Weather routing xảy ra trước Agent/model inference;** intent thời tiết phải được route `weather-direct` với `GROQ_CALLS=0`.
+- **Workflow `AIHome OpenClaw TEST Box` hiện đã có kiểm thử Bước 3 Weather tự động;** không cần selector `3-Only`.
+- **Google Cloud Text-to-Speech là lựa chọn TTS mặc định của AIHome;** TTS được đặt sau AI Gateway qua adapter, không phụ thuộc trực tiếp vào OpenClaw/provider-specific implementation.
+- TTS mục tiêu dùng cloud neural voice và hướng tới streaming/chunk playback để giảm latency; hiện chưa triển khai/test nên vẫn `PLANNED`.
+- Audit log cần có metadata đủ để phân biệt nguồn phát sinh (BOX/GitHub), `event_id` và request/run identifiers; không dựa riêng vào timestamp.
+- GitHub ↔ BOX không dùng live two-way control channel. Đồng bộ được thực hiện qua workflow `Sync Github-Box` khi người dùng chủ động `workflow_dispatch`.
+- Union sync không được tự ghi đè xung đột: cùng logical event nhưng khác nội dung phải `FAIL CLOSED`.
+
+## 8. Cách đọc bản đồ
+
+- `PASS`: đã chứng minh bằng test/log.
+- `IMPLEMENTED / CHƯA TEST`: code/config đã có, nhưng chưa có xác nhận runtime PASS.
+- `IN PROGRESS`: đang xây hoặc còn dependency chưa hoàn tất.
+- `PLANNED`: yêu cầu đã xác định, chưa triển khai.
+
+**Nguồn sự thật:**
+- `capabilities.md` → AIHome **đang có/đang xây chức năng gì**.
+- `NhatKy.md` → **đã làm gì, vì sao và tiến độ theo thời gian**.
+- `checkpoints.md` → **mốc kỹ thuật chính thức**.
+
+---
+
+## Sơ đồ tổng quan cuối file
+
+```text
+                         AIHOME — CURRENT TARGET
+
+[USER]
+   │
+   ▼
+[ENDPOINT]                                  PLANNED
+   │ User intent
+   ▼
+[AI GATEWAY / OPENCLAW]                     PASS
+   │
+   ├─────────────────────────────────────────────────────┐
+   │                                                     │
+   ▼                                                     ▼
+[GENERAL AI / WEB RESEARCH]                    [WEATHER CAPABILITY]
+   │                                            │
+   ▼                                            ▼
+[GROQ / AGENT]                                 [Weather routing]
+   │                                            │
+   ├─ browser_search                            ▼
+   └─ code_interpreter*                     [Skill-weather.md]
+                                              │
+   * deactive, giữ cấu hình                   ▼
+                                           [home-location.json]
+                                              │
+                                              ▼
+                                           [web_fetch]
+                                              │
+                                              ▼
+                                           [OPEN-METEO]
+                                              │ JSON
+                                              ▼
+                                           [OPENCLAW]
+                                              │
+                                              ▼
+                                           [KIRA]
+
+WEATHER TARGET:
+KIRA → OpenClaw → Weather routing → Skill-weather.md
+→ home-location.json → web_fetch → Open-Meteo → JSON → OpenClaw → KIRA
+
+WEATHER TEST AUTOMATION:
+GitHub/Test → openclaw-test-box-deploy.yml → TEST Box deploy/check
+→ scripts/test-weather-agent-skill.sh → BUOC_3_WEATHER=PASS
+
+GENERAL RESEARCH TARGET:
+KIRA → OpenClaw → Agent/Groq → browser_search → external web → Groq/Agent → KIRA
+
+TTS TARGET:
+KIRA → AI Gateway → TTS adapter → Google Cloud Text-to-Speech → audio → Endpoint → speaker
+
+Weather direct routing: PASS (2C / CP4)
+Weather/Open-Meteo contract: PASS (CP3)
+Weather end-to-end TEST workflow: PASS (CP5)
+Groq is excluded from the Weather path: GROQ_CALLS=0
+TTS default provider: Google Cloud Text-to-Speech (PLANNED)
+```
