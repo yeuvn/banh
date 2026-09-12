@@ -1,34 +1,31 @@
-@yeuvn ➜ /workspaces/AIHome/frontend (kira-ui) $ npm ci
-npm run typecheck
-npm run build
-
-added 77 packages, and audited 78 packages in 6s
-
-9 packages are looking for funding
-  run `npm fund` for details
-
-found 0 vulnerabilities
-npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
-npm warn install-scripts   esbuild@0.28.2 (postinstall: node install.js)
-npm warn install-scripts
-npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
-npm error Missing script: "typecheck"
-npm error
-npm error To see a list of scripts, run:
-npm error   npm run
-npm error A complete log of this run can be found in: /home/codespace/.npm/_logs/2026-09-12T08_25_40_102Z-debug-0.log
-
-> kira-ui@0.1.0 build
-> tsc -b && vite build
-
-vite v7.3.6 building client environment for production...
-✓ 34 modules transformed.
-dist/index.html                   0.44 kB │ gzip:   0.29 kB
-dist/assets/index-gW5quAKs.css    6.85 kB │ gzip:   2.38 kB
-dist/assets/index-B9379LS6.js   737.72 kB │ gzip: 201.12 kB
-
-(!) Some chunks are larger than 500 kB after minification. Consider:
-- Using dynamic import() to code-split the application
-- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
-- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
-✓ built in 5.94s
+@yeuvn ➜ /workspaces/AIHome (kira-ui) $ cd /workspaces/AIHome/frontend
+cat package.json
+{
+  "name": "kira-ui",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "three": "^0.184.0",
+    "vite": "^7.0.0",
+    "typescript": "^5.6.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "5.2.0"
+  }
+}
+@yeuvn ➜ /workspaces/AIHome/frontend (kira-ui) $ npm run
+Scripts available in kira-ui@0.1.0 via `npm run`:
+  dev
+    vite
+  build
+    tsc -b && vite build
+  preview
+    vite preview
