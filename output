@@ -1,23 +1,18 @@
 nmd@NhaNMD:~/DuAn/KIRA-ui$ cd /home/nmd/DuAn/KIRA-ui
-ls -la
-cat package.json 2>/dev/null
-total 116
-drwxrwxr-x 8 nmd nmd  4096 Sep 13 10:11 .
-drwxrwxr-x 5 nmd nmd  4096 Sep 13 10:11 ..
-drwxrwxr-x 2 nmd nmd  4096 Sep 13 10:11 assets
-drwxrwxr-x 3 nmd nmd  4096 Sep 13 10:11 examples
-drwxrwxr-x 8 nmd nmd  4096 Sep 13 10:11 .git
-drwxrwxr-x 3 nmd nmd  4096 Sep 13 10:11 .github
--rw-rw-r-- 1 nmd nmd   109 Sep 13 10:11 .gitignore
--rw-rw-r-- 1 nmd nmd  1066 Sep 13 10:11 LICENSE
--rw-rw-r-- 1 nmd nmd   100 Sep 13 10:11 .npmignore
--rw-rw-r-- 1 nmd nmd  1498 Sep 13 10:11 package.json
--rw-rw-r-- 1 nmd nmd 53179 Sep 13 10:11 package-lock.json
--rw-rw-r-- 1 nmd nmd  5466 Sep 13 10:11 README.md
-drwxrwxr-x 2 nmd nmd  4096 Sep 13 10:11 scripts
-drwxrwxr-x 2 nmd nmd  4096 Sep 13 10:11 src
--rw-rw-r-- 1 nmd nmd   506 Sep 13 10:11 tsconfig.json
--rw-rw-r-- 1 nmd nmd   288 Sep 13 10:11 tsup.config.ts
+npm install
+
+added 63 packages, and audited 64 packages in 8s
+
+6 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 low, 1 moderate)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+nmd@NhaNMD:~/DuAn/KIRA-ui$ cat package.json
 {
   "name": "jarvis-ai-web-animation",
   "version": "0.1.2",
