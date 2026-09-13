@@ -1,77 +1,63 @@
-nmd@NhaNMD:~/DuAn/KIRA-ui$ cd /home/nmd/DuAn/KIRA-ui
-npm install
-
-added 63 packages, and audited 64 packages in 8s
-
-6 packages are looking for funding
-  run `npm fund` for details
-
-2 vulnerabilities (1 low, 1 moderate)
-
-To address all issues, run:
-  npm audit fix
-
-Run `npm audit` for details.
-nmd@NhaNMD:~/DuAn/KIRA-ui$ cat package.json
-{
-  "name": "jarvis-ai-web-animation",
-  "version": "0.1.2",
-  "description": "Jarvis-style AI orb — React component with Three.js orbital animation, themeable palettes, and state-driven moods.",
-  "license": "MIT",
-  "author": "cyber1443",
-  "homepage": "https://github.com/cyber1443/jarvis-ai-orb-web-animation#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/cyber1443/jarvis-ai-orb-web-animation.git"
-  },
-  "bugs": "https://github.com/cyber1443/jarvis-ai-orb-web-animation/issues",
-  "keywords": [
-    "jarvis",
-    "ai",
-    "orb",
-    "mascot",
-    "react",
-    "three.js",
-    "webgl",
-    "animation"
-  ],
-  "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    }
-  },
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE"
-  ],
-  "sideEffects": false,
-  "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
-    "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run typecheck && npm run build"
-  },
-  "peerDependencies": {
-    "react": "^18 || ^19",
-    "react-dom": "^18 || ^19"
-  },
-  "dependencies": {
-    "three": "^0.184.0"
-  },
-  "devDependencies": {
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@types/three": "^0.184.0",
-    "react": "^19",
-    "react-dom": "^19",
-    "tsup": "^8.3.5",
-    "typescript": "^5.6.3"
-  }
-}
+nmd@NhaNMD:~$ ssh aihome@192.168.1.80 "cat -n /opt/aihome-test/source/config/gateway/app/main.py | sed -n '170,230p'"
+aihome@192.168.1.80's password: 
+   170	        "status": "ok",
+   171	        "deleted": key,
+   172	    }
+   173	
+   174	
+   175	@app.post("/api/chat")
+   176	def chat(request: ChatRequest):
+   177	    total_start = time.perf_counter()
+   178	    diagnostic = os.getenv("AIHOME_LATENCY_DIAGNOSTIC", "0") == "1"
+   179	    session_id = request.session_id or str(uuid4())
+   180	
+   181	    conn = get_connection()
+   182	
+   183	    conn.execute(
+   184	        """
+   185	        INSERT OR IGNORE INTO sessions (session_id)
+   186	        VALUES (?)
+   187	        """,
+   188	        (session_id,),
+   189	    )
+   190	
+   191	    conn.execute(
+   192	        """
+   193	        INSERT INTO messages
+   194	            (session_id, role, content)
+   195	        VALUES (?, ?, ?)
+   196	        """,
+   197	        (session_id, "user", request.text),
+   198	    )
+   199	
+   200	    conn.commit()
+   201	
+   202	    history_rows = conn.execute(
+   203	        """
+   204	        SELECT role, content
+   205	        FROM messages
+   206	        WHERE session_id = ?
+   207	        ORDER BY id DESC
+   208	        LIMIT 11
+   209	        """,
+   210	        (session_id,),
+   211	    ).fetchall()
+   212	
+   213	    history_rows = list(reversed(history_rows))
+   214	    if history_rows:
+   215	        history_rows = history_rows[:-1]
+   216	
+   217	    history = [
+   218	        {
+   219	            "role": row["role"],
+   220	            "content": row["content"],
+   221	        }
+   222	        for row in history_rows
+   223	    ]
+   224	
+   225	    orchestrator_start = time.perf_counter()
+   226	    result = handle_chat(request.text, history=history)
+   227	    orchestrator_ms = (time.perf_counter() - orchestrator_start) * 1000
+   228	    reply = result["reply"]
+   229	    memories = result["memories"]
+   230	
