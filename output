@@ -1,2 +1,0 @@
-umask 077
-read -rs -p "Dán Groq key thứ 2 rồi Enter: " KEY && printf '%s' "$KEY" > /tmp/kira-groq-key.txt && unset KEY
